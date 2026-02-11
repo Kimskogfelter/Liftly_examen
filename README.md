@@ -1,0 +1,1 @@
+# GymTok - Examensarbete för Glimåkra Folkhögskola
