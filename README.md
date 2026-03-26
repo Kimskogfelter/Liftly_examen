@@ -49,7 +49,6 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 
 # DESIGN
 ## Figma
-
 Här en min figma skiss för designen för hemsidan. 
 https://www.figma.com/design/DwmMKIZb9NEAqBsgdjA8FS/Case_examen_Liftly?node-id=0-1&t=cEzKXCzBBMna6P1I-1
 
