@@ -1,6 +1,6 @@
 # Liftly - Examensarbete för Glimåkra Folkhögskola
 
-Liftly är ett examensprojekt som utvecklar en social nätverksplattform för personer med intresse för gym och hälsa. Användare kan skapa konton, dela och redigera inlägg, kommentera andras innehåll samt spara inlägg för senare användning. Plattformen täcker ämnen som träning, kost, recept och mode, och skapar en interaktiv community för inspiration och kunskapsdelning.
+Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en social nätverksplattform för personer med intresse för gym och hälsa. Användare kan skapa konton, dela och redigera inlägg, kommentera andras innehåll samt spara inlägg för senare användning. Plattformen täcker ämnen som träning, kost, recept och mode, och skapar en interaktiv community för inspiration och kunskapsdelning.
 
 # KRAV
 
@@ -47,7 +47,10 @@ Liftly är ett examensprojekt som utvecklar en social nätverksplattform för pe
 6. Sök och filter: sök efter användare eller inlägg
 7. Relationer i databasen: t.ex. “följare” om du vill expandera socialt senare ??
 
+# DESIGN
+## Figma
 
-
+Här en min figma skiss för designen för hemsidan. 
+https://www.figma.com/design/DwmMKIZb9NEAqBsgdjA8FS/Case_examen_Liftly?node-id=0-1&t=cEzKXCzBBMna6P1I-1
 
 
