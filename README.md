@@ -15,9 +15,11 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 7. Ska kunna redigera egna inlägg
 8. Ska kunna radera egna inlägg
 9. Ska kunna kommentera på andra användares inlägg
-10. Ska kunna "gilla" spara andra användares inlägg för att kolla på senare
-11. Ska kunna besöka en annan användares profil 
-12. Ska ha en egen profil sida
+10. Ska kunna gilla andra personers kommentarer
+11. Ska kunna gilla andra personers inlägg
+12. Ska kunna spara andra användares inlägg för att kolla på senare
+13. Ska kunna besöka en annan användares profil 
+14. Ska ha en egen profil sida
 
 ### besökare
 1. Ska kunna se alla inlägg på hemsidan
@@ -31,8 +33,8 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 ### databas
 1. Spara användarnamn
 2. Spara inlägg med: text, bild, video, datum, likes, kommentarer, skapad av user_id, post_id
-3. Spara kommentarer: text, skapad av user_id, datum, kopplat till inlägg
-4. Likes/sparade inlägg: user_id + post_id relation
+3. Spara kommentarer: text, likes, skapad av user_id, datum, kopplat till inlägg
+4. Sparade inlägg: user_id + post_id relation
 5. Admin inlogg? : spara blockarade användare, raderade användare, datum, admin_id
 6. Relationer: user -> post (1 till många)
 7. Relationer: post -> comment (1 till många)
