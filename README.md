@@ -66,7 +66,7 @@ Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend o
 
 * React hanterar användargränssnittet och skickar förfrågningar till backend.
 * Express/Node.js fungerar som API och hanterar affärslogik samt autentisering.
-* MongoDB lagrar användare och träningsdata.
+* MongoDB lagrar användare och data.
 * Kommunikation mellan frontend och backend sker via HTTP-requests med Axios.
 
 ## Installation
