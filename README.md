@@ -1,11 +1,11 @@
 # Liftly - Examensarbete för Glimåkra Folkhögskola
 
-Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en social nätverksplattform för personer med intresse för gym och hälsa. Användare kan skapa konton, dela och redigera inlägg, kommentera och gilla andras innehåll samt spara inlägg för senare användning. Plattformen täcker ämnen som träning, kost, recept och mode, och skapar en interaktiv community för inspiration och kunskapsdelning.
+Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en social plattform för personer med intresse för gym och hälsa. Användare kan skapa konton, dela och redigera inlägg, kommentera och gilla andras innehåll samt spara inlägg för senare användning. Plattformen täcker ämnen som träning, kost, recept och mode, och skapar en interaktiv community för inspiration och kunskapsdelning.
 
-## KRAV
+## Krav
 
 ### Frontend
-#### användare
+#### Användare
 1. Ska kunna skapa en användare 
 2. Ska kunna logga in med sin skapade användare
 3. Ska kunna logga ut med sin skapade användare
@@ -23,18 +23,18 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 15. Ska kunna besöka en annan användares profil 
 16. Ska kunna följa andra användare
 17. Ska ha en egen profil sida
-18. Ska kunna använda sökfunktion 
+18. Ska kunna använda sökfunktion
+19. Ska kunna filtrera inlägg efter kategori
 
-#### besökare
+#### Besökare
 1. Ska kunna se alla inlägg på hemsidan
-2. Ska kunna besöka en användars profil
 
 ### Backend
-#### admin
+#### Admin
 1. Ska kunna blockera en användare från appen
 2. Ska kunna radera en användare från appen 
 
-#### databas
+#### Databas
 1. Spara användarnamn
 2. Spara inlägg med: text, bild, video, datum, likes, kommentarer, skapad av user_id, post_id
 3. Spara kommentarer: text, likes, skapad av user_id, datum, kopplat till inlägg
@@ -44,23 +44,24 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 7. Relationer: post -> comment (1 till många)
 8. Relationer: user -> likes (många-till-många)
 
-#### funktioner 
+#### Funktioner 
 1. Lösenordhantering: glömt/ändra lösenord
 2. Validering: se till att text, bild/video, profilinfo följer rätt format/filstorlek
 3. Säkerhet: sessionshantering, token-baserad autentisering, skydd mot oönskad åtkomst
 4. Filhantering: hur bilder/videos lagras – lokalt eller moln?
 5. Notiser/feedback: bekräftelse på like, kommentar eller radering
 6. Sök och filter: sök efter användare eller inlägg
-7. Relationer i databasen: t.ex. “följare” om du vill expandera socialt senare ??
+7. Relationer i databasen: t.ex. “följare”
 
-## TEKNIK & PROGRAMSPRÅK
+## Teknik & programspråk
+
 * **Frontend:** React, HTML, CSS, Tailwind, React Router, Axios
 * **Backend:** Node.js, Express
 * **Databas:** MongoDB
 * **Säkerhet:** JWT, bcrypt
 * **Verktyg:** nodemon, dotenv, CORS
 
-## ARKITEKTUR
+## Arkitektur
 Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend och databas är separerade men kommunicerar via ett REST-API.
 
 * React hanterar användargränssnittet och skickar förfrågningar till backend.
@@ -68,7 +69,7 @@ Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend o
 * MongoDB lagrar användare och träningsdata.
 * Kommunikation mellan frontend och backend sker via HTTP-requests med Axios.
 
-## INSTALLATION
+## Installation
 
 1. Klona projektet
 
@@ -115,21 +116,23 @@ Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend o
     npm run dev
     ```
 
-Frontend körs på http://localhost:5173  
-Backend API finns på http://localhost:5000
+Frontend: http://localhost:5173  
+Backend API: http://localhost:5000
 
-## DESIGN
+## Design
+
 ### Figma
 Här är en Figma-skiss för designen av hemsidan. 
 https://www.figma.com/design/DwmMKIZb9NEAqBsgdjA8FS/Case_examen_Liftly?node-id=0-1&t=cEzKXCzBBMna6P1I-1
 
 
-## INSPIRATION & RESURSER
+## Inspiration & resurser
 Som inspiration och hjälp med att skapa detta projekt har jag valt att följa denna tutorial: 
 https://www.youtube.com/watch?v=BEIaBF6oZ0M
 
 
-## SYFTE 
+## Syfte 
+
 ### Tekniskt syfte
 Projektet skapades för att utveckla praktiska kunskaper inom fullstack-utveckling och förstå hur olika delar av en webbapplikation samverkar.
 Under projektet har följande områden utforskats:
@@ -148,7 +151,12 @@ Idag är innehåll relaterat till träning, kost och hälsa ofta utspritt över 
 
 Liftly syftar till att lösa detta problem genom att erbjuda en plattform där allt träningsrelaterat innehåll samlas och kan organiseras på ett strukturerat sätt. Användare ska enkelt kunna spara, sortera och återvända till innehåll inom kategorier som träning, kost och livsstil.
 
-## AI ANVÄNDNING
+## AI användning
+
 AI har använts som stöd för:
 * formulering av texter
 * förklaring av tekniska koncept
+
+## Framtida utveckling 
+
+* Notiser
