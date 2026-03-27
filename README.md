@@ -14,14 +14,16 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 6. Ska kunna skapa egna inlägg med video
 7. Ska kunna redigera egna inlägg
 8. Ska kunna radera egna inlägg
-9. ska kunna se andra användares inlägg
+9. Ska kunna se andra användares inlägg
 10. Ska kunna kommentera på andra användares inlägg
 11. Ska kunna gilla andra användares kommentarer
 12. Ska kunna gilla andra användares inlägg
 13. Ska kunna spara andra användares inlägg för att kolla på senare
-14. Ska kunna besöka en annan användares profil 
-15. Ska kunna följa andra användare
-16. Ska ha en egen profil sida
+14. Ska kunna sortera sparade inlägg efter kategorier
+15. Ska kunna besöka en annan användares profil 
+16. Ska kunna följa andra användare
+17. Ska ha en egen profil sida
+18. Ska kunna använda sökfunktion 
 
 #### besökare
 1. Ska kunna se alla inlägg på hemsidan
@@ -66,9 +68,87 @@ Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend o
 * MongoDB lagrar användare och träningsdata.
 * Kommunikation mellan frontend och backend sker via HTTP-requests med Axios.
 
+## INSTALLATION
+
+1. Klona projektet
+
+    ```bash
+    git clone https://github.com/Kimskogfelter/Liftly_examen
+    cd Liftly_examen
+    ```
+
+2. Installera dependencies
+
+    Backend:
+
+    ```bash
+    cd backend
+    npm install
+    ```
+
+    Frontend:
+
+    ```bash
+    cd frontend
+    npm install
+    ```
+
+3. Skapa `.env` fil
+
+    ```env
+    PORT=5000
+    MONGO_URI=din_mongodb_connection_string
+    JWT_SECRET=din_hemliga_nyckel
+    ```
+
+4. Starta applikationen
+
+    Backend:
+
+    ```bash
+    npm run server
+    ```
+
+    Frontend:
+
+    ```bash
+    npm run dev
+    ```
+
+Frontend körs på http://localhost:5173  
+Backend API finns på http://localhost:5000
+
 ## DESIGN
 ### Figma
-Här en min figma skiss för designen för hemsidan. 
+Här är en Figma-skiss för designen av hemsidan. 
 https://www.figma.com/design/DwmMKIZb9NEAqBsgdjA8FS/Case_examen_Liftly?node-id=0-1&t=cEzKXCzBBMna6P1I-1
 
 
+## INSPIRATION & RESURSER
+Som inspiration och hjälp med att skapa detta projekt har jag valt att följa denna tutorial: 
+https://www.youtube.com/watch?v=BEIaBF6oZ0M
+
+
+## SYFTE 
+### Tekniskt syfte
+Projektet skapades för att utveckla praktiska kunskaper inom fullstack-utveckling och förstå hur olika delar av en webbapplikation samverkar.
+Under projektet har följande områden utforskats:
+
+* Bygga REST API med Node.js och Express
+* Datamodellering med MongoDB och Mongoose
+* Autentisering med JWT
+* Säker lösenordshantering med bcrypt
+* State management och routing i React
+* Kommunikation mellan frontend och backend
+
+### Användarperspektiv
+Syftet med applikationen är att skapa ett community liknande sociala plattformar som TikTok och Instagram, men med fullt fokus på träning och hälsa. Målet är att samla likasinnade användare på ett och samma ställe där de kan inspirera, motivera och följa varandra.
+
+Idag är innehåll relaterat till träning, kost och hälsa ofta utspritt över flera olika plattformar, vilket gör det svårt att hitta tillbaka till sparade inlägg. Användare kan till exempel behöva leta igenom stora mängder innehåll för att hitta ett specifikt recept eller träningsinlägg de tidigare sparat.
+
+Liftly syftar till att lösa detta problem genom att erbjuda en plattform där allt träningsrelaterat innehåll samlas och kan organiseras på ett strukturerat sätt. Användare ska enkelt kunna spara, sortera och återvända till innehåll inom kategorier som träning, kost och livsstil.
+
+## AI ANVÄNDNING
+AI har använts som stöd för:
+* formulering av texter
+* förklaring av tekniska koncept
