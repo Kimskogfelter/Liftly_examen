@@ -53,7 +53,7 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 6. Sök och filter: sök efter användare eller inlägg
 7. Relationer i databasen: t.ex. “följare”
 
-## Teknik & programspråk
+## Teknik & programmeringsspråk
 
 * **Frontend:** React, HTML, CSS, Tailwind, React Router, Axios
 * **Backend:** Node.js, Express
