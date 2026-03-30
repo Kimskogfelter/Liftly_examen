@@ -56,10 +56,11 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 ## Teknik & programmeringsspråk
 
 * **Frontend:** React, HTML, CSS, Tailwind, React Router, Axios
-* **Backend:** Node.js, Express
+* **Backend:** Node.js, Express, Mongoose
 * **Databas:** MongoDB
 * **Säkerhet:** JWT, bcrypt
-* **Verktyg:** nodemon, dotenv, CORS
+* **Verktyg:** nodemon, dotenv, CORS, uuid
+* **Filhantering:** Multer, Cloudinary
 
 ## Arkitektur
 Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend och databas är separerade men kommunicerar via ett REST-API.
@@ -127,8 +128,8 @@ https://www.figma.com/design/DwmMKIZb9NEAqBsgdjA8FS/Case_examen_Liftly?node-id=0
 
 
 ## Inspiration & resurser
-Som inspiration och hjälp med att skapa detta projekt har jag valt att följa denna tutorial: 
-https://www.youtube.com/watch?v=BEIaBF6oZ0M
+* Som inspiration och hjälp med att skapa detta projekt har jag valt att följa denna tutorial: https://www.youtube.com/watch?v=BEIaBF6oZ0M
+* För hjälp med syntax och hur man skriver med ES-moduler istället för CommonJS har jag använt den här guiden då tutorialen ovan använder CommonJS: https://www.youtube.com/watch?v=BqRWK57dwqo
 
 
 ## Syfte 
@@ -160,3 +161,5 @@ AI har använts som stöd för:
 ## Framtida utveckling 
 
 * Notiser
+* Se online användare
+* Chatt funktion
