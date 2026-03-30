@@ -12,7 +12,6 @@ const server = express();
 
 // Läs från miljövariabler
 const port = process.env.PORT || 3000;
-const mongo_uri = process.env.MONGO_URI;
 
 // middleware funktioner
 server.use(express.urlencoded({extended: true}))
@@ -28,10 +27,10 @@ server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
 // funktion för att starta servern efter att DB är ansluten
 const startServer = async () => {
   try {
-    // Vänta på att MongoDB är ansluten
+    // Vänta på att MongoDB är ansluten via funktionen connectToDB()
     await connectToDB();
     // Starta servern på angiven port
-    app.listen(port, () => console.log(`Express server listening on port ${port}`));
+    server.listen(port, () => console.log(`Express server listening on port ${port}`));
   } catch (err) {
     // Logga fel om DB-anslutning misslyckas och stoppa servern
     console.error("Failed to connect to DB, server not started: ", err);
