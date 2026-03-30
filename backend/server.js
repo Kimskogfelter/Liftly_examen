@@ -1,8 +1,11 @@
 import express from 'express';
 import connect from 'mongoose';
-import 'dotenv/config';
 import cors from 'cors';
 import multer from 'multer';
+// Ladda miljövariabler från .env
+import 'dotenv/config';
+// Importera funktion för att ansluta till MongoDB och Express
+import connectToDB from './config/db.js';
 
 // skapa express server
 const server = express();
@@ -18,5 +21,22 @@ server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
 // koppla ihop multer med cloudinary senare för storage av bilder/vidoes
 // server.use(multer())
 
-// starta servern efter att DB är ansluten
-connect(mongo_uri).then(server.listen(port, () => console.log(`Server started on port ${port}`)))
+// ----------------------
+// STARTA SERVERN
+// ----------------------
+
+// funktion för att starta servern efter att DB är ansluten
+const startServer = async () => {
+  try {
+    // Vänta på att MongoDB är ansluten
+    await connectToDB();
+    // Starta servern på angiven port
+    app.listen(port, () => console.log(`Express server listening on port ${port}`));
+  } catch (err) {
+    // Logga fel om DB-anslutning misslyckas och stoppa servern
+    console.error("Failed to connect to DB, server not started: ", err);
+  }
+};
+
+// kör funktionen startServer()
+startServer();
