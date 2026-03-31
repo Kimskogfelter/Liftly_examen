@@ -108,7 +108,7 @@ Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend o
     Backend:
 
     ```bash
-    npm run server
+    npm run dev
     ```
 
     Frontend:
