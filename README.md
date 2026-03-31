@@ -157,6 +157,7 @@ Liftly syftar till att lösa detta problem genom att erbjuda en plattform där a
 AI har använts som stöd för:
 * formulering av texter
 * förklaring av tekniska koncept
+* genererat och strukturerat GitHub Issues baserat på projektets krav i README-filen
 
 ## Framtida utveckling 
 
