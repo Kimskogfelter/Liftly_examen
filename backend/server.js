@@ -4,10 +4,10 @@ import cors from 'cors';
 import multer from 'multer';
 // Ladda miljövariabler från .env
 import 'dotenv/config';
-// Importera funktion för att ansluta till MongoDB och Express
+// Importera funktion för att ansluta till MongoDB
 import connectToDB from './config/db.js';
-// Importera funktion för att hantera errors
-import { HttpError } from './models/errorModel.js';
+// Middleware för felhantering(error) och 404-rutter
+import { errorHandler, notFoundEndpoint } from './middleware/errorMiddleware.js';
 
 // skapa express server
 const server = express();
@@ -19,6 +19,8 @@ const port = process.env.PORT || 3000;
 server.use(express.urlencoded({extended: true}))
 server.use(express.json({extended: true}))
 server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
+server.use(notFoundEndpoint);
+server.use(errorHandler);
 // koppla ihop multer med cloudinary senare för storage av bilder/vidoes
 // server.use(multer())
 
