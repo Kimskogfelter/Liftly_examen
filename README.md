@@ -158,6 +158,7 @@ AI har använts som stöd för:
 * formulering av texter
 * förklaring av tekniska koncept
 * genererat och strukturerat GitHub Issues baserat på projektets krav i README-filen
+* felsökning och optimering av kod
 
 ## Framtida utveckling 
 
