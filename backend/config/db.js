@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 const mongo_uri = process.env.MONGO_URI;
 
-const connectToDB = async () => {
+ export const connectToDB = async () => {
 
     try {
 
@@ -16,6 +16,3 @@ const connectToDB = async () => {
         console.log("Connection to DB failed", err);
     }
 }
-
-// exportera funktionen ovan så den kan användas i andra filer
-export default connectToDB;
