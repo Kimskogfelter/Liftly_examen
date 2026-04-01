@@ -4,7 +4,7 @@ import cors from 'cors';
 import multer from 'multer';
 // Ladda miljövariabler från .env
 import 'dotenv/config';
-// Importera funktion för att ansluta till MongoDB
+// Funktion för att ansluta till MongoDB
 import connectToDB from './config/db.js';
 // Middleware för felhantering(error) och 404-rutter
 import { errorHandler, notFoundEndpoint } from './middleware/errorMiddleware.js';
