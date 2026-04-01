@@ -6,6 +6,8 @@ import multer from 'multer';
 import 'dotenv/config';
 // Importera funktion för att ansluta till MongoDB och Express
 import connectToDB from './config/db.js';
+// Importera funktion för att hantera errors
+import { HttpError } from './models/errorModel.js';
 
 // skapa express server
 const server = express();
