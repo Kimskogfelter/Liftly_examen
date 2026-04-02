@@ -128,8 +128,55 @@ https://www.figma.com/design/DwmMKIZb9NEAqBsgdjA8FS/Case_examen_Liftly?node-id=0
 
 
 ## Inspiration & resurser
+
+I detta avsnitt listar jag tutorials, guider och tidigare projekt som har inspirerat delar av min social media-app.  
+Koden har anpassats för detta projekt, och jag har lagt till egen logik där det behövdes för att passa appens funktionalitet.  
+
 * Som inspiration och hjälp med att skapa detta projekt har jag valt att följa denna tutorial: https://www.youtube.com/watch?v=BEIaBF6oZ0M
-* För hjälp med syntax och hur man skriver med ES-moduler istället för CommonJS har jag använt den här guiden då tutorialen ovan använder CommonJS: https://www.youtube.com/watch?v=BqRWK57dwqo
+* För hjälp med syntax och hur man skriver med ES-moduler istället för CommonJS har jag använt den här guiden då tutorialen ovan använder CommonJS: https://www.youtube.com/watch?v=BqRWK57dwqo, samt mitt egna projekt: https://github.com/Kimskogfelter/Case_8_nodejs
+
+
+I följande avsnitt visar jag exempel på kod som inspirerat funktioner i projektet, samt hur jag anpassat dem.
+
+### Backend
+#### userController.js - deleteUser
+
+I `userController.js` har jag skapat flera funktioner för användarhantering, bland annat `deleteUser`.  
+För att skriva och strukturera denna funktion tog jag inspiration från ett äldre projekt där jag hanterade radering av bokningar. Koden har anpassats för User-modellen och inkluderar kontroll för om användaren finns samt felhantering via `HttpError`.
+
+Inspiration från mitt tidigare projekt:
+
+```js
+// -----------------------------
+// RADERA EN BOKNING
+// -----------------------------
+export const deleteBooking = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const findBooking = await BookingModel.findById(id);
+    if (!findBooking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    const findBookedSeat = findBooking.seats;
+    const findBookedShow = findBooking.show;
+
+    await ShowModel.findByIdAndUpdate(
+      findBookedShow,
+      { $addToSet: { availableSeats: { $each: findBookedSeat } } }
+    );
+
+    const deleteBooking = await BookingModel.findByIdAndDelete(id);
+    const updatedShow = await ShowModel.findById(findBookedShow);
+
+    res.json({ deletedBooking: deleteBooking, updatedShow });
+  } catch (error) {
+    res.status(500).json({ message: 'Serverfel vid uppdatering', error });
+    console.error(error);
+  }
+}
+```
 
 
 ## Syfte 
