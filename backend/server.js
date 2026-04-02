@@ -20,7 +20,7 @@ server.use(express.urlencoded({extended: true}))
 server.use(express.json({extended: true}))
 server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
 server.use(notFoundEndpoint);
-server.use(errorHandler);
+server.use(errorHandler); // körs varje gång ett error skapas
 // koppla ihop multer med cloudinary senare för storage av bilder/vidoes
 // server.use(multer())
 
