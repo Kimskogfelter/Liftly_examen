@@ -9,7 +9,7 @@ import { connectToDB } from './config/db.js';
 // Middleware för felhantering(error) och 404-rutter
 import { errorHandler, notFoundEndpoint } from './middleware/errorMiddleware.js';
 // Routes
-import { userRoutes } from './routes/userRoutes.js';
+import { userRouter } from './routes/userRoutes.js';
 
 // skapa express server
 const server = express();
@@ -23,7 +23,7 @@ server.use(express.json({extended: true}))
 server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
 
 // API routes
-server.use('/api/users', userRoutes);
+server.use('/api/users', userRouter);
 
 server.use(notFoundEndpoint);
 server.use(errorHandler); // körs varje gång ett error skapas
