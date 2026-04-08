@@ -91,8 +91,8 @@ export const getUsers = async (req, res, next) => {
 
 
 // ---------------------------- uppdatera användare --------------------------- 
-// ... inget :id behövs då det endast är den inloggade användare som ska kunna göra detta
-// PATCH req: api/users/update
+// ... inget :id behövs då det endast är den inloggade användare som ska kunna göra detta ???
+// PATCH req: api/users/:id/update
 // PROTECTED
 
 export const updateUser = async (req, res, next) => {
@@ -113,7 +113,7 @@ export const updateUser = async (req, res, next) => {
 }
 
 // ---------------------------- följ användare --------------------------- 
-// PATCH? req: api/users/:id/follow
+// GET req: api/users/:id/follow
 // PROTECTED
 
 export const followUser = async (req, res, next) => {
@@ -134,7 +134,7 @@ export const followUser = async (req, res, next) => {
 }
 
 // ---------------------------- sluta följ användare --------------------------- 
-// PATCH? req: api/users/:id/unfollow
+// GET req: api/users/:id/unfollow
 // PROTECTED
 
 export const unfollowUser = async (req, res, next) => {
@@ -156,7 +156,7 @@ export const unfollowUser = async (req, res, next) => {
 
 // ---------------------------- ändra profil bild --------------------------- 
 // ... inget :id behövs då det endast är den inloggade användare som ska kunna göra detta
-// PATCH req: api/users/profile-image
+// POST req: api/users/profile-image
 // PROTECTED
 
 export const changeProfileImage = async (req, res, next) => {
