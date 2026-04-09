@@ -1,5 +1,5 @@
-import { HttpError } from "../models/errorModel"
-import { User } from "../models/userModel"
+import { HttpError } from "../models/errorModel.js"
+import { User } from "../models/userModel.js"
 
 
 // ---------------------------- registrera användare --------------------------- 
