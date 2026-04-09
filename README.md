@@ -70,6 +70,11 @@ Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend o
 * MongoDB lagrar användare och data.
 * Kommunikation mellan frontend och backend sker via HTTP-requests med Axios.
 
+## API Testing
+
+Under utvecklingen användes Postman för att testa backendens API-endpoints. 
+Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att verifiera att funktioner som autentisering, inlägg och kommentarer fungerade korrekt innan de kopplades till frontend.
+
 ## Installation
 
 1. Klona projektet
