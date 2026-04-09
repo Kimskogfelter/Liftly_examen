@@ -97,6 +97,9 @@ export const getUsers = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
 
+    
+    // KOM IHÅG: fixa JWT middleware för att få userID
+
     try {
 
         res.json("User updated")
@@ -160,6 +163,8 @@ export const unfollowUser = async (req, res, next) => {
 // PROTECTED
 
 export const changeProfileImage = async (req, res, next) => {
+
+    // KOM IHÅG: fixa JWT middleware för att få userID
 
     try {
 
