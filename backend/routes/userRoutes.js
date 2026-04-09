@@ -14,4 +14,3 @@ userRouter.get('/:id/follow', followUser)
 userRouter.get('/:id/unfollow', unfollowUser)
 userRouter.post('/profile-image', changeProfileImage)
 userRouter.delete('/:id', deleteUser)
-

@@ -59,7 +59,7 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 * **Backend:** Node.js, Express, Mongoose
 * **Databas:** MongoDB
 * **Säkerhet:** JWT, bcrypt
-* **Verktyg:** nodemon, dotenv, CORS, uuid
+* **Verktyg:** Nodemon, Dotenv, CORS, uuid, Postman (API testing)
 * **Filhantering:** Multer, Cloudinary
 
 ## Arkitektur
