@@ -207,6 +207,7 @@ export const deleteUser = async (req, res, next) => {
 
         }
 
+
         
     } catch (error) {
     // Om något går fel när vi försöker radera användaren:
