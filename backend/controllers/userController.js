@@ -18,6 +18,10 @@ export const registerUser = async (req, res, next) => {
         }
 
         // --------- email ----------
+        // kolla ifall email är korrekt skriven med hjälp av validator 
+        if(email) {
+            return next(new HttpError("Email must contain @, .se  or .com", 422))
+        }
         // gör email till endast små bokstäver
         const emailLowerCase = email.toLowerCase();
         // kollar ifall email redan finns i databasen
@@ -25,7 +29,7 @@ export const registerUser = async (req, res, next) => {
         if(emailExists) {
              return next(new HttpError("Email already exists", 422))
         }
-        
+
 
 
     } catch (error) {
