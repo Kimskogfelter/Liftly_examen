@@ -10,14 +10,30 @@ export const registerUser = async (req, res, next) => {
 
     try {
 
-       return res.json("User registered")
+        const { username, email, password, confirmPassword } = req.body;
+
+        if (!username || !email || !password || !confirmPassword) {
+
+            return next(new HttpError("Fill in all fields", 422))
+        }
+
+        // --------- email ----------
+        // gör email till endast små bokstäver
+        const emailLowerCase = email.toLowerCase();
+        // kollar ifall email redan finns i databasen
+        const emailExists = await User.findOne({email: emailLowerCase})
+        if(emailExists) {
+             return next(new HttpError("Email already exists", 422))
+        }
         
+
+
     } catch (error) {
-    // Om något går fel när vi försöker registrera användaren:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker registrera användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -33,13 +49,13 @@ export const loginUser = async (req, res, next) => {
     try {
 
         return res.json("User logged in")
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker logga in användaren:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker logga in användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -55,13 +71,13 @@ export const getUser = async (req, res, next) => {
     try {
 
         return res.json("Get user")
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker hämta en användaren:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker hämta en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -77,13 +93,13 @@ export const getUsers = async (req, res, next) => {
     try {
 
         return res.json("Get users")
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker hämta flera användare:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker hämta flera användare:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -97,19 +113,19 @@ export const getUsers = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
 
-    
+
     // KOM IHÅG: fixa JWT middleware för att få userID
 
     try {
 
         res.json("User updated")
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker uppdatera en användaren:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker uppdatera en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -124,13 +140,13 @@ export const followUser = async (req, res, next) => {
     try {
 
         res.json("User followed")
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker följa en användaren:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -145,13 +161,13 @@ export const unfollowUser = async (req, res, next) => {
     try {
 
         res.json("User unfollowed")
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker sluta följa en användaren:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker sluta följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -169,13 +185,13 @@ export const changeProfileImage = async (req, res, next) => {
     try {
 
         res.json("Profile image changed")
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker uppdatera profilbilden:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker uppdatera profilbilden:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
@@ -195,9 +211,9 @@ export const deleteUser = async (req, res, next) => {
         const findUser = await User.findById(id);
 
         // om användare ej kan hittas meddela det
-        if(!findUser) {
+        if (!findUser) {
 
-            return res.status(404).json({message: 'User not found'});
+            return res.status(404).json({ message: 'User not found' });
 
         } else {
 
@@ -208,13 +224,13 @@ export const deleteUser = async (req, res, next) => {
         }
 
 
-        
+
     } catch (error) {
-    // Om något går fel när vi försöker radera användaren:
-    // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-    // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-    // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-    //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        // Om något går fel när vi försöker radera användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
     }
 
