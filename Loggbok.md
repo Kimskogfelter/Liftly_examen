@@ -8,4 +8,4 @@ Påbörjat kravlistan för projektet samt gjort klart HI-FI i Figma.
 Smått påbörjat projektet genom att följa tutorial: https://www.youtube.com/watch?v=BEIaBF6oZ0M
 
 ## Vecka 15
-Hunnit med att skapa model, controller och routes för user. Även testat API endpoints genom Postman så jag vet att de funkar korrekt innan jag börjar koppla ihop allt med frontend längre fram. 
+Hunnit med att skapa model, controller och routes för user. Även testat API endpoints genom Postman så jag vet att de funkar korrekt innan jag börjar koppla ihop allt med frontend längre fram. Installerat validator som är ett verktyg som ska hjälpa mig validera email i backend.

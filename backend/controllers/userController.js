@@ -1,5 +1,7 @@
 import { HttpError } from "../models/errorModel.js"
 import { User } from "../models/userModel.js"
+import validator from "validator";
+import bcrypt from "bcryptjs";
 
 
 // ---------------------------- registrera användare --------------------------- 
@@ -10,26 +12,77 @@ export const registerUser = async (req, res, next) => {
 
     try {
 
+        // hämtar input från frontend
         const { username, email, password, confirmPassword } = req.body;
 
+        // kollar ifall alla fält är ifyllda, om inte skickar error
         if (!username || !email || !password || !confirmPassword) {
 
             return next(new HttpError("Fill in all fields", 422))
         }
 
-        // --------- email ----------
-        // kolla ifall email är korrekt skriven med hjälp av validator 
-        if(email) {
-            return next(new HttpError("Email must contain @, .se  or .com", 422))
-        }
-        // gör email till endast små bokstäver
-        const emailLowerCase = email.toLowerCase();
-        // kollar ifall email redan finns i databasen
-        const emailExists = await User.findOne({email: emailLowerCase})
-        if(emailExists) {
-             return next(new HttpError("Email already exists", 422))
+        // --------- username ----------
+        // tar bort ledande och avslutande mellanslag i användarnamnet
+        const trimUsername = username.trim();
+
+        // kollar ifall användarnamnet är för kort
+        if(trimUsername.length < 5) {
+            return next(new HttpError("Username is too short, should be at least 5 characters long", 422))
         }
 
+        // kollar ifall användarnamnet är för långt
+        if(trimUsername.length > 20) {
+            return next(new HttpError("Username is too long, should be a maximum of 20 characters", 422))
+        }
+
+        // skapar regex för att kontrollera att användarnamnet använder giltiga tecken
+        const regex = /^[a-zA-Z0-9_]+$/
+        
+        // kontrollerar att username matchar tillåtet regex-format, om INTE kasta error
+        if(!regex.test(trimUsername)) {
+            return next(new HttpError("Invalid username", 422))
+        }
+
+        // kollar ifall användarnamnet redan finns i databasen
+        const usernameExists = await User.findOne({ username: trimUsername })
+        if (usernameExists) {
+            return next(new HttpError("Username already exists", 422))
+        }
+
+        // --------- email ----------
+        // gör email till endast små bokstäver
+        const emailLowerCase = email.toLowerCase();
+
+        // kolla ifall email är korrekt skriven med hjälp av validator, om inte skicka error
+        if (!validator.isEmail(emailLowerCase)) {
+            return next(new HttpError("Invalid email", 422))
+        }
+
+        // kollar ifall email redan finns i databasen
+        const emailExists = await User.findOne({ email: emailLowerCase })
+        if (emailExists) {
+            return next(new HttpError("Email already exists", 422))
+        }
+
+        // --------- lösenord ----------
+        // kolla ifall password och confirmPassword matchar
+        if(password != confirmPassword) {
+            return next(new HttpError("Password do not match", 422))
+        }
+
+        // kolla längden på lösenordet, ska vara minst 10 bokstäver/siffror
+        if(password.length < 10) {
+            return next(new HttpError("Password must be at least 10 characters long", 422))
+        }
+
+        // hasha lösenordet med verktyget bcrypt
+        const saltPassword = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, saltPassword);
+
+
+        // --------- lägger till användare till databasen ----------
+        const newUser = await User.create({username: trimUsername, email: emailLowerCase, password: hashedPassword})
+        res.json(newUser).status(201);
 
 
     } catch (error) {

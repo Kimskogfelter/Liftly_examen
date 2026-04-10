@@ -2,10 +2,10 @@ import mongoose, { Schema } from "mongoose";
 
 // schema/strukturen för user
 const userSchema = new mongoose.Schema({
-    username: {type: String, required: true, minlength: 3, maxlength: 15},
-    email: {type: String, required: true, unique: true, minlength: 10, maxlength: 45},
-    password: {type: String, required: true, minlength: 8, maxlength: 30},
-    profileBio: {type: String, default: "", minlength: 10, maxlength: 200},
+    username: {type: String, required: true, minlength: 5, maxlength: 20},
+    email: {type: String, required: true, unique: true, maxlength: 45},
+    password: {type: String, required: true, minlength: 10},
+    profileBio: {type: String, default: "", maxlength: 200},
     profileImage: {type: String, default: "https://res.cloudinary.com/dn3kezspn/image/upload/q_auto/f_auto/v1775115252/Liftly_profile_avatar_image_le0vou.png"},
     followers: [{type: Schema.Types.ObjectId, ref: "User"}],
     following: [{type: Schema.Types.ObjectId, ref: "User"}],
