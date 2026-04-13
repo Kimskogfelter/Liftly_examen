@@ -15,3 +15,5 @@ Jag har installerat ett valideringsverktyg som används för att kontrollera ema
 Jag har också färdigställt registerUser-funktionen i user-controllern. Den kontrollerar att alla fält finns, att de är korrekt ifyllda och att användaren inte redan finns i databasen samt hashar lösenordet.
 
 Till sist har jag testat att skapa en användare via API-anrop i Postman, vilket fungerade som det ska.
+
+## Vecka 16

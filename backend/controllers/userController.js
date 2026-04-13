@@ -2,6 +2,9 @@ import { HttpError } from "../models/errorModel.js"
 import { User } from "../models/userModel.js"
 import validator from "validator";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+// Ladda miljövariabler från .env
+import 'dotenv/config';
 
 
 // ---------------------------- registrera användare --------------------------- 
@@ -105,7 +108,39 @@ export const loginUser = async (req, res, next) => {
 
     try {
 
-        return res.json("User logged in")
+        // hämtar input från frontend
+        const { username, password } = req.body;
+
+        // kollar ifall alla fält är ifyllda, om inte skickar error
+        if (!username || !password ) {
+
+            return next(new HttpError("Fill in all fields", 422))
+        }
+
+        // hämtar EN specifik användare baserat på username från databasen
+        const getUserFromDB = await User.findOne({username: username})
+        // kollar om användarnamnet finns registrerat, om inte skickar error
+        if(!getUserFromDB) {
+
+            return next(new HttpError("Username doesnt exist", 422))
+        }
+
+        // vad gör denna delen för nytta??
+        // const {userPassword, ...userInfo} = getUserFromDB;
+
+        // jämför lösenord via bcrypt - Matchar det inskrivna lösenordet hash:en för JUST DEN användaren?
+        const correctPassword = await bcrypt.compare(password, getUserFromDB.password);
+        if(!correctPassword) {
+
+            return next(new HttpError("Incorrect password", 422))
+
+        }
+
+        // json web token för login
+        const token = await jwt.sign({id: getUserFromDB._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+        // skickar token och användar id till klienten
+        res.json({token, id: getUserFromDB._id }).status(200)
+
 
     } catch (error) {
         // Om något går fel när vi försöker logga in användaren:
