@@ -197,7 +197,17 @@ export const getUsers = async (req, res, next) => {
 
     try {
 
-        return res.json("Get users")
+        // hämta alla användare från databasen, visar endast 20 st
+        const getAllUsers = await User.find().limit(20);
+
+        // error ifall användarna ej kan hämtas
+        if(!getAllUsers) {
+
+            return next(new HttpError("No users could be found", 404))
+        }
+
+        // skickar tillbaka lista med alla användare
+        res.status(200).json({message: "Users found: ", getAllUsers})
 
     } catch (error) {
         // Om något går fel när vi försöker hämta flera användare:
@@ -219,7 +229,6 @@ export const getUsers = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
 
 
-    // KOM IHÅG: fixa JWT middleware för att få userID
 
     try {
 
