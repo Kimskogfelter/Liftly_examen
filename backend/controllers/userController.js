@@ -169,13 +169,13 @@ export const getUser = async (req, res, next) => {
         const findUser = await User.findById(id);
 
         // error ifall man inte hittar användaren
-        if(!findUser) {
+        if (!findUser) {
 
             return next(new HttpError("No user could be found with that id", 404))
         }
 
         // skickar tillbaka användaren
-        res.status(200).json({message: 'User found: ', findUser});
+        res.status(200).json({ message: 'User found: ', findUser });
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
@@ -201,13 +201,13 @@ export const getUsers = async (req, res, next) => {
         const getAllUsers = await User.find().limit(20);
 
         // error ifall användarna ej kan hämtas
-        if(!getAllUsers) {
+        if (!getAllUsers) {
 
             return next(new HttpError("No users could be found", 404))
         }
 
         // skickar tillbaka lista med alla användare
-        res.status(200).json({message: "Users found: ", getAllUsers})
+        res.status(200).json({ message: "Users found: ", getAllUsers })
 
     } catch (error) {
         // Om något går fel när vi försöker hämta flera användare:
@@ -228,11 +228,24 @@ export const getUsers = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
 
-
-
     try {
 
-        res.json("User updated")
+        // hämta username/bio för användare som ska uppdateras
+        const { username, profileBio } = req.body;
+
+        // uppdatera endast de fält som användaren skickat med i req.body
+        // dubbelkollar att rätt användare är inloggad/gör ändringen  via req.user.id och auth middleware
+        const updatedUser = await User.findByIdAndUpdate(req.user.id, {username, profileBio}, {new: true})
+
+        // error om användaren ej hittas
+        if (!updatedUser) {
+
+            return next(new HttpError("User not found", 404))
+        }
+
+        // skicka tillbaka uppdaterade användaren
+        res.status(200).json({ message: "User updated: ", updatedUser })
+
 
     } catch (error) {
         // Om något går fel när vi försöker uppdatera en användaren:
