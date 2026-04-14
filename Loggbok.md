@@ -17,3 +17,4 @@ Jag har också färdigställt registerUser-funktionen i user-controllern. Den ko
 Till sist har jag testat att skapa en användare via API-anrop i Postman, vilket fungerade som det ska.
 
 ## Vecka 16
+Fortsatt skapa logiken i userController, nu för att logga in användare. Även testat att valideringen funkar som den ska i Postman. Tycker det är väldigt roligt och smidigt att använda Postman för att testa att ens controllers fungerar.
