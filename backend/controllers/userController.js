@@ -163,7 +163,6 @@ export const getUser = async (req, res, next) => {
     try {
 
         // :id i route(URL) blir värdet i {id} = req.params
-        // :id i route blir tillgängligt här via req.params
         const { id } = req.params;
 
         // hämtar användaren från databasen med id
