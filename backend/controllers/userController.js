@@ -29,20 +29,20 @@ export const registerUser = async (req, res, next) => {
         const trimUsername = username.trim();
 
         // kollar ifall användarnamnet är för kort
-        if(trimUsername.length < 5) {
+        if (trimUsername.length < 5) {
             return next(new HttpError("Username is too short, should be at least 5 characters long", 422))
         }
 
         // kollar ifall användarnamnet är för långt
-        if(trimUsername.length > 20) {
+        if (trimUsername.length > 20) {
             return next(new HttpError("Username is too long, should be a maximum of 20 characters", 422))
         }
 
         // skapar regex för att kontrollera att användarnamnet använder giltiga tecken
         const regex = /^[a-zA-Z0-9_]+$/
-        
+
         // kontrollerar att username matchar tillåtet regex-format, om INTE kasta error
-        if(!regex.test(trimUsername)) {
+        if (!regex.test(trimUsername)) {
             return next(new HttpError("Invalid username", 422))
         }
 
@@ -69,12 +69,12 @@ export const registerUser = async (req, res, next) => {
 
         // --------- lösenord ----------
         // kolla ifall password och confirmPassword matchar
-        if(password != confirmPassword) {
+        if (password != confirmPassword) {
             return next(new HttpError("Password do not match", 422))
         }
 
         // kolla längden på lösenordet, ska vara minst 10 bokstäver/siffror
-        if(password.length < 10) {
+        if (password.length < 10) {
             return next(new HttpError("Password must be at least 10 characters long", 422))
         }
 
@@ -84,8 +84,8 @@ export const registerUser = async (req, res, next) => {
 
 
         // --------- lägger till användare till databasen ----------
-        const newUser = await User.create({username: trimUsername, email: emailLowerCase, password: hashedPassword})
-        res.json(newUser).status(201);
+        const newUser = await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword })
+        res.status(201).json(newUser);
 
 
     } catch (error) {
@@ -112,15 +112,15 @@ export const loginUser = async (req, res, next) => {
         const { username, password } = req.body;
 
         // kollar ifall alla fält är ifyllda, om inte skickar error
-        if (!username || !password ) {
+        if (!username || !password) {
 
             return next(new HttpError("Fill in all fields", 422))
         }
 
         // hämtar EN specifik användare baserat på username från databasen
-        const getUserFromDB = await User.findOne({username: username})
+        const getUserFromDB = await User.findOne({ username: username })
         // kollar om användarnamnet finns registrerat, om inte skickar error
-        if(!getUserFromDB) {
+        if (!getUserFromDB) {
 
             return next(new HttpError("Username doesnt exist", 422))
         }
@@ -130,16 +130,16 @@ export const loginUser = async (req, res, next) => {
 
         // jämför lösenord via bcrypt - Matchar det inskrivna lösenordet hash:en för JUST DEN användaren?
         const correctPassword = await bcrypt.compare(password, getUserFromDB.password);
-        if(!correctPassword) {
+        if (!correctPassword) {
 
             return next(new HttpError("Incorrect password", 422))
 
         }
 
         // json web token för login
-        const token = await jwt.sign({id: getUserFromDB._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+        const token = await jwt.sign({ id: getUserFromDB._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
         // skickar token och användar id till klienten
-        res.json({token, id: getUserFromDB._id }).status(200)
+        res.status(200).json({ token, id: getUserFromDB._id })
 
 
     } catch (error) {
@@ -162,7 +162,21 @@ export const getUser = async (req, res, next) => {
 
     try {
 
-        return res.json("Get user")
+        // :id i route(URL) blir värdet i {id} = req.params
+        // :id i route blir tillgängligt här via req.params
+        const { id } = req.params;
+
+        // hämtar användaren från databasen med id
+        const findUser = await User.findById(id);
+
+        // error ifall man inte hittar användaren
+        if(!findUser) {
+
+            return next(new HttpError("No user could be found with that id", 404))
+        }
+
+        // skickar tillbaka användaren
+        res.status(200).json({message: 'User found: ', findUser});
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
