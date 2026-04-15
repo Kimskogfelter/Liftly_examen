@@ -235,7 +235,7 @@ export const updateUser = async (req, res, next) => {
 
         // uppdatera endast de fält som användaren skickat med i req.body
         // dubbelkollar att rätt användare är inloggad/gör ändringen  via req.user.id och auth middleware
-        const updatedUser = await User.findByIdAndUpdate(req.user.id, {username, profileBio}, {new: true})
+        const updatedUser = await User.findByIdAndUpdate(req.user.id, { username, profileBio }, { new: true })
 
         // error om användaren ej hittas
         if (!updatedUser) {
@@ -266,7 +266,46 @@ export const followUser = async (req, res, next) => {
 
     try {
 
-        res.json("User followed")
+        // hämta id från användarens profil vi besöker via url(routes)
+        const followUserId = req.params.id;
+
+        // hämta inloggade användarens objekt via id
+        const loggedInUser = await User.findById(req.user.id);
+        // hämta endast inloggande användarens id och gör om till sträng
+        const loggedInUserId = loggedInUser._id.toString();
+
+        // kolla ifall det är den inloggade användarens profil
+        // ... om samma, meddela att man inte kan följa sig själv
+        if (loggedInUserId === followUserId) {
+
+            return next(new HttpError("You cant follow yourself.", 422))
+
+        }
+
+        // kolla ifall användaren man vill följa redan finns i ens "following" lista i databasen
+        const alreadyFollowingUser = loggedInUser.following.includes(followUserId);
+
+        // om man redan FÖLJER användaren
+        if (alreadyFollowingUser) {
+            return next(new HttpError("You are already following this user.", 422));
+        }
+
+        // om man INTE följer användaren, 
+        // 1. lägg till användaren man vill följa i inloggade användarens "following" lista i databasen
+        // 2. lägg till den inloggade användaren som följare i användarens "followers" lista i databasen
+        if (!alreadyFollowingUser) {
+
+            // 1
+            const addUserToFollowing = await User.findByIdAndUpdate(loggedInUserId, { $push: { following: followUserId } }, { new: true })
+            // 2
+            await User.findByIdAndUpdate(followUserId, { $push: { followers: loggedInUserId } }, { new: true })
+
+            // meddela att det gick att börja följa användaren
+            res.status(200).json({ message: "You started to follow: ", addUserToFollowing })
+
+        }
+
+        
 
     } catch (error) {
         // Om något går fel när vi försöker följa en användaren:
@@ -306,8 +345,6 @@ export const unfollowUser = async (req, res, next) => {
 // PROTECTED
 
 export const changeProfileImage = async (req, res, next) => {
-
-    // KOM IHÅG: fixa JWT middleware för att få userID
 
     try {
 
