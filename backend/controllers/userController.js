@@ -3,6 +3,7 @@ import { User } from "../models/userModel.js"
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 // Ladda miljövariabler från .env
 import 'dotenv/config';
 
@@ -283,14 +284,17 @@ export const followUser = async (req, res, next) => {
         }
 
         // kolla ifall användaren man vill följa redan finns i ens "following" lista i databasen
-        const alreadyFollowingUser = loggedInUser.following.includes(followUserId);
+        // 1. Konvertera sträng-ID från URL:en till ett Mongoose ObjectId. med hjälp av mongoose ...
+        // Detta krävs eftersom 'loggedInUser.following' i databasen innehåller objekt, inte rena strängar.
+        // .includes() fungerar nu korrekt eftersom båda sidorna av jämförelsen är av typen ObjectId.
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(followUserId));
 
         // om man redan FÖLJER användaren
         if (alreadyFollowingUser) {
             return next(new HttpError("You are already following this user.", 422));
         }
 
-        // om man INTE följer användaren, 
+        // om man INTE FÖLJER användaren, 
         // 1. lägg till användaren man vill följa i inloggade användarens "following" lista i databasen
         // 2. lägg till den inloggade användaren som följare i användarens "followers" lista i databasen
         if (!alreadyFollowingUser) {
@@ -305,7 +309,7 @@ export const followUser = async (req, res, next) => {
 
         }
 
-        
+
 
     } catch (error) {
         // Om något går fel när vi försöker följa en användaren:
@@ -326,7 +330,44 @@ export const unfollowUser = async (req, res, next) => {
 
     try {
 
-        res.json("User unfollowed")
+        // hämta id från användarens profil vi besöker via url(routes)
+        const followUserId = req.params.id;
+
+        // hämta inloggade användarens objekt via id
+        const loggedInUser = await User.findById(req.user.id);
+        // hämta endast inloggande användarens id och gör om till sträng
+        const loggedInUserId = loggedInUser._id.toString();
+
+        // error ifall man försöker avfölja sig själv
+        if(followUserId === loggedInUserId) {
+
+            return next(new HttpError("You cant unfollow yourself", 422))
+        }
+
+        // kolla om man följer användaren
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(followUserId));
+
+        // om man INTE följer meddela det
+        if(!alreadyFollowingUser) {
+
+            return next(new HttpError("You are not following this user.", 422));
+
+        }
+
+        // 1. om man FÖLJER användaren ta bort den från "following"
+        // 2. samt ta bort inloggade användaren som "follower"
+        if(alreadyFollowingUser) {
+
+            // 1
+            const removeUserFromFollowing = await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: followUserId } }, { new: true })
+            // 2
+            await User.findByIdAndUpdate(followUserId, { $pull: { followers: loggedInUserId } }, { new: true })
+
+            // meddela att det gick att sluta följa användaren
+            res.status(200).json({ message: "You started to unfollow: ", removeUserFromFollowing })
+
+
+        }
 
     } catch (error) {
         // Om något går fel när vi försöker sluta följa en användaren:
