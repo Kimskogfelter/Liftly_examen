@@ -300,12 +300,12 @@ export const followUser = async (req, res, next) => {
         if (!alreadyFollowingUser) {
 
             // 1
-            const addUserToFollowing = await User.findByIdAndUpdate(loggedInUserId, { $push: { following: followUserId } }, { new: true })
+            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: followUserId } }, { new: true })
             // 2
             await User.findByIdAndUpdate(followUserId, { $push: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att börja följa användaren
-            res.status(200).json({ message: "You started to follow: ", addUserToFollowing })
+            res.status(200).json({ message: "You started to follow: ", followUserId })
 
         }
 
@@ -356,6 +356,7 @@ export const unfollowUser = async (req, res, next) => {
 
         // 1. om man FÖLJER användaren ta bort den från "following"
         // 2. samt ta bort inloggade användaren som "follower"
+
         if(alreadyFollowingUser) {
 
             // 1
