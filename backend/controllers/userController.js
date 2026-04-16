@@ -268,7 +268,7 @@ export const followUser = async (req, res, next) => {
     try {
 
         // hämta id från användarens profil vi besöker via url(routes)
-        const followUserId = req.params.id;
+        const targetUserId = req.params.id;
 
         // hämta inloggade användarens objekt via id
         const loggedInUser = await User.findById(req.user.id);
@@ -277,7 +277,7 @@ export const followUser = async (req, res, next) => {
 
         // kolla ifall det är den inloggade användarens profil
         // ... om samma, meddela att man inte kan följa sig själv
-        if (loggedInUserId === followUserId) {
+        if (loggedInUserId === targetUserId) {
 
             return next(new HttpError("You cant follow yourself.", 422))
 
@@ -287,7 +287,7 @@ export const followUser = async (req, res, next) => {
         // 1. Konvertera sträng-ID från URL:en till ett Mongoose ObjectId. med hjälp av mongoose ...
         // Detta krävs eftersom 'loggedInUser.following' i databasen innehåller objekt, inte rena strängar.
         // .includes() fungerar nu korrekt eftersom båda sidorna av jämförelsen är av typen ObjectId.
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(followUserId));
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(targetUserId));
 
         // om man redan FÖLJER användaren
         if (alreadyFollowingUser) {
@@ -300,12 +300,12 @@ export const followUser = async (req, res, next) => {
         if (!alreadyFollowingUser) {
 
             // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: followUserId } }, { new: true })
+            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: targetUserId } }, { new: true })
             // 2
-            await User.findByIdAndUpdate(followUserId, { $push: { followers: loggedInUserId } }, { new: true })
+            await User.findByIdAndUpdate(targetUserId, { $push: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att börja följa användaren
-            res.status(200).json({ message: "You started to follow: ", followUserId })
+            res.status(200).json({ message: "You started to follow: ", targetUserId })
 
         }
 
@@ -331,7 +331,7 @@ export const unfollowUser = async (req, res, next) => {
     try {
 
         // hämta id från användarens profil vi besöker via url(routes)
-        const userToUnfollowId = req.params.id;
+        const targetUserId = req.params.id;
 
         // hämta inloggade användarens objekt via id
         const loggedInUser = await User.findById(req.user.id);
@@ -339,13 +339,13 @@ export const unfollowUser = async (req, res, next) => {
         const loggedInUserId = loggedInUser._id.toString();
 
         // error ifall man försöker avfölja sig själv
-        if(userToUnfollowId === loggedInUserId) {
+        if(targetUserId === loggedInUserId) {
 
             return next(new HttpError("You cant unfollow yourself", 422))
         }
 
         // kolla om man följer användaren
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userToUnfollowId));
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(targetUserId));
 
         // om man INTE följer meddela det
         if(!alreadyFollowingUser) {
@@ -360,12 +360,12 @@ export const unfollowUser = async (req, res, next) => {
         if(alreadyFollowingUser) {
 
             // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: userToUnfollowId } }, { new: true })
+            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: targetUserId } }, { new: true })
             // 2
-            await User.findByIdAndUpdate(userToUnfollowId, { $pull: { followers: loggedInUserId } }, { new: true })
+            await User.findByIdAndUpdate(targetUserId, { $pull: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att sluta följa användaren
-            res.status(200).json({ message: "You unfollowed: ", userToUnfollowId })
+            res.status(200).json({ message: "You unfollowed: ", targetUserId })
 
 
         }
