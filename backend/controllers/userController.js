@@ -331,7 +331,7 @@ export const unfollowUser = async (req, res, next) => {
     try {
 
         // hämta id från användarens profil vi besöker via url(routes)
-        const followUserId = req.params.id;
+        const userToUnfollowId = req.params.id;
 
         // hämta inloggade användarens objekt via id
         const loggedInUser = await User.findById(req.user.id);
@@ -339,13 +339,13 @@ export const unfollowUser = async (req, res, next) => {
         const loggedInUserId = loggedInUser._id.toString();
 
         // error ifall man försöker avfölja sig själv
-        if(followUserId === loggedInUserId) {
+        if(userToUnfollowId === loggedInUserId) {
 
             return next(new HttpError("You cant unfollow yourself", 422))
         }
 
         // kolla om man följer användaren
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(followUserId));
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userToUnfollowId));
 
         // om man INTE följer meddela det
         if(!alreadyFollowingUser) {
@@ -360,12 +360,12 @@ export const unfollowUser = async (req, res, next) => {
         if(alreadyFollowingUser) {
 
             // 1
-            const removeUserFromFollowing = await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: followUserId } }, { new: true })
+            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: userToUnfollowId } }, { new: true })
             // 2
-            await User.findByIdAndUpdate(followUserId, { $pull: { followers: loggedInUserId } }, { new: true })
+            await User.findByIdAndUpdate(userToUnfollowId, { $pull: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att sluta följa användaren
-            res.status(200).json({ message: "You started to unfollow: ", removeUserFromFollowing })
+            res.status(200).json({ message: "You unfollowed: ", userToUnfollowId })
 
 
         }
