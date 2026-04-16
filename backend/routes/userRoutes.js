@@ -13,5 +13,5 @@ userRouter.get('/', getUsers)
 userRouter.patch('/update', authMiddleware, updateUser) // authMiddleware behövs för att kolla att en användare är inloggad innan den uppdaterar sin profil
 userRouter.post('/:id/follow',authMiddleware, followUser) // authMiddleware behövs för att kolla att en användare är inloggad innan den följer 
 userRouter.delete('/:id/unfollow',authMiddleware, unfollowUser) // authMiddleware behövs för att kolla att en användare är inloggad innan den avföljer
-userRouter.post('/profile-image', changeProfileImage)
+userRouter.post('/profile-image',authMiddleware, changeProfileImage) // authMiddleware behövs för att kolla att en användare är inloggad innan den byter profilbild
 userRouter.delete('/:id', deleteUser)
