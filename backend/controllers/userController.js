@@ -219,7 +219,7 @@ export const getUsers = async (req, res, next) => {
 }
 
 
-// ---------------------------- uppdatera användare --------------------------- 
+// ---------------------------- UPDATE USER --------------------------- 
 // ... inget :id behövs då det endast är den inloggade användare som ska kunna göra detta
 // PATCH req: api/users/update
 // PROTECTED
