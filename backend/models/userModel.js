@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-// schema/strukturen för user
+// schema for user
 const userSchema = new mongoose.Schema({
     username: {type: String, required: true, minlength: 5, maxlength: 20},
     email: {type: String, required: true, unique: true, maxlength: 45},
@@ -14,5 +14,5 @@ const userSchema = new mongoose.Schema({
 
 }, {timestamps: true})
 
-// user modell
+// user model
 export const User = mongoose.model('User', userSchema)
