@@ -378,16 +378,16 @@ export const unfollowUser = async (req, res, next) => {
 
 }
 
-// ---------------------------- ändra profil bild --------------------------- 
-// ... inget :id behövs då det endast är den inloggade användare som ska kunna göra detta
-// POST req: api/users/profile-image ... ÄNDRA till PATCH senare
+// ---------------------------- CHANGE PROFILE PICTURE --------------------------- 
+// no id required, only logged in user should be able to do this, verified thru auth middleware
+// POST req: api/users/profile-image
 // PROTECTED
 
 export const changeProfileImage = async (req, res, next) => {
 
     try {
 
-        res.json("Profile image changed")
+        res.json(req.file);
 
     } catch (error) {
         // Om något går fel när vi försöker uppdatera profilbilden:
