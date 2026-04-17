@@ -4,11 +4,11 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-// Ladda miljövariabler från .env
+// loading env var from .env
 import 'dotenv/config';
 
 
-// ---------------------------- registrera användare --------------------------- 
+// ---------------------------- REGISTER USER --------------------------- 
 // POST req: api/users/register
 // UNPROTECTED
 
@@ -16,75 +16,74 @@ export const registerUser = async (req, res, next) => {
 
     try {
 
-        // hämtar input från frontend
+        // get input from frontend
         const { username, email, password, confirmPassword } = req.body;
 
-        // kollar ifall alla fält är ifyllda, om inte skickar error
+        // validate required fields
         if (!username || !email || !password || !confirmPassword) {
 
             return next(new HttpError("Fill in all fields", 422))
         }
 
         // --------- username ----------
-        // tar bort ledande och avslutande mellanslag i användarnamnet
+        // remove leading and trailing whitespace from username
         const trimUsername = username.trim();
 
-        // kollar ifall användarnamnet är för kort
+        // validate if username length is too short
         if (trimUsername.length < 5) {
             return next(new HttpError("Username is too short, should be at least 5 characters long", 422))
         }
 
-        // kollar ifall användarnamnet är för långt
+        // validate if username length is too long
         if (trimUsername.length > 20) {
             return next(new HttpError("Username is too long, should be a maximum of 20 characters", 422))
         }
 
-        // skapar regex för att kontrollera att användarnamnet använder giltiga tecken
+        // ensure username contains only valid characters thru regex
         const regex = /^[a-zA-Z0-9_]+$/
 
-        // kontrollerar att username matchar tillåtet regex-format, om INTE kasta error
         if (!regex.test(trimUsername)) {
             return next(new HttpError("Invalid username", 422))
         }
 
-        // kollar ifall användarnamnet redan finns i databasen
+        // check if username already exists in database
         const usernameExists = await User.findOne({ username: trimUsername })
         if (usernameExists) {
             return next(new HttpError("Username already exists", 422))
         }
 
         // --------- email ----------
-        // gör email till endast små bokstäver
+        // normalize email to lowercase
         const emailLowerCase = email.toLowerCase();
 
-        // kolla ifall email är korrekt skriven med hjälp av validator, om inte skicka error
+        // validate email format with validator
         if (!validator.isEmail(emailLowerCase)) {
             return next(new HttpError("Invalid email", 422))
         }
 
-        // kollar ifall email redan finns i databasen
+        // check if email already exists in database
         const emailExists = await User.findOne({ email: emailLowerCase })
         if (emailExists) {
             return next(new HttpError("Email already exists", 422))
         }
 
-        // --------- lösenord ----------
-        // kolla ifall password och confirmPassword matchar
+        // --------- password----------
+        // ensure passwords match
         if (password != confirmPassword) {
             return next(new HttpError("Password do not match", 422))
         }
 
-        // kolla längden på lösenordet, ska vara minst 10 bokstäver/siffror
+        // validate password length requirement
         if (password.length < 10) {
             return next(new HttpError("Password must be at least 10 characters long", 422))
         }
 
-        // hasha lösenordet med verktyget bcrypt
+        // hash password with bcrypt before storing in database
         const saltPassword = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, saltPassword);
 
 
-        // --------- lägger till användare till databasen ----------
+        // --------- create new user to database ----------
         const newUser = await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword })
         res.status(201).json(newUser);
 
@@ -101,7 +100,7 @@ export const registerUser = async (req, res, next) => {
 }
 
 
-// ---------------------------- logga in användare --------------------------- 
+// ---------------------------- log in user --------------------------- 
 // POST req: api/users/login
 // UNPROTECTED
 
@@ -109,27 +108,25 @@ export const loginUser = async (req, res, next) => {
 
     try {
 
-        // hämtar input från frontend
+        // get input from frontend
         const { username, password } = req.body;
 
-        // kollar ifall alla fält är ifyllda, om inte skickar error
+        // validate required fields
         if (!username || !password) {
 
             return next(new HttpError("Fill in all fields", 422))
         }
 
-        // hämtar EN specifik användare baserat på username från databasen
+        // ensure user exists before proceeding
         const getUserFromDB = await User.findOne({ username: username })
-        // kollar om användarnamnet finns registrerat, om inte skickar error
+       
         if (!getUserFromDB) {
 
             return next(new HttpError("Username doesnt exist", 422))
         }
 
-        // vad gör denna delen för nytta??
-        // const {userPassword, ...userInfo} = getUserFromDB;
 
-        // jämför lösenord via bcrypt - Matchar det inskrivna lösenordet hash:en för JUST DEN användaren?
+        // compare password with hashed password
         const correctPassword = await bcrypt.compare(password, getUserFromDB.password);
         if (!correctPassword) {
 
@@ -137,9 +134,9 @@ export const loginUser = async (req, res, next) => {
 
         }
 
-        // json web token för login
+        // generate authentication token for login
         const token = await jwt.sign({ id: getUserFromDB._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        // skickar token och användar id till klienten
+        // sends token and user id to client
         res.status(200).json({ token, id: getUserFromDB._id })
 
 
@@ -155,7 +152,7 @@ export const loginUser = async (req, res, next) => {
 }
 
 
-// ---------------------------- hämta användare --------------------------- 
+// ---------------------------- GET USER --------------------------- 
 // GET req: api/users/:ID
 // PROTECTED
 
@@ -163,19 +160,19 @@ export const getUser = async (req, res, next) => {
 
     try {
 
-        // :id i route(URL) blir värdet i {id} = req.params
+        // extract user id from route parameters
         const { id } = req.params;
 
-        // hämtar användaren från databasen med id
+        // fetch user from database
         const findUser = await User.findById(id);
 
-        // error ifall man inte hittar användaren
+        // check if user doesnt exists
         if (!findUser) {
 
             return next(new HttpError("No user could be found with that id", 404))
         }
 
-        // skickar tillbaka användaren
+        // return user data
         res.status(200).json({ message: 'User found: ', findUser });
 
     } catch (error) {
@@ -190,7 +187,7 @@ export const getUser = async (req, res, next) => {
 }
 
 
-// ---------------------------- hämta flera användare --------------------------- 
+// ---------------------------- GET USERS --------------------------- 
 // GET req: api/users
 // PROTECTED
 
@@ -198,16 +195,16 @@ export const getUsers = async (req, res, next) => {
 
     try {
 
-        // hämta alla användare från databasen, visar endast 20 st
+        // fetch all users from database, limited to 20
         const getAllUsers = await User.find().limit(20);
 
-        // error ifall användarna ej kan hämtas
+        // check if users doesnt exists
         if (!getAllUsers) {
 
             return next(new HttpError("No users could be found", 404))
         }
 
-        // skickar tillbaka lista med alla användare
+        // return list of users
         res.status(200).json({ message: "Users found: ", getAllUsers })
 
     } catch (error) {
