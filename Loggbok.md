@@ -18,3 +18,6 @@ Till sist har jag testat att skapa en användare via API-anrop i Postman, vilket
 
 ## Vecka 16
 Fortsatt skapa logiken i userController, nu för att logga in användare. Även testat att valideringen funkar som den ska i Postman. Tycker det är väldigt roligt och smidigt att använda Postman för att testa att ens controllers fungerar.
+
+## Vecka 17
+Implementerat filuppladdning med Multer och konfigurerat memory storage för att temporärt lagra uppladdade filer i minnet(RAM) inför vidare hantering med Cloudinary. 
