@@ -5,6 +5,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
+import { cloudinaryService } from "../utils/imageStorage.js";
+
 // loading env var from .env
 import 'dotenv/config';
 
@@ -411,7 +413,9 @@ export const changeProfileImage = async (req, res, next) => {
         // Generates a unique filename for the uploaded image to prevent naming conflicts
         // by appending a UUID between the original filename and its file extension.
         let newImageName = splittedImageName[0] + uuidv4() + "." + splittedImageName[splittedImageName.length - 1]
-        res.json(newImageName)
+        // send image to cloudinary storage
+        
+
 
 
 
