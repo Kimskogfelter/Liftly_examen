@@ -402,7 +402,7 @@ export const changeProfileImage = async (req, res, next) => {
 
 }
 
-// ---------------------------- radera användare --------------------------- 
+// ---------------------------- DELETE USER --------------------------- 
 // DELETE req: api/users/:ID
 // PROTECTED
 
@@ -412,17 +412,17 @@ export const deleteUser = async (req, res, next) => {
 
     try {
 
-        // hitta användare 
+        // find user 
         const findUser = await User.findById(id);
 
-        // om användare ej kan hittas meddela det
+        // if user cant be found 
         if (!findUser) {
 
             return res.status(404).json({ message: 'User not found' });
 
         } else {
 
-            // Radera användaren
+            // delete user
             await User.findByIdAndDelete(id);
             return res.json("User deleted")
 
