@@ -399,24 +399,15 @@ export const changeProfileImage = async (req, res, next) => {
 
         }
 
-        // fetch choosen profile image
-        const profileImage = req.file;
+        // profile image cloudinary url
+        const cloudinaryImagePath = req.file.path;
 
-        // check file size
-        if (profileImage.size > 500000) {
-            return next(new HttpError("Image is to big. Should be less than 500kb", 422))
-        }
-
-        // fetch image name
-        let imageName = profileImage.originalname;
-        let splittedImageName = imageName.split("."); // split removes everything after the dot in the file name
-        // Generates a unique filename for the uploaded image to prevent naming conflicts
-        // by appending a UUID between the original filename and its file extension.
-        let newImageName = splittedImageName[0] + uuidv4() + "." + splittedImageName[splittedImageName.length - 1]
-        // send image to cloudinary storage
+        // uploads profile image to database
+        // fetch logged in users id through "req.user.id" and authMiddleware
+        await User.findByIdAndUpdate(req.user.id, { profileImage: cloudinaryImagePath } , { new: true })
         
-
-
+        // meddela att det gick att sluta följa användaren
+        res.status(200).json({ success: true, message: "You added a new profile picture ", cloudinaryImagePath })
 
 
     } catch (error) {
