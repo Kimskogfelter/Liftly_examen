@@ -21,14 +21,15 @@ const port = process.env.PORT || 3000;
 server.use(express.urlencoded({extended: true}))
 server.use(express.json({extended: true}))
 server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
+server.use(notFoundEndpoint);
+server.use(errorHandler); // körs varje gång ett error skapas
+// koppla ihop multer med cloudinary senare för storage av bilder/vidoes
+// const uploadImage = multer({dest: 'uploads'})
+
 
 // API routes
 server.use('/api/users', userRouter);
 
-server.use(notFoundEndpoint);
-server.use(errorHandler); // körs varje gång ett error skapas
-// koppla ihop multer med cloudinary senare för storage av bilder/vidoes
-// server.use(multer())
 
 // ----------------------
 // STARTA SERVERN

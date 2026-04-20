@@ -387,7 +387,9 @@ export const changeProfileImage = async (req, res, next) => {
 
     try {
 
-        res.json(req.file);
+        console.log(req.files);
+
+        res.json(req.files);
 
     } catch (error) {
         // Om något går fel när vi försöker uppdatera profilbilden:
