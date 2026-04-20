@@ -385,11 +385,9 @@ export const unfollowUser = async (req, res, next) => {
 
 export const changeProfileImage = async (req, res, next) => {
 
-    console.log("HIT CONTROLLER")
 
     try {
 
-        console.log(req.file);
 
         res.json(req.file);
 
