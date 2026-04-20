@@ -385,11 +385,13 @@ export const unfollowUser = async (req, res, next) => {
 
 export const changeProfileImage = async (req, res, next) => {
 
+    console.log("HIT CONTROLLER")
+
     try {
 
-        console.log(req.files);
+        console.log(req.file);
 
-        res.json(req.files);
+        res.json(req.file);
 
     } catch (error) {
         // Om något går fel när vi försöker uppdatera profilbilden:
