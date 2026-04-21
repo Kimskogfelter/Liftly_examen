@@ -1,5 +1,4 @@
 import { HttpError } from "../models/errorModel.js"
-import { User } from "../models/userModel.js"
 import { Post } from "../models/postModel.js";
 import mongoose from "mongoose";
 
@@ -208,54 +207,43 @@ export const updatePost = async (req, res, next) => {
 
 export const likePost = async (req, res, next) => {
 
-    try {
+      try {
 
-        // hämta id från användarens profil vi besöker via url(routes)
-        const targetUserId = req.params.id;
+        // get post id
+        const targetPostId = req.params.id;
+        // fetch post from db
+        const fetchPost = await Post.findById(targetPostId);
+        // check if post exists
+        if (!fetchPost) {
+            return next(new HttpError("Post not found", 404));
+        }
 
-        // hämta inloggade användarens objekt via id
-        const loggedInUser = await User.findById(req.user.id);
-        // hämta endast inloggande användarens id och gör om till sträng
-        const loggedInUserId = loggedInUser._id.toString();
+        // check if post is liked be the req user
+        const alreadyLikedPost = fetchPost.likes.includes(req.user.id);
 
-        // kolla ifall det är den inloggade användarens profil
-        // ... om samma, meddela att man inte kan följa sig själv
-        if (loggedInUserId === targetUserId) {
+        // if LIKED 
+        if (alreadyLikedPost) {
 
-            return next(new HttpError("You cant follow yourself.", 422))
+            return next(new HttpError("You already like this post.", 422));
 
         }
 
-        // kolla ifall användaren man vill följa redan finns i ens "following" lista i databasen
-        // 1. Konvertera sträng-ID från URL:en till ett Mongoose ObjectId. med hjälp av mongoose ...
-        // Detta krävs eftersom 'loggedInUser.following' i databasen innehåller objekt, inte rena strängar.
-        // .includes() fungerar nu korrekt eftersom båda sidorna av jämförelsen är av typen ObjectId.
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(targetUserId));
+        // if NOt liked, add to likes list
+        if (!alreadyLikedPost) {
 
-        // om man redan FÖLJER användaren
-        if (alreadyFollowingUser) {
-            return next(new HttpError("You are already following this user.", 422));
-        }
+            const likedPost = await Post.findByIdAndUpdate(targetPostId, { $push: { likes: req.user.id } }, { new: true })
 
-        // om man INTE FÖLJER användaren, 
-        // 1. lägg till användaren man vill följa i inloggade användarens "following" lista i databasen
-        // 2. lägg till den inloggade användaren som följare i användarens "followers" lista i databasen
-        if (!alreadyFollowingUser) {
+            return res.status(200).json({
+                message: "Post liked",
+                likesCount: likedPost.likes.length,
+                post: likedPost
+            })
 
-            // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: targetUserId } }, { new: true })
-            // 2
-            await User.findByIdAndUpdate(targetUserId, { $push: { followers: loggedInUserId } }, { new: true })
-
-            // meddela att det gick att börja följa användaren
-            return res.status(200).json({ message: "You started to follow: ", targetUserId })
 
         }
-
-
 
     } catch (error) {
-        // Om något går fel när vi försöker följa en användaren:
+        // Om något går fel när vi försöker sluta följa en användaren:
         // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
