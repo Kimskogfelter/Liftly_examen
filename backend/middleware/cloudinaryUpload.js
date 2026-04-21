@@ -1,9 +1,9 @@
 import multer from 'multer';
 import path from 'path';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import { cloudinaryService } from '../utils/imageStorage.js';
+import { cloudinaryService } from '../config/cloudinaryConfig.js';
 
-// function to upload files with Multer to Cloudinary
+// middleware to upload files with Multer to Cloudinary
 export const uploadFile = (folderName) => {
   const storage = new CloudinaryStorage({
     cloudinary: cloudinaryService,

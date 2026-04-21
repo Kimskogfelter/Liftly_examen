@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
-import { cloudinaryService } from "../utils/imageStorage.js";
+import { cloudinaryService } from "../config/cloudinaryConfig.js";
 
 // loading env var from .env
 import 'dotenv/config';
