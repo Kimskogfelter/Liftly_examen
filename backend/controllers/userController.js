@@ -88,7 +88,7 @@ export const registerUser = async (req, res, next) => {
 
         // --------- create new user to database ----------
         const newUser = await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword })
-        res.status(201).json(newUser);
+        return res.status(201).json(newUser);
 
 
     } catch (error) {
@@ -140,7 +140,7 @@ export const loginUser = async (req, res, next) => {
         // generate authentication token for login
         const token = await jwt.sign({ id: getUserFromDB._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
         // sends token and user id to client
-        res.status(200).json({ token, id: getUserFromDB._id })
+        return res.status(200).json({ token, id: getUserFromDB._id })
 
 
     } catch (error) {
@@ -176,7 +176,7 @@ export const getUser = async (req, res, next) => {
         }
 
         // return user data
-        res.status(200).json({ message: 'User found: ', findUser });
+        return res.status(200).json({ message: 'User found: ', findUser });
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
@@ -208,7 +208,7 @@ export const getUsers = async (req, res, next) => {
         }
 
         // return list of users
-        res.status(200).json({ message: "Users found: ", getAllUsers })
+        return res.status(200).json({ message: "Users found: ", getAllUsers })
 
     } catch (error) {
         // Om något går fel när vi försöker hämta flera användare:
@@ -245,7 +245,7 @@ export const updateUser = async (req, res, next) => {
         }
 
         // skicka tillbaka uppdaterade användaren
-        res.status(200).json({ message: "User updated: ", updatedUser })
+        return res.status(200).json({ message: "User updated: ", updatedUser })
 
 
     } catch (error) {
@@ -305,7 +305,7 @@ export const followUser = async (req, res, next) => {
             await User.findByIdAndUpdate(targetUserId, { $push: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att börja följa användaren
-            res.status(200).json({ message: "You started to follow: ", targetUserId })
+            return res.status(200).json({ message: "You started to follow: ", targetUserId })
 
         }
 
@@ -365,7 +365,7 @@ export const unfollowUser = async (req, res, next) => {
             await User.findByIdAndUpdate(targetUserId, { $pull: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att sluta följa användaren
-            res.status(200).json({ message: "You unfollowed: ", targetUserId })
+            return res.status(200).json({ message: "You unfollowed: ", targetUserId })
 
 
         }
@@ -404,10 +404,10 @@ export const changeProfileImage = async (req, res, next) => {
 
         // uploads profile image to database
         // fetch logged in users id through "req.user.id" and authMiddleware
-        await User.findByIdAndUpdate(req.user.id, { profileImage: cloudinaryImagePath } , { new: true })
-        
-        // meddela att det gick att sluta följa användaren
-        res.status(200).json({ success: true, message: "You added a new profile picture ", cloudinaryImagePath })
+        await User.findByIdAndUpdate(req.user.id, { profileImage: cloudinaryImagePath }, { new: true })
+
+        // send response that upload was successfull
+        return res.status(200).json({ success: true, message: "You added a new profile picture ", cloudinaryImagePath })
 
 
     } catch (error) {
@@ -441,9 +441,20 @@ export const deleteUser = async (req, res, next) => {
 
         } else {
 
+            // remove user from followers and following lists
+            await User.updateMany(
+                {}, // all users
+                {
+                    $pull: {
+                        followers: id,
+                        following: id
+                    }
+                }
+            );
+
             // delete user
             await User.findByIdAndDelete(id);
-            return res.json("User deleted")
+            return res.status(200).json(`User with id: ${id} was successfully removed from followers and following lists and deleted from database`)
 
         }
 
