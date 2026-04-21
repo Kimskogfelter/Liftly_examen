@@ -141,17 +141,20 @@ export const getPosts = async (req, res, next) => {
 
     try {
 
-        // fetch all users from database, limited to 20
-        const getAllUsers = await User.find().limit(20);
+        // fetch all posts from database
+        const getAllPosts = await Post.find()
+            .populate("createdBy", "username") // populates createdBy field with user data (only username)
+            .sort({ createdAt: -1 }) // sort by newest first
+            .limit(20); // show only 20 at a time
 
-        // check if users doesnt exists
-        if (!getAllUsers) {
+        // check if posts doesnt exists
+        if (getAllPosts.length === 0) {
 
-            return next(new HttpError("No users could be found", 404))
+            return next(new HttpError("No posts could be found", 404));
         }
 
-        // return list of users
-        return res.status(200).json({ message: "Users found: ", getAllUsers })
+        // return list of posts
+        return res.status(200).json({ message: "Posts found: ", getAllPosts })
 
     } catch (error) {
         // Om något går fel när vi försöker hämta flera användare:
@@ -180,7 +183,7 @@ export const updatePost = async (req, res, next) => {
         const fetchPost = await Post.findById(targetPostId)
 
 
-         // if post not found
+        // if post not found
         if (!fetchPost) {
 
             return next(new HttpError("Post not found", 404))
@@ -190,15 +193,15 @@ export const updatePost = async (req, res, next) => {
         // check if post is created by req user
         // with mongoDB method "equals" that compare objectId with string
         // no need to convert
-        if(!fetchPost.createdBy.equals(req.user.id)) {
+        if (!fetchPost.createdBy.equals(req.user.id)) {
 
-            return res.status(403).json({ message: "You are not allowed to edit this post"})
+            return res.status(403).json({ message: "You are not allowed to edit this post" })
         }
 
         // fetch content from frontend
         const { content } = req.body;
 
-        
+
         // update post
         const updatedPost = await Post.findByIdAndUpdate(targetPostId, { content }, { new: true })
 
@@ -224,7 +227,7 @@ export const updatePost = async (req, res, next) => {
 
 export const likePost = async (req, res, next) => {
 
-      try {
+    try {
 
         // get post id
         const targetPostId = req.params.id;
