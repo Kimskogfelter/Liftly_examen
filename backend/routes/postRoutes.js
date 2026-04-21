@@ -9,9 +9,9 @@ export const postRouter = Router();
 
 // ---------------------------- post routes --------------------------- 
 
+postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
 postRouter.get('/',authMiddleware, getPosts)
 postRouter.get('/:id',authMiddleware, getPost)
-postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
 postRouter.patch('/:id/update', authMiddleware, updatePost) // authMiddleware behövs för att kolla att en användare är inloggad innan den uppdaterar sin profil
 postRouter.post('/:id/like',authMiddleware, likePost)
 postRouter.delete('/:id/unlike',authMiddleware, unlikePost)

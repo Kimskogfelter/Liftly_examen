@@ -273,42 +273,35 @@ export const unlikePost = async (req, res, next) => {
 
     try {
 
-        // hämta id från användarens profil vi besöker via url(routes)
-        const targetUserId = req.params.id;
-
-        // hämta inloggade användarens objekt via id
-        const loggedInUser = await User.findById(req.user.id);
-        // hämta endast inloggande användarens id och gör om till sträng
-        const loggedInUserId = loggedInUser._id.toString();
-
-        // error ifall man försöker avfölja sig själv
-        if (targetUserId === loggedInUserId) {
-
-            return next(new HttpError("You cant unfollow yourself", 422))
+        // get post id
+        const targetPostId = req.params.id;
+        // fetch post from db
+        const fetchPost = await Post.findById(targetPostId);
+        // check if post exists
+        if (!fetchPost) {
+            return next(new HttpError("Post not found", 404));
         }
 
-        // kolla om man följer användaren
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(targetUserId));
+        // check if post is liked be the req user
+        const alreadyLikedPost = fetchPost.likes.includes(req.user.id);
 
-        // om man INTE följer meddela det
-        if (!alreadyFollowingUser) {
+        // if not LIKED 
+        if (!alreadyLikedPost) {
 
-            return next(new HttpError("You are not following this user.", 422));
+            return next(new HttpError("You havent liked this post.", 422));
 
         }
 
-        // 1. om man FÖLJER användaren ta bort den från "following"
-        // 2. samt ta bort inloggade användaren som "follower"
+        // if post is LIKED remove from liked list
+        if (alreadyLikedPost) {
 
-        if (alreadyFollowingUser) {
+            const updatedPost = await Post.findByIdAndUpdate(targetPostId, { $pull: { likes: req.user.id } }, { new: true })
 
-            // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: targetUserId } }, { new: true })
-            // 2
-            await User.findByIdAndUpdate(targetUserId, { $pull: { followers: loggedInUserId } }, { new: true })
-
-            // meddela att det gick att sluta följa användaren
-            return res.status(200).json({ message: "You unfollowed: ", targetUserId })
+            return res.status(200).json({
+                message: "Post unliked",
+                likesCount: updatedPost.likes.length,
+                post: updatedPost
+            })
 
 
         }
@@ -336,30 +329,30 @@ export const deletePost = async (req, res, next) => {
 
     try {
 
-        // find user 
-        const findUser = await User.findById(id);
+        // find post 
+        const findPost = await Post.findById(id);
 
-        // if user cant be found 
-        if (!findUser) {
+        // if post cant be found 
+        if (!findPost) {
 
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Post not found' });
 
         } else {
 
-            // remove user from followers and following lists
+            // remove post from savedPosts list
             await User.updateMany(
                 {}, // all users
                 {
                     $pull: {
-                        followers: id,
-                        following: id
+                        savedPosts: id,
+
                     }
                 }
             );
 
-            // delete user
-            await User.findByIdAndDelete(id);
-            return res.status(200).json(`User with id: ${id} was successfully removed from followers and following lists and deleted from database`)
+            // delete post
+            await Post.findByIdAndDelete(id);
+            return res.status(200).json(`Post with id: ${id} was successfully removed from saved post lists and deleted from database`)
 
         }
 
