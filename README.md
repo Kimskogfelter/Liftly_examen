@@ -183,7 +183,7 @@ export const deleteBooking = async (req, res) => {
 }
 ```
 
-#### config/fileUpload.js
+#### middleware/cloudinaryUpload.js
 
 För att hjälpa mig skapa funktionen som med hjälp av Multer laddar upp filer direkt till Cloudinary storage så har jag använt mig av denna tutorialen: https://salmasaaiou.medium.com/file-uploads-using-cloudinary-and-multer-eb22bf928f18
 

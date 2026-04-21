@@ -8,7 +8,7 @@ const uploadFile = (folderName) => {
   const storage = new CloudinaryStorage({
     cloudinary: cloudinaryService,
     params: (req, file) => {
-      const folderPath = `${folderName.trim()}`; // Update the folder path here
+      const folderPath = `${folderName.trim()}`; 
       const fileExtension = path.extname(file.originalname).substring(1);
       const publicId = `${file.fieldname}-${Date.now()}`;
       
