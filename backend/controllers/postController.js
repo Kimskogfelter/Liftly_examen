@@ -173,21 +173,38 @@ export const updatePost = async (req, res, next) => {
 
     try {
 
-        // hämta username/bio för användare som ska uppdateras
-        const { username, profileBio } = req.body;
+        // fetch current post id
+        const targetPostId = req.params.id;
 
-        // uppdatera endast de fält som användaren skickat med i req.body
-        // dubbelkollar att rätt användare är inloggad/gör ändringen  via req.user.id och auth middleware
-        const updatedUser = await User.findByIdAndUpdate(req.user.id, { username, profileBio }, { new: true })
+        // fecth post from db
+        const fetchPost = await Post.findById(targetPostId)
 
-        // error om användaren ej hittas
-        if (!updatedUser) {
 
-            return next(new HttpError("User not found", 404))
+         // if post not found
+        if (!fetchPost) {
+
+            return next(new HttpError("Post not found", 404))
         }
 
-        // skicka tillbaka uppdaterade användaren
-        return res.status(200).json({ message: "User updated: ", updatedUser })
+
+        // check if post is created by req user
+        // with mongoDB method "equals" that compare objectId with string
+        // no need to convert
+        if(!fetchPost.createdBy.equals(req.user.id)) {
+
+            return res.status(403).json({ message: "You are not allowed to edit this post"})
+        }
+
+        // fetch content from frontend
+        const { content } = req.body;
+
+        
+        // update post
+        const updatedPost = await Post.findByIdAndUpdate(targetPostId, { content }, { new: true })
+
+
+        // success message
+        return res.status(200).json({ message: "Post updated: ", updatedPost })
 
 
     } catch (error) {
