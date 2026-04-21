@@ -4,7 +4,7 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { cloudinaryService } from '../config/cloudinaryConfig.js';
 
 // middleware to upload files with Multer to Cloudinary
-export const uploadFile = (folderName) => {
+const uploadFile = (folderName) => {
   const storage = new CloudinaryStorage({
     cloudinary: cloudinaryService,
     params: (req, file) => {
@@ -27,3 +27,6 @@ export const uploadFile = (folderName) => {
     },
   });
 }
+
+// create uploads folder in cloudinary
+export const upload = uploadFile("uploads");

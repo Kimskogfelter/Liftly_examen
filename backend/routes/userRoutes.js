@@ -1,13 +1,10 @@
 import { Router } from 'express';
 import { registerUser, loginUser, getUser, getUsers, updateUser, followUser, unfollowUser, changeProfileImage, deleteUser } from '../controllers/userController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
-import { uploadFile } from '../middleware/cloudinaryUpload.js'
+import { upload } from '../middleware/cloudinaryUpload.js'
 
 // create router
 export const userRouter = Router();
-
-// upload files folder
-const upload = uploadFile("uploads");
 
 
 // ---------------------------- user routes --------------------------- 
