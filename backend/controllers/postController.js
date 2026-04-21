@@ -106,20 +106,19 @@ export const getPost = async (req, res, next) => {
 
     try {
 
-        // extract user id from route parameters
-        const { id } = req.params;
+        // fetch post from database using id from URL params
+        // needed to display full post details on frontend
+        // only shows username and profile image in "createdBy"
+        const findPost = await Post.findById(req.params.id).populate("createdBy", "username profileImage");
 
-        // fetch user from database
-        const findUser = await User.findById(id);
+        // check if post doesnt exists
+        if (!findPost) {
 
-        // check if user doesnt exists
-        if (!findUser) {
-
-            return next(new HttpError("No user could be found with that id", 404))
+            return next(new HttpError("No post could be found with that id", 404))
         }
 
-        // return user data
-        return res.status(200).json({ message: 'User found: ', findUser });
+        // return post data
+        return res.status(200).json({ message: 'Post found: ', findPost });
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
@@ -143,7 +142,7 @@ export const getPosts = async (req, res, next) => {
 
         // fetch all posts from database
         const getAllPosts = await Post.find()
-            .populate("createdBy", "username") // populates createdBy field with user data (only username)
+            .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
             .sort({ createdAt: -1 }) // sort by newest first
             .limit(20); // show only 20 at a time
 
