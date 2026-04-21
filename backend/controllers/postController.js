@@ -295,12 +295,12 @@ export const unlikePost = async (req, res, next) => {
         // if post is LIKED remove from liked list
         if (alreadyLikedPost) {
 
-            const updatedPost = await Post.findByIdAndUpdate(targetPostId, { $pull: { likes: req.user.id } }, { new: true })
+            const unlikedPost = await Post.findByIdAndUpdate(targetPostId, { $pull: { likes: req.user.id } }, { new: true })
 
             return res.status(200).json({
                 message: "Post unliked",
-                likesCount: updatedPost.likes.length,
-                post: updatedPost
+                likesCount: unlikedPost.likes.length,
+                post: unlikedPost
             })
 
 
