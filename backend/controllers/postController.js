@@ -1,7 +1,8 @@
 import { HttpError } from "../models/errorModel.js"
 import { Post } from "../models/postModel.js";
+import { User } from "../models/userModel.js";
 import mongoose from "mongoose";
-
+import { upload } from "../middleware/cloudinaryUpload.js";
 // loading env var from .env
 import 'dotenv/config';
 
@@ -14,76 +15,43 @@ export const createPost = async (req, res, next) => {
 
     try {
 
-        // get input from frontend
-        const { username, email, password, confirmPassword } = req.body;
+        // get content input from frontend
+        const { content } = req.body;
 
-        // validate required fields
-        if (!username || !email || !password || !confirmPassword) {
+        // validate required field
+        if (!content) {
 
-            return next(new HttpError("Fill in all fields", 422))
+            return next(new HttpError("Fill in content", 422))
         }
 
-        // --------- username ----------
-        // remove leading and trailing whitespace from username
-        const trimUsername = username.trim();
+        // --------- content ----------
 
-        // validate if username length is too short
-        if (trimUsername.length < 5) {
-            return next(new HttpError("Username is too short, should be at least 5 characters long", 422))
+        // validate if content length is too short
+        if (content.length < 5) {
+            return next(new HttpError("Content should be at least 5 characters long", 422))
         }
 
-        // validate if username length is too long
-        if (trimUsername.length > 20) {
-            return next(new HttpError("Username is too long, should be a maximum of 20 characters", 422))
+        // --------- check if user exist in database ----------
+        const user = await User.findById(req.user.id)
+
+        if (!user) {
+            return next(new HttpError("User not found", 404));
         }
 
-        // ensure username contains only valid characters thru regex
-        const regex = /^[a-zA-Z0-9_]+$/
+        // --------- create new post to database ----------
 
-        if (!regex.test(trimUsername)) {
-            return next(new HttpError("Invalid username", 422))
+        let newPost;
+
+        if (req.file) {
+
+            newPost = await Post.create({ createdBy: user._id, content: content, media: req.file.path })
+        } else {
+
+            newPost = await Post.create({ createdBy: user._id, content: content })
+
         }
 
-        // check if username already exists in database
-        const usernameExists = await User.findOne({ username: trimUsername })
-        if (usernameExists) {
-            return next(new HttpError("Username already exists", 422))
-        }
-
-        // --------- email ----------
-        // normalize email to lowercase
-        const emailLowerCase = email.toLowerCase();
-
-        // validate email format with validator
-        if (!validator.isEmail(emailLowerCase)) {
-            return next(new HttpError("Invalid email", 422))
-        }
-
-        // check if email already exists in database
-        const emailExists = await User.findOne({ email: emailLowerCase })
-        if (emailExists) {
-            return next(new HttpError("Email already exists", 422))
-        }
-
-        // --------- password----------
-        // ensure passwords match
-        if (password != confirmPassword) {
-            return next(new HttpError("Password do not match", 422))
-        }
-
-        // validate password length requirement
-        if (password.length < 10) {
-            return next(new HttpError("Password must be at least 10 characters long", 422))
-        }
-
-        // hash password with bcrypt before storing in database
-        const saltPassword = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, saltPassword);
-
-
-        // --------- create new user to database ----------
-        const newUser = await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword })
-        return res.status(201).json(newUser);
+        return res.status(201).json({ message: 'Post created: ', newPost });
 
 
     } catch (error) {
