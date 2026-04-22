@@ -10,6 +10,7 @@ import { connectToDB } from './config/db.js';
 import { errorHandler, notFoundEndpoint } from './middleware/errorMiddleware.js';
 // Routes
 import { userRouter } from './routes/userRoutes.js';
+import { postRouter } from './routes/postRoutes.js';
 
 // skapa express server
 const server = express();
@@ -27,6 +28,7 @@ server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
 
 // API routes
 server.use('/api/users', userRouter);
+server.use('/api/posts', postRouter);
 
 // fallback middleware, for route not found and error handler
 server.use(notFoundEndpoint);
