@@ -67,7 +67,7 @@ export const createPost = async (req, res, next) => {
 
 
 // ---------------------------- GET POST --------------------------- 
-// GET req: api/posts/:ID
+// GET req: api/posts/:postId
 // PROTECTED
 
 export const getPost = async (req, res, next) => {
@@ -77,7 +77,7 @@ export const getPost = async (req, res, next) => {
         // fetch post from database using id from URL params
         // needed to display full post details on frontend
         // only shows username and profile image in "createdBy"
-        const foundPost = await Post.findById(req.params.id).populate("createdBy", "username profileImage");
+        const foundPost = await Post.findById(req.params.postId).populate("createdBy", "username profileImage");
 
         // check if post doesnt exists
         if (!foundPost) {
@@ -136,7 +136,7 @@ export const getPosts = async (req, res, next) => {
 
 
 // ---------------------------- UPDATE POST --------------------------- 
-// PATCH req: api/posts/:id/update
+// PATCH req: api/posts/:postId/update
 // PROTECTED
 
 export const updatePost = async (req, res, next) => {
@@ -144,10 +144,10 @@ export const updatePost = async (req, res, next) => {
     try {
 
         // fetch current post id
-        const targetPostId = req.params.id;
+        const { postId } = req.params;
 
         // fecth post from db
-        const fetchPost = await Post.findById(targetPostId)
+        const fetchPost = await Post.findById(postId);
 
 
         // if post not found
@@ -170,7 +170,7 @@ export const updatePost = async (req, res, next) => {
 
 
         // update post
-        const updatedPost = await Post.findByIdAndUpdate(targetPostId, { content }, { new: true })
+        const updatedPost = await Post.findByIdAndUpdate(postId, { content }, { new: true })
 
 
         // success message
@@ -189,7 +189,7 @@ export const updatePost = async (req, res, next) => {
 }
 
 // ---------------------------- LIKE POST --------------------------- 
-// POST req: api/posts/:id/like
+// POST req: api/posts/:postId/like
 // PROTECTED
 
 export const likePost = async (req, res, next) => {
@@ -197,9 +197,9 @@ export const likePost = async (req, res, next) => {
     try {
 
         // get post id
-        const targetPostId = req.params.id;
+        const { postId } = req.params;
         // fetch post from db
-        const fetchPost = await Post.findById(targetPostId);
+        const fetchPost = await Post.findById(postId);
         // check if post exists
         if (!fetchPost) {
             return next(new HttpError("Post not found", 404));
@@ -218,7 +218,7 @@ export const likePost = async (req, res, next) => {
         // if NOt liked, add to likes list
         if (!alreadyLikedPost) {
 
-            const likedPost = await Post.findByIdAndUpdate(targetPostId, { $push: { likes: req.user.id } }, { new: true })
+            const likedPost = await Post.findByIdAndUpdate(postId, { $push: { likes: req.user.id } }, { new: true })
 
             return res.status(200).json({
                 message: "Post liked",
@@ -241,7 +241,7 @@ export const likePost = async (req, res, next) => {
 }
 
 // ---------------------------- UNLIKE POST --------------------------- 
-// DELETE req: api/posts/:id/unlike 
+// DELETE req: api/posts/:postId/unlike 
 // PROTECTED
 
 export const unlikePost = async (req, res, next) => {
@@ -249,9 +249,9 @@ export const unlikePost = async (req, res, next) => {
     try {
 
         // get post id
-        const targetPostId = req.params.id;
+        const { postId } = req.params;
         // fetch post from db
-        const fetchPost = await Post.findById(targetPostId);
+        const fetchPost = await Post.findById(postId);
         // check if post exists
         if (!fetchPost) {
             return next(new HttpError("Post not found", 404));
@@ -270,7 +270,7 @@ export const unlikePost = async (req, res, next) => {
         // if post is LIKED remove from liked list
         if (alreadyLikedPost) {
 
-            const unlikedPost = await Post.findByIdAndUpdate(targetPostId, { $pull: { likes: req.user.id } }, { new: true })
+            const unlikedPost = await Post.findByIdAndUpdate(postId, { $pull: { likes: req.user.id } }, { new: true })
 
             return res.status(200).json({
                 message: "Post unliked",
@@ -295,17 +295,17 @@ export const unlikePost = async (req, res, next) => {
 
 
 // ---------------------------- DELETE POST --------------------------- 
-// DELETE req: api/posts/:ID
+// DELETE req: api/posts/:postId
 // PROTECTED
 
 export const deletePost = async (req, res, next) => {
 
-    const { id } = req.params;
+    const { postId } = req.params;
 
     try {
 
         // find post 
-        const findPost = await Post.findById(id);
+        const findPost = await Post.findById(postId);
 
         // if post cant be found 
         if (!findPost) {
@@ -319,15 +319,15 @@ export const deletePost = async (req, res, next) => {
                 {}, // all users
                 {
                     $pull: {
-                        savedPosts: id,
+                        savedPosts: postId,
 
                     }
                 }
             );
 
             // delete post
-            await Post.findByIdAndDelete(id);
-            return res.status(200).json(`Post with id: ${id} was successfully removed from saved post lists and deleted from database`)
+            await Post.findByIdAndDelete(postId);
+            return res.status(200).json(`Post with id: ${postId} was successfully removed from saved post lists and deleted from database`)
 
         }
 
