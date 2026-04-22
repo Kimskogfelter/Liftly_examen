@@ -77,16 +77,16 @@ export const getPost = async (req, res, next) => {
         // fetch post from database using id from URL params
         // needed to display full post details on frontend
         // only shows username and profile image in "createdBy"
-        const findPost = await Post.findById(req.params.id).populate("createdBy", "username profileImage");
+        const foundPost = await Post.findById(req.params.id).populate("createdBy", "username profileImage");
 
         // check if post doesnt exists
-        if (!findPost) {
+        if (!foundPost) {
 
             return next(new HttpError("No post could be found with that id", 404))
         }
 
         // return post data
-        return res.status(200).json({ message: 'Post found: ', findPost });
+        return res.status(200).json({ message: 'Post found: ', foundPost });
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
