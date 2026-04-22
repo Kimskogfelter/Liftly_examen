@@ -21,7 +21,7 @@ postRouter.delete('/:id',authMiddleware, deletePost)
 
 // ---------------------------- comment routes ---------------------------
 
-postRouter.post('/:postId/comments/create', authMiddleware, upload.single("media"), createComment)
+postRouter.post('/:postId/comments/create', authMiddleware, createComment)
 postRouter.get('/:postId/comments',authMiddleware, getComments)
 postRouter.get('/:postId/comments/:commentId',authMiddleware, getComment)
 postRouter.delete('/:postId/comments/:commentId',authMiddleware, deleteComment)
