@@ -12,11 +12,11 @@ export const postRouter = Router();
 
 postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
 postRouter.get('/',authMiddleware, getPosts)
-postRouter.get('/:id',authMiddleware, getPost)
-postRouter.patch('/:id/update', authMiddleware, updatePost) // authMiddleware behövs för att kolla att en användare är inloggad innan den uppdaterar sin profil
-postRouter.post('/:id/like',authMiddleware, likePost)
-postRouter.delete('/:id/unlike',authMiddleware, unlikePost)
-postRouter.delete('/:id',authMiddleware, deletePost)
+postRouter.get('/:postId',authMiddleware, getPost)
+postRouter.patch('/:postId/update', authMiddleware, updatePost) // authMiddleware behövs för att kolla att en användare är inloggad innan den uppdaterar sin profil
+postRouter.post('/:postId/like',authMiddleware, likePost)
+postRouter.delete('/:postId/unlike',authMiddleware, unlikePost)
+postRouter.delete('/:postId',authMiddleware, deletePost)
 
 
 // ---------------------------- comment routes ---------------------------
