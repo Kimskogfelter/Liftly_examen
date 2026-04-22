@@ -156,7 +156,7 @@ export const loginUser = async (req, res, next) => {
 
 
 // ---------------------------- GET USER --------------------------- 
-// GET req: api/users/:ID
+// GET req: api/users/:userId
 // PROTECTED
 
 export const getUser = async (req, res, next) => {
@@ -164,10 +164,10 @@ export const getUser = async (req, res, next) => {
     try {
 
         // extract user id from route parameters
-        const { id } = req.params;
+        const { userId } = req.params;
 
         // fetch user from database
-        const findUser = await User.findById(id);
+        const findUser = await User.findById(userId);
 
         // check if user doesnt exists
         if (!findUser) {
@@ -260,7 +260,7 @@ export const updateUser = async (req, res, next) => {
 }
 
 // ---------------------------- följ användare --------------------------- 
-// GET req: api/users/:id/follow ... ÄNDRA till POST senare
+// POST req: api/users/:userId/follow 
 // PROTECTED
 
 export const followUser = async (req, res, next) => {
@@ -268,7 +268,7 @@ export const followUser = async (req, res, next) => {
     try {
 
         // hämta id från användarens profil vi besöker via url(routes)
-        const targetUserId = req.params.id;
+        const { userId } = req.params;
 
         // hämta inloggade användarens objekt via id
         const loggedInUser = await User.findById(req.user.id);
@@ -277,7 +277,7 @@ export const followUser = async (req, res, next) => {
 
         // kolla ifall det är den inloggade användarens profil
         // ... om samma, meddela att man inte kan följa sig själv
-        if (loggedInUserId === targetUserId) {
+        if (loggedInUserId === userId) {
 
             return next(new HttpError("You cant follow yourself.", 422))
 
@@ -287,7 +287,7 @@ export const followUser = async (req, res, next) => {
         // 1. Konvertera sträng-ID från URL:en till ett Mongoose ObjectId. med hjälp av mongoose ...
         // Detta krävs eftersom 'loggedInUser.following' i databasen innehåller objekt, inte rena strängar.
         // .includes() fungerar nu korrekt eftersom båda sidorna av jämförelsen är av typen ObjectId.
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(targetUserId));
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userId));
 
         // om man redan FÖLJER användaren
         if (alreadyFollowingUser) {
@@ -300,12 +300,12 @@ export const followUser = async (req, res, next) => {
         if (!alreadyFollowingUser) {
 
             // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: targetUserId } }, { new: true })
+            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: userId } }, { new: true })
             // 2
-            await User.findByIdAndUpdate(targetUserId, { $push: { followers: loggedInUserId } }, { new: true })
+            await User.findByIdAndUpdate(userId, { $push: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att börja följa användaren
-            return res.status(200).json({ message: "You started to follow: ", targetUserId })
+            return res.status(200).json({ message: "You started to follow: ", userId })
 
         }
 
@@ -323,7 +323,7 @@ export const followUser = async (req, res, next) => {
 }
 
 // ---------------------------- sluta följ användare --------------------------- 
-// GET req: api/users/:id/unfollow ... ÄNDRA till DELETE senare
+// DELETE req: api/users/:userId/unfollow 
 // PROTECTED
 
 export const unfollowUser = async (req, res, next) => {
@@ -331,7 +331,7 @@ export const unfollowUser = async (req, res, next) => {
     try {
 
         // hämta id från användarens profil vi besöker via url(routes)
-        const targetUserId = req.params.id;
+        const { userId } = req.params;
 
         // hämta inloggade användarens objekt via id
         const loggedInUser = await User.findById(req.user.id);
@@ -339,13 +339,13 @@ export const unfollowUser = async (req, res, next) => {
         const loggedInUserId = loggedInUser._id.toString();
 
         // error ifall man försöker avfölja sig själv
-        if (targetUserId === loggedInUserId) {
+        if (userId === loggedInUserId) {
 
             return next(new HttpError("You cant unfollow yourself", 422))
         }
 
         // kolla om man följer användaren
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(targetUserId));
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userId));
 
         // om man INTE följer meddela det
         if (!alreadyFollowingUser) {
@@ -360,12 +360,12 @@ export const unfollowUser = async (req, res, next) => {
         if (alreadyFollowingUser) {
 
             // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: targetUserId } }, { new: true })
+            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: userId } }, { new: true })
             // 2
-            await User.findByIdAndUpdate(targetUserId, { $pull: { followers: loggedInUserId } }, { new: true })
+            await User.findByIdAndUpdate(userId, { $pull: { followers: loggedInUserId } }, { new: true })
 
             // meddela att det gick att sluta följa användaren
-            return res.status(200).json({ message: "You unfollowed: ", targetUserId })
+            return res.status(200).json({ message: "You unfollowed: ", userId })
 
 
         }
@@ -403,7 +403,7 @@ export const changeProfileImage = async (req, res, next) => {
         const cloudinaryImagePath = req.file.path;
 
         // uploads profile image to database
-        // fetch logged in users id through "req.user.id" and authMiddleware
+        // fetch logged in user id through "req.user.id" and authMiddleware
         await User.findByIdAndUpdate(req.user.id, { profileImage: cloudinaryImagePath }, { new: true })
 
         // send response that upload was successfull
@@ -422,17 +422,17 @@ export const changeProfileImage = async (req, res, next) => {
 }
 
 // ---------------------------- DELETE USER --------------------------- 
-// DELETE req: api/users/:ID
+// DELETE req: api/users/:userId
 // PROTECTED
 
 export const deleteUser = async (req, res, next) => {
 
-    const { id } = req.params;
+    const { userId } = req.params;
 
     try {
 
         // find user 
-        const findUser = await User.findById(id);
+        const findUser = await User.findById(userId);
 
         // if user cant be found 
         if (!findUser) {
@@ -446,15 +446,15 @@ export const deleteUser = async (req, res, next) => {
                 {}, // all users
                 {
                     $pull: {
-                        followers: id,
-                        following: id
+                        followers: userId,
+                        following: userId
                     }
                 }
             );
 
             // delete user
-            await User.findByIdAndDelete(id);
-            return res.status(200).json(`User with id: ${id} was successfully removed from followers and following lists and deleted from database`)
+            await User.findByIdAndDelete(userId);
+            return res.status(200).json(`User with id: ${userId} was successfully removed from followers and following lists and deleted from database`)
 
         }
 
