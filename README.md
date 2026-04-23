@@ -188,6 +188,19 @@ export const deleteBooking = async (req, res) => {
 För att hjälpa mig skapa funktionen som med hjälp av Multer laddar upp filer direkt till Cloudinary storage så har jag använt mig av denna tutorialen: https://salmasaaiou.medium.com/file-uploads-using-cloudinary-and-multer-eb22bf928f18
 
 
+#### middleware/authMiddleware.js
+Denna middleware används för att kontrollera om en användare är inloggad genom att verifiera deras JWT-token. Den ser till att endast autentiserade användare kan nå skyddade routes.
+
+Jag följde denna tutorial: https://www.youtube.com/watch?v=BEIaBF6oZ0M för att få detta att fungera korrekt eftersom jag har svårt att förstå hur middleware i Express fungerar tillsammans med JWT. Under tiden har jag dock lärt mig att token verifieras och användarens id sparas i req.user så att det kan användas i andra delar av applikationen.
+
+
+#### middleware/errorMiddleware.js
+
+För att skriva middleware för hantera errors som skickas till klienten gick jag efter denna tutorial: https://www.youtube.com/watch?v=BEIaBF6oZ0M. Den gör så att alla errors skickas till ett centralt ställe istället för att hanteras separat i varje route.
+
+Jag följde denna tutorial eftersom jag har svårt att förstå hur fel skickas vidare med next() i Express. Jag börjar få bättre förståelse för hur fel flödar genom denna middleware som sedan skickas tillbaka till klienten.
+
+
 ## Syfte 
 
 ### Tekniskt syfte
