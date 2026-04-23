@@ -23,5 +23,5 @@ postRouter.delete('/:postId',authMiddleware, deletePost)
 
 postRouter.post('/:postId/comments/create', authMiddleware, createComment)
 postRouter.get('/:postId/comments',authMiddleware, getComments)
-postRouter.get('/:postId/comments/:commentId',authMiddleware, getComment)
+postRouter.get('/comments/:commentId',authMiddleware, getComment)
 postRouter.delete('/:postId/comments/:commentId',authMiddleware, deleteComment)
