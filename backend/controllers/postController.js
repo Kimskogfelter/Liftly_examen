@@ -1,6 +1,7 @@
 import { HttpError } from "../models/errorModel.js"
 import { Post } from "../models/postModel.js";
 import { User } from "../models/userModel.js";
+import { Comment } from "../models/commentModel.js";
 import mongoose from "mongoose";
 import { upload } from "../middleware/cloudinaryUpload.js";
 // loading env var from .env
@@ -300,11 +301,13 @@ export const unlikePost = async (req, res, next) => {
 
 export const deletePost = async (req, res, next) => {
 
-    const { postId } = req.params;
 
     try {
 
-        // find post 
+        // fetch post id from url params
+        const { postId } = req.params;
+
+        // find post in database
         const findPost = await Post.findById(postId);
 
         // if post cant be found 
@@ -312,24 +315,25 @@ export const deletePost = async (req, res, next) => {
 
             return res.status(404).json({ message: 'Post not found' });
 
-        } else {
-
-            // remove post from savedPosts list
-            await User.updateMany(
-                {}, // all users
-                {
-                    $pull: {
-                        savedPosts: postId,
-
-                    }
-                }
-            );
-
-            // delete post
-            await Post.findByIdAndDelete(postId);
-            return res.status(200).json(`Post with id: ${postId} was successfully removed from saved post lists and deleted from database`)
-
         }
+
+        // remove post from savedPosts list
+        await User.updateMany(
+            {},
+            {
+                $pull: { savedPosts: postId }
+            }
+        );
+
+
+        // remove all comments from the post
+        await Comment.deleteMany({ post: postId });
+
+        // delete post
+        await Post.findByIdAndDelete(postId);
+        return res.status(200).json(`Post with id: ${postId} was successfully removed from saved post lists and deleted from database`)
+
+
 
 
 
