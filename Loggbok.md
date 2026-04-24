@@ -21,4 +21,4 @@ Fortsatt skapa logiken i userController, nu för att logga in användare. Även 
 
 ## Vecka 17
 Lagt till så filer laddas upp direkt till cloudinary genom en upload middleware innan filen skickas och sparas i databasen.
-Fått klart controllers, models och routes för user och post i backend. Fortsätter skapa detta för kommentarer. Vill gärna hinna med klart det för kommentarer med samt sparade inlägg så jag har hela backend klar denna veckan och kan börja smått på frontend nästa vecka.
+Fått klart controllers, models och routes för user, post och comments i backend. Även kollat att samtliga routes fungerar via postman.
