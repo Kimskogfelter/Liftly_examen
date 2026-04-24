@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { createPost, updatePost, likePost, unlikePost, getPost, getPosts, deletePost } from '../controllers/postController.js';
-import { createComment, getComment, getComments, deleteComment } from '../controllers/postController.js';
+import { createComment, getComment, getComments, deleteComment } from '../controllers/commentController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
 
@@ -24,4 +24,4 @@ postRouter.delete('/:postId',authMiddleware, deletePost)
 postRouter.post('/:postId/comments/create', authMiddleware, createComment)
 postRouter.get('/:postId/comments',authMiddleware, getComments)
 postRouter.get('/comments/:commentId',authMiddleware, getComment)
-postRouter.delete('/:postId/comments/:commentId',authMiddleware, deleteComment)
+postRouter.delete('/comments/:commentId',authMiddleware, deleteComment)

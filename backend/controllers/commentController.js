@@ -16,7 +16,7 @@ export const createComment = async (req, res, next) => {
         // get content input from frontend
         const { content } = req.body;
 
-            // validate required field
+        // validate required field
         if (!content) {
 
             return next(new HttpError("Fill in content", 422))
@@ -36,13 +36,15 @@ export const createComment = async (req, res, next) => {
         // check if post exists
         const postExist = await Post.findById(postId);
 
-        if(!postExist) {
+        if (!postExist) {
 
             return next(new HttpError("Post not found", 404));
 
         }
 
         // --------- create new comment to database ----------
+        // store only req.user.id, not username, in cause the user changes username later on
+        // to avoid duplicating mutable data like username
 
         const newComment = await Comment.create({ createdBy: req.user.id, content: content, post: postId })
 
@@ -69,7 +71,7 @@ export const getComment = async (req, res, next) => {
 
     try {
 
-        // fetch comment from database using id from URL params
+        // fetch comment id from URL params
         const { commentId } = req.params;
 
         // use populate to display data from another model "User"
@@ -111,7 +113,7 @@ export const getComments = async (req, res, next) => {
         // check if post exists in database
         const post = await Post.findById(postId);
 
-        if(!post) {
+        if (!post) {
 
             return next(new HttpError("Post not found", 404))
 
@@ -119,9 +121,9 @@ export const getComments = async (req, res, next) => {
 
         // fetch all comments from current postId
         const getAllComments = await Comment.find({ post: postId })
-                                .populate("createdBy", "username profileImage")
-                                .sort({ createdAt: -1 })
-                                .limit(20);
+            .populate("createdBy", "username profileImage")
+            .sort({ createdAt: -1 })
+            .limit(20);
 
 
         // return list of comments
@@ -141,36 +143,49 @@ export const getComments = async (req, res, next) => {
 
 
 // ---------------------------- DELETE COMMENT --------------------------- 
-// DELETE req: api/posts/:postId/comments/:commentId
+// DELETE req: api/posts/comments/:commentId
 // PROTECTED
 
 export const deleteComment = async (req, res, next) => {
 
-    const { postId, commentId } = req.params;
+
 
     try {
+
+        // fetch comment id from url params
+        const { commentId } = req.params;
 
         // find comment
         const findComment = await Comment.findById(commentId);
 
-        // if comment cant be found 
+        // check if comments exists
         if (!findComment) {
 
             return res.status(404).json({ message: 'Comment not found' });
 
-        } else {
-
-
-            // remove comment from post
-            await Post.findByIdAndUpdate(postId, {
-                $pull: { comments: commentId }
-            })
-
-            // delete comment
-            await Comment.findByIdAndDelete(commentId);
-            return res.status(200).json(`Comment with id: ${commentId} was successfully removed from post: ${postId} and deleted from database`)
-
         }
+
+        // check if the user is the correct user
+        // converting createdBy objectId to string so the createdBy id can be compared to the logged in users id
+        if (findComment.createdBy.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'You cant delete this comment' })
+        }
+
+
+        // find correct post for comment in database
+        const postId = findComment.post;
+
+
+        // remove comment from post
+        await Post.findByIdAndUpdate(postId, {
+            $pull: { comments: commentId }
+        })
+
+        // delete comment
+        await Comment.findByIdAndDelete(commentId);
+        return res.status(200).json(`Comment with id: ${commentId} was successfully removed from post: ${postId} and deleted from database`)
+
+
 
 
 
