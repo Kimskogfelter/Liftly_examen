@@ -21,3 +21,5 @@ userRouter.delete('/:userId', deleteUser)
 
 // ---------------------------- user post routes --------------------------- 
 userRouter.get('/:userId/posts', getUserPosts)
+userRouter.post('/posts/:postId/save', authMiddleware, savePost)
+userRouter.delete('/posts/:postId/unsave', authMiddleware, unsavePost)
