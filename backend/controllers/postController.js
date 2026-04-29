@@ -136,7 +136,7 @@ export const getPosts = async (req, res, next) => {
 }
 
 // ---------------------------- GET USER POSTS --------------------------- 
-// GET req: api/posts/userId
+// GET req: api/posts/user/:userId
 // PROTECTED
 
 export const getUserPosts = async (req, res, next) => {
@@ -144,6 +144,14 @@ export const getUserPosts = async (req, res, next) => {
     try {
 
         const { userId } = req.params;
+
+        // fetch user from database 
+        const fetchUser = await User.findById(userId);
+
+        if(!fetchUser) {
+
+            return next(new HttpError("User not found", 404))
+        }
 
         // fetch all posts from one user from database
         const getPosts = await Post.find({"createdBy": userId})
@@ -154,6 +162,7 @@ export const getUserPosts = async (req, res, next) => {
         // check if posts doesnt exists
         if (getPosts.length === 0) {
 
+            
             return next(new HttpError("No posts could be found", 404));
         }
 
