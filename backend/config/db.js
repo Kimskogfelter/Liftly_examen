@@ -1,7 +1,5 @@
-// importera mongoose
 import mongoose from "mongoose";
-
-// Laddar .env automatiskt
+// load .env file
 import 'dotenv/config';  
 
 const mongo_uri = process.env.MONGO_URI;
