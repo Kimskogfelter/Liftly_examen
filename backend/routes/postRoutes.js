@@ -19,6 +19,11 @@ postRouter.delete('/:postId/unlike',authMiddleware, unlikePost)
 postRouter.delete('/:postId',authMiddleware, deletePost)
 
 
+// ---------------------------- saved post routes --------------------------- 
+postRouter.patch('/:postId/save', authMiddleware, savePost) 
+postRouter.post('/:postId/unsave',authMiddleware, unsavePost)
+
+
 // ---------------------------- comment routes ---------------------------
 
 postRouter.post('/:postId/comments/create', authMiddleware, createComment)
