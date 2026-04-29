@@ -1,5 +1,6 @@
 import { HttpError } from "../models/errorModel.js"
 import { User } from "../models/userModel.js"
+import { Post } from "../models/postModel.js"
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -103,7 +104,7 @@ export const registerUser = async (req, res, next) => {
 }
 
 
-// ---------------------------- log in user --------------------------- 
+// ---------------------------- LOG IN USER --------------------------- 
 // POST req: api/users/login
 // UNPROTECTED
 
@@ -259,7 +260,7 @@ export const updateUser = async (req, res, next) => {
 
 }
 
-// ---------------------------- följ användare --------------------------- 
+// ---------------------------- FOLLOW USER --------------------------- 
 // POST req: api/users/:userId/follow 
 // PROTECTED
 
@@ -322,7 +323,7 @@ export const followUser = async (req, res, next) => {
 
 }
 
-// ---------------------------- sluta följ användare --------------------------- 
+// ---------------------------- UNFOLLOW USER --------------------------- 
 // DELETE req: api/users/:userId/unfollow 
 // PROTECTED
 
@@ -462,6 +463,51 @@ export const deleteUser = async (req, res, next) => {
 
     } catch (error) {
         // Om något går fel när vi försöker radera användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+// ---------------------------- GET USER POSTS --------------------------- 
+// GET req: api/users/:userId/posts
+// PROTECTED
+
+export const getUserPosts = async (req, res, next) => {
+
+    try {
+
+        const { userId } = req.params;
+
+        // fetch user from database 
+        const fetchUser = await User.findById(userId);
+
+        if(!fetchUser) {
+
+            return next(new HttpError("User not found", 404))
+        }
+
+        // fetch all posts from one user from database
+        const getPosts = await Post.find({"createdBy": userId})
+            .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
+            .sort({ createdAt: -1 }) // sort by newest first
+            .limit(20); // show only 20 at a time
+
+        // check if posts doesnt exists
+        if (getPosts.length === 0) {
+
+            
+            return next(new HttpError("No posts could be found", 404));
+        }
+
+        // return list of posts
+        return res.status(200).json({ message: "Posts found: ", getPosts })
+
+    } catch (error) {
+        // Om något går fel när vi försöker hämta flera användare:
         // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'

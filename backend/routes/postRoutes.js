@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPost, updatePost, likePost, unlikePost, getPost, getPosts, getUserPosts, deletePost } from '../controllers/postController.js';
+import { createPost, updatePost, likePost, unlikePost, getPost, getPosts, deletePost } from '../controllers/postController.js';
 import { createComment, getComment, getComments, deleteComment } from '../controllers/commentController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
