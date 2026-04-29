@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser, loginUser, getUser, getUsers, getUserPosts, updateUser, followUser, unfollowUser, changeProfileImage, deleteUser } from '../controllers/userController.js';
+import { registerUser, loginUser, getUser, getUsers, updateUser, followUser, unfollowUser, changeProfileImage, deleteUser, getUserPosts, savePost, unsavePost } from '../controllers/userController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
 

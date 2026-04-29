@@ -472,9 +472,12 @@ export const deleteUser = async (req, res, next) => {
 
 }
 
+
+// ============================= POSTS  ============================= 
+
+
 // ---------------------------- GET USER POSTS --------------------------- 
 // GET req: api/users/:userId/posts
-// PROTECTED
 
 export const getUserPosts = async (req, res, next) => {
 
@@ -508,6 +511,121 @@ export const getUserPosts = async (req, res, next) => {
 
     } catch (error) {
         // Om något går fel när vi försöker hämta flera användare:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+
+// ---------------------------- SAVE POST --------------------------- 
+// POST req: api/users/posts/:postId
+// PROTECTED
+
+export const savePost = async (req, res, next) => {
+
+    try {
+
+        // fetch post id from params
+        const { postId } = req.params;
+
+        // hämta inloggade användarens objekt via id
+        const loggedInUser = await User.findById(req.user.id);
+        // hämta endast inloggande användarens id och gör om till sträng
+        const loggedInUserId = loggedInUser._id.toString();
+
+        // kolla ifall användaren man vill följa redan finns i ens "following" lista i databasen
+        // 1. Konvertera sträng-ID från URL:en till ett Mongoose ObjectId. med hjälp av mongoose ...
+        // Detta krävs eftersom 'loggedInUser.following' i databasen innehåller objekt, inte rena strängar.
+        // .includes() fungerar nu korrekt eftersom båda sidorna av jämförelsen är av typen ObjectId.
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userId));
+
+        // om man redan FÖLJER användaren
+        if (alreadyFollowingUser) {
+            return next(new HttpError("You are already following this user.", 422));
+        }
+
+        // om man INTE FÖLJER användaren, 
+        // 1. lägg till användaren man vill följa i inloggade användarens "following" lista i databasen
+        // 2. lägg till den inloggade användaren som följare i användarens "followers" lista i databasen
+        if (!alreadyFollowingUser) {
+
+            // 1
+            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: userId } }, { new: true })
+            // 2
+            await User.findByIdAndUpdate(userId, { $push: { followers: loggedInUserId } }, { new: true })
+
+            // meddela att det gick att börja följa användaren
+            return res.status(200).json({ message: "You started to follow: ", userId })
+
+        }
+
+
+
+    } catch (error) {
+        // Om något går fel när vi försöker följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+// ---------------------------- UNSAVE POST --------------------------- 
+// DELETE req: api/users/posts/:postId
+// PROTECTED
+
+export const unsavePost = async (req, res, next) => {
+
+    try {
+
+        // fetch post id from params
+        const { postId } = req.params;
+
+        // hämta inloggade användarens objekt via id
+        const loggedInUser = await User.findById(req.user.id);
+        // hämta endast inloggande användarens id och gör om till sträng
+        const loggedInUserId = loggedInUser._id.toString();
+
+        // error ifall man försöker avfölja sig själv
+        if (userId === loggedInUserId) {
+
+            return next(new HttpError("You cant unfollow yourself", 422))
+        }
+
+        // kolla om man följer användaren
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userId));
+
+        // om man INTE följer meddela det
+        if (!alreadyFollowingUser) {
+
+            return next(new HttpError("You are not following this user.", 422));
+
+        }
+
+        // 1. om man FÖLJER användaren ta bort den från "following"
+        // 2. samt ta bort inloggade användaren som "follower"
+
+        if (alreadyFollowingUser) {
+
+            // 1
+            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: userId } }, { new: true })
+            // 2
+            await User.findByIdAndUpdate(userId, { $pull: { followers: loggedInUserId } }, { new: true })
+
+            // meddela att det gick att sluta följa användaren
+            return res.status(200).json({ message: "You unfollowed: ", userId })
+
+
+        }
+
+    } catch (error) {
+        // Om något går fel när vi försöker sluta följa en användaren:
         // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
