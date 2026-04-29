@@ -143,20 +143,22 @@ export const getUserPosts = async (req, res, next) => {
 
     try {
 
-        // fetch all posts from database
-        const getAllPosts = await Post.find()
+        const { userId } = req.params;
+
+        // fetch all posts from one user from database
+        const getPosts = await Post.find({"createdBy": userId})
             .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
             .sort({ createdAt: -1 }) // sort by newest first
             .limit(20); // show only 20 at a time
 
         // check if posts doesnt exists
-        if (getAllPosts.length === 0) {
+        if (getPosts.length === 0) {
 
             return next(new HttpError("No posts could be found", 404));
         }
 
         // return list of posts
-        return res.status(200).json({ message: "Posts found: ", getAllPosts })
+        return res.status(200).json({ message: "Posts found: ", getPosts })
 
     } catch (error) {
         // Om något går fel när vi försöker hämta flera användare:
