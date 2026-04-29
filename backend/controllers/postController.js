@@ -135,50 +135,6 @@ export const getPosts = async (req, res, next) => {
 
 }
 
-// ---------------------------- GET USER POSTS --------------------------- 
-// GET req: api/posts/user/:userId
-// PROTECTED
-
-export const getUserPosts = async (req, res, next) => {
-
-    try {
-
-        const { userId } = req.params;
-
-        // fetch user from database 
-        const fetchUser = await User.findById(userId);
-
-        if(!fetchUser) {
-
-            return next(new HttpError("User not found", 404))
-        }
-
-        // fetch all posts from one user from database
-        const getPosts = await Post.find({"createdBy": userId})
-            .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
-            .sort({ createdAt: -1 }) // sort by newest first
-            .limit(20); // show only 20 at a time
-
-        // check if posts doesnt exists
-        if (getPosts.length === 0) {
-
-            
-            return next(new HttpError("No posts could be found", 404));
-        }
-
-        // return list of posts
-        return res.status(200).json({ message: "Posts found: ", getPosts })
-
-    } catch (error) {
-        // Om något går fel när vi försöker hämta flera användare:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
-    }
-
-}
 
 // ---------------------------- UPDATE POST --------------------------- 
 // PATCH req: api/posts/:postId/update

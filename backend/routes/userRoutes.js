@@ -17,3 +17,6 @@ userRouter.post('/:userId/follow',authMiddleware, followUser) // authMiddleware 
 userRouter.delete('/:userId/unfollow',authMiddleware, unfollowUser) // authMiddleware behövs för att kolla att en användare är inloggad innan den avföljer
 userRouter.post('/profile-image',authMiddleware, upload.single("profileImage"), changeProfileImage) // authMiddleware behövs för att kolla att en användare är inloggad innan den byter profilbild
 userRouter.delete('/:userId', deleteUser)
+
+
+// ---------------------------- user post routes --------------------------- 

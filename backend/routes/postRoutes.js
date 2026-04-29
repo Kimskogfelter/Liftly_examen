@@ -11,17 +11,11 @@ export const postRouter = Router();
 // ---------------------------- post routes --------------------------- 
 postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
 postRouter.get('/',authMiddleware, getPosts)
-postRouter.get('/user/:userId', authMiddleware, getUserPosts)
 postRouter.get('/:postId',authMiddleware, getPost)
 postRouter.patch('/:postId/update', authMiddleware, updatePost) 
 postRouter.post('/:postId/like',authMiddleware, likePost)
 postRouter.delete('/:postId/unlike',authMiddleware, unlikePost)
 postRouter.delete('/:postId',authMiddleware, deletePost)
-
-
-// ---------------------------- saved post routes --------------------------- 
-postRouter.patch('/:postId/save', authMiddleware, savePost) 
-postRouter.post('/:postId/unsave',authMiddleware, unsavePost)
 
 
 // ---------------------------- comment routes ---------------------------
