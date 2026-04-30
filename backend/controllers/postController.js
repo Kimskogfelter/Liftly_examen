@@ -316,59 +316,6 @@ export const getSavedPosts = async (req, res, next) => {
 }
 
 
-// ---------------------------- UPDATE POST --------------------------- 
-// PATCH req: api/posts/:postId/update
-// PROTECTED
-
-export const updatePost = async (req, res, next) => {
-
-    try {
-
-        // fetch current post id
-        const { postId } = req.params;
-
-        // fecth post from db
-        const fetchPost = await Post.findById(postId);
-
-
-        // if post not found
-        if (!fetchPost) {
-
-            return next(new HttpError("Post not found", 404))
-        }
-
-
-        // check if post is created by req user
-        // with mongoDB method "equals" that compare objectId with string
-        // no need to convert
-        if (!fetchPost.createdBy.equals(req.user.id)) {
-
-            return res.status(403).json({ message: "You are not allowed to edit this post" })
-        }
-
-        // fetch content from frontend
-        const { content } = req.body;
-
-
-        // update post
-        const updatedPost = await Post.findByIdAndUpdate(postId, { content }, { new: true })
-
-
-        // success message
-        return res.status(200).json({ message: "Post updated: ", updatedPost })
-
-
-    } catch (error) {
-        // Om något går fel när vi försöker uppdatera en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
-    }
-
-}
-
 // ---------------------------- LIKE POST --------------------------- 
 // POST req: api/posts/:postId/like
 // PROTECTED
@@ -472,6 +419,63 @@ export const unlikePost = async (req, res, next) => {
     }
 
 }
+
+
+
+// ---------------------------- UPDATE POST --------------------------- 
+// PATCH req: api/posts/:postId/update
+// PROTECTED
+
+export const updatePost = async (req, res, next) => {
+
+    try {
+
+        // fetch current post id
+        const { postId } = req.params;
+
+        // fecth post from db
+        const fetchPost = await Post.findById(postId);
+
+
+        // if post not found
+        if (!fetchPost) {
+
+            return next(new HttpError("Post not found", 404))
+        }
+
+
+        // check if post is created by req user
+        // with mongoDB method "equals" that compare objectId with string
+        // no need to convert
+        if (!fetchPost.createdBy.equals(req.user.id)) {
+
+            return res.status(403).json({ message: "You are not allowed to edit this post" })
+        }
+
+        // fetch content from frontend
+        const { content } = req.body;
+
+
+        // update post
+        const updatedPost = await Post.findByIdAndUpdate(postId, { content }, { new: true })
+
+
+        // success message
+        return res.status(200).json({ message: "Post updated: ", updatedPost })
+
+
+    } catch (error) {
+        // Om något går fel när vi försöker uppdatera en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+
 
 
 
