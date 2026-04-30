@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPost, updatePost, likePost, unlikePost, getPost, getPosts, deletePost } from '../controllers/postController.js';
+import { createPost, updatePost, likePost, unlikePost, getPost, getPosts, getUserPosts, savePost, unsavePost, getSavedPosts, deletePost } from '../controllers/postController.js';
 import { createComment, getComment, getComments, deleteComment } from '../controllers/commentController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
@@ -16,6 +16,11 @@ postRouter.patch('/:postId/update', authMiddleware, updatePost)
 postRouter.post('/:postId/like',authMiddleware, likePost)
 postRouter.delete('/:postId/unlike',authMiddleware, unlikePost)
 postRouter.delete('/:postId',authMiddleware, deletePost)
+
+postRouter.get('/users/:userId/posts', getUserPosts)
+postRouter.post('/:postId/save', authMiddleware, savePost)
+postRouter.delete('/:postId/unsave', authMiddleware, unsavePost)
+postRouter.get('/saved', authMiddleware, getSavedPosts)
 
 
 // ---------------------------- comment routes ---------------------------

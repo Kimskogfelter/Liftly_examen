@@ -136,6 +136,186 @@ export const getPosts = async (req, res, next) => {
 }
 
 
+// ---------------------------- GET USER POSTS --------------------------- 
+// GET req: api/users/:userId/posts
+
+export const getUserPosts = async (req, res, next) => {
+
+    try {
+
+        const { userId } = req.params;
+
+        // fetch user from database 
+        const fetchUser = await User.findById(userId);
+
+        if (!fetchUser) {
+
+            return next(new HttpError("User not found", 404))
+        }
+
+        // fetch all posts from one user from database
+        const getPosts = await Post.find({ "createdBy": userId })
+            .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
+            .sort({ createdAt: -1 }) // sort by newest first
+            .limit(20); // show only 20 at a time
+
+        // check if posts doesnt exists
+        if (getPosts.length === 0) {
+
+
+            return next(new HttpError("No posts could be found", 404));
+        }
+
+        // return list of posts
+        return res.status(200).json({ message: "Posts found: ", getPosts })
+
+    } catch (error) {
+        // Om något går fel när vi försöker hämta flera användare:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+
+// ---------------------------- SAVE POST --------------------------- 
+// POST req: api/users/posts/:postId
+// PROTECTED
+
+export const savePost = async (req, res, next) => {
+
+    try {
+
+        // fetch post id from params
+        const { postId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
+
+        // check if post exists
+        const post = await Post.findById(postId);
+
+        if (!post) {
+
+            return res.status(404).json({ message: "Post does not exist", postId })
+        }
+
+        // save post
+        // addToSet adds the post to the savedPosts array only if it doesnt already exists 
+        const savePost = await User.findByIdAndUpdate(req.user.id, { $addToSet: { savedPosts: postId } }, { new: true })
+
+        // check if savedPosts array is updated and show response
+        if (savePost)
+            return res.status(200).json({ message: "You saved post: ", postId })
+
+
+
+
+
+    } catch (error) {
+        // Om något går fel när vi försöker följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+// ---------------------------- UNSAVE POST --------------------------- 
+// DELETE req: api/users/posts/:postId
+// PROTECTED
+
+export const unsavePost = async (req, res, next) => {
+
+    try {
+
+        // fetch post id from params
+        const { postId } = req.params;
+
+        // hämta inloggade användarens objekt via id
+        const loggedInUser = await User.findById(req.user.id);
+        // hämta endast inloggande användarens id och gör om till sträng
+        const loggedInUserId = loggedInUser._id.toString();
+
+        // error ifall man försöker avfölja sig själv
+        if (userId === loggedInUserId) {
+
+            return next(new HttpError("You cant unfollow yourself", 422))
+        }
+
+        // kolla om man följer användaren
+        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userId));
+
+        // om man INTE följer meddela det
+        if (!alreadyFollowingUser) {
+
+            return next(new HttpError("You are not following this user.", 422));
+
+        }
+
+        // 1. om man FÖLJER användaren ta bort den från "following"
+        // 2. samt ta bort inloggade användaren som "follower"
+
+        if (alreadyFollowingUser) {
+
+            // 1
+            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: userId } }, { new: true })
+            // 2
+            await User.findByIdAndUpdate(userId, { $pull: { followers: loggedInUserId } }, { new: true })
+
+            // meddela att det gick att sluta följa användaren
+            return res.status(200).json({ message: "You unfollowed: ", userId })
+
+
+        }
+
+    } catch (error) {
+        // Om något går fel när vi försöker sluta följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+// ---------------------------- GET SAVED POSTS --------------------------- 
+// GET req: api/users/posts/saved
+// PROTECTED
+
+export const getSavedPosts = async (req, res, next) => {
+
+    try {
+
+           const savedPosts = await User.findById(req.user.id).populate({path: 'savedPosts', model: 'Post'})
+           
+
+            // meddela att det gick att sluta följa användaren
+            return res.status(200).json({ message: "Saved posts: ", savedPosts })
+
+
+        
+
+    } catch (error) {
+        // Om något går fel när vi försöker sluta följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+
 // ---------------------------- UPDATE POST --------------------------- 
 // PATCH req: api/posts/:postId/update
 // PROTECTED
