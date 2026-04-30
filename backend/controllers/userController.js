@@ -488,13 +488,13 @@ export const getUserPosts = async (req, res, next) => {
         // fetch user from database 
         const fetchUser = await User.findById(userId);
 
-        if(!fetchUser) {
+        if (!fetchUser) {
 
             return next(new HttpError("User not found", 404))
         }
 
         // fetch all posts from one user from database
-        const getPosts = await Post.find({"createdBy": userId})
+        const getPosts = await Post.find({ "createdBy": userId })
             .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
             .sort({ createdAt: -1 }) // sort by newest first
             .limit(20); // show only 20 at a time
@@ -502,7 +502,7 @@ export const getUserPosts = async (req, res, next) => {
         // check if posts doesnt exists
         if (getPosts.length === 0) {
 
-            
+
             return next(new HttpError("No posts could be found", 404));
         }
 
@@ -532,36 +532,28 @@ export const savePost = async (req, res, next) => {
         // fetch post id from params
         const { postId } = req.params;
 
-        // hämta inloggade användarens objekt via id
-        const loggedInUser = await User.findById(req.user.id);
-        // hämta endast inloggande användarens id och gör om till sträng
-        const loggedInUserId = loggedInUser._id.toString();
-
-        // kolla ifall användaren man vill följa redan finns i ens "following" lista i databasen
-        // 1. Konvertera sträng-ID från URL:en till ett Mongoose ObjectId. med hjälp av mongoose ...
-        // Detta krävs eftersom 'loggedInUser.following' i databasen innehåller objekt, inte rena strängar.
-        // .includes() fungerar nu korrekt eftersom båda sidorna av jämförelsen är av typen ObjectId.
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userId));
-
-        // om man redan FÖLJER användaren
-        if (alreadyFollowingUser) {
-            return next(new HttpError("You are already following this user.", 422));
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
         }
 
-        // om man INTE FÖLJER användaren, 
-        // 1. lägg till användaren man vill följa i inloggade användarens "following" lista i databasen
-        // 2. lägg till den inloggade användaren som följare i användarens "followers" lista i databasen
-        if (!alreadyFollowingUser) {
+        // check if post exists
+        const post = await Post.findById(postId);
 
-            // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $push: { following: userId } }, { new: true })
-            // 2
-            await User.findByIdAndUpdate(userId, { $push: { followers: loggedInUserId } }, { new: true })
+        if (!post) {
 
-            // meddela att det gick att börja följa användaren
-            return res.status(200).json({ message: "You started to follow: ", userId })
-
+            return res.status(404).json({ message: "Post does not exist", postId })
         }
+
+        // save post
+        // addToSet adds the post to the savedPosts array only if it doesnt already exists 
+        const savePost = await User.findByIdAndUpdate(req.user.id, { $addToSet: { savedPosts: postId } }, { new: true })
+
+        // check if savedPosts array is updated and show response
+        if (savePost)
+            return res.status(200).json({ message: "You saved post: ", postId })
+
+
 
 
 
