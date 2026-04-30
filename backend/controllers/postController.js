@@ -137,7 +137,7 @@ export const getPosts = async (req, res, next) => {
 
 
 // ---------------------------- GET USER POSTS --------------------------- 
-// GET req: api/users/:userId/posts
+// GET req: api/posts/users/:userId/
 
 export const getUserPosts = async (req, res, next) => {
 
@@ -182,7 +182,7 @@ export const getUserPosts = async (req, res, next) => {
 
 
 // ---------------------------- SAVE POST --------------------------- 
-// POST req: api/users/posts/:postId
+// POST req: api/posts/:postId/save
 // PROTECTED
 
 export const savePost = async (req, res, next) => {
@@ -229,7 +229,7 @@ export const savePost = async (req, res, next) => {
 }
 
 // ---------------------------- UNSAVE POST --------------------------- 
-// DELETE req: api/users/posts/:postId
+// DELETE req: api/posts/:postId/unsave
 // PROTECTED
 
 export const unsavePost = async (req, res, next) => {
@@ -288,7 +288,7 @@ export const unsavePost = async (req, res, next) => {
 }
 
 // ---------------------------- GET SAVED POSTS --------------------------- 
-// GET req: api/users/posts/saved
+// GET req: api/posts/saved
 // PROTECTED
 
 export const getSavedPosts = async (req, res, next) => {

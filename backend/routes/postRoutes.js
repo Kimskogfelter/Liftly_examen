@@ -17,7 +17,7 @@ postRouter.post('/:postId/like',authMiddleware, likePost)
 postRouter.delete('/:postId/unlike',authMiddleware, unlikePost)
 postRouter.delete('/:postId',authMiddleware, deletePost)
 
-postRouter.get('/users/:userId/posts', getUserPosts)
+postRouter.get('/users/:userId', getUserPosts)
 postRouter.post('/:postId/save', authMiddleware, savePost)
 postRouter.delete('/:postId/unsave', authMiddleware, unsavePost)
 postRouter.get('/saved', authMiddleware, getSavedPosts)
