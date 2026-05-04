@@ -46,10 +46,14 @@ export const createPost = async (req, res, next) => {
 
         if (req.file) {
 
-            newPost = await Post.create({ createdBy: user._id, content: content, media: req.file.path })
+            // creates and adds post to "post" database
+            newPost = await Post.create({ createdBy: user._id, content: content, media: req.file.path }) 
+            // updates user database with created post in "user -> post"
+            await User.findByIdAndUpdate(newPost.createdBy, {$push: {posts: newPost._id}}) 
         } else {
 
             newPost = await Post.create({ createdBy: user._id, content: content })
+            await User.findByIdAndUpdate(newPost.createdBy, {$push: {posts: newPost._id}})
 
         }
 
