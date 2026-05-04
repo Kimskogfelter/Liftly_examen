@@ -11,11 +11,11 @@ export const postRouter = Router();
 // ---------------------------- post routes --------------------------- 
 postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
 
-postRouter.get('/',authMiddleware, getPosts)
 postRouter.get('/:postId',authMiddleware, getPost)
-postRouter.get('/users/:userId', getUserPosts)
-postRouter.get('/following', getFollowingPosts)
+postRouter.get('/users/:userId/posts', authMiddleware, getUserPosts)
+postRouter.get('/following',authMiddleware, getFollowingPosts)
 postRouter.get('/saved', authMiddleware, getSavedPosts)
+postRouter.get('/',authMiddleware, getPosts)
 
 postRouter.post('/:postId/save', authMiddleware, savePost)
 postRouter.delete('/:postId/unsave', authMiddleware, unsavePost)
