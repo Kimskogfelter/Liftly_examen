@@ -81,14 +81,18 @@ export const getPost = async (req, res, next) => {
     try {
 
         // fetch post from database using id from URL params
-        // needed to display full post details on frontend
-        // only shows username and profile image in "createdBy"
-        const foundPost = await Post.findById(req.params.postId).populate("createdBy", "username profileImage");
+        // populate replaces createdBy ObjectId with user data (username + profileImage)
+        const foundPost = await Post.findById(req.params.postId)
+        .populate("createdBy", "username profileImage")
+        // populate replaces comment ObjectIds with full comment documents
+        // path is needed because we use the sorting option, if not path would not be required
+        .populate({path: "comments", options: {sort: {createdAt: -1}}});
 
         // check if post doesnt exists
         if (!foundPost) {
 
             return next(new HttpError("No post could be found with that id", 404))
+
         }
 
         // return post data
