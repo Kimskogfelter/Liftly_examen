@@ -198,11 +198,13 @@ export const getFollowingPosts = async (req, res, next) => {
 
     try {
 
-        // fetch all posts from users
-        const followingPosts = await User.find({ following })
+        // fetch logged in user
+        const loggedInUser = await User.findById(req.user.id);
+
+        // fetch all posts from users you are following
+        const followingPosts = await Post.find({createdBy: {$in: loggedInUser.following}})
             .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
             .sort({ createdAt: -1 }) // sort by newest first
-            .limit(20); // show only 20 at a time
 
         // check if posts doesnt exists
         if (followingPosts.length === 0) {
