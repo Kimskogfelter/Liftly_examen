@@ -541,13 +541,19 @@ export const deletePost = async (req, res, next) => {
         const { postId } = req.params;
 
         // find post in database
-        const findPost = await Post.findById(postId);
+        const post = await Post.findById(postId);
 
         // if post cant be found 
-        if (!findPost) {
+        if (!post) {
 
             return res.status(404).json({ message: 'Post not found' });
 
+        }
+
+        // check user
+        if (!post.createdBy.equals(req.user.id)) {
+
+            return res.status(403).json({ message: "You are not allowed to delete this post" })
         }
 
         // remove post from savedPosts list
