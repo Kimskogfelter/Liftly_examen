@@ -155,9 +155,9 @@ export const getUserPosts = async (req, res, next) => {
         const { userId } = req.params;
 
         // fetch user from database 
-        const fetchUser = await User.findById(userId);
+        const user = await User.findById(userId);
 
-        if (!fetchUser) {
+        if (!user) {
 
             return next(new HttpError("User not found", 404))
         }
