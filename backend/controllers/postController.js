@@ -560,6 +560,9 @@ export const deletePost = async (req, res, next) => {
         // remove all comments from the post
         await Comment.deleteMany({ post: postId });
 
+        // remove post from user model
+        await User.findByIdAndUpdate(req.user.id, {$pull: {posts: postId}})
+
         // delete post
         await Post.findByIdAndDelete(postId);
         return res.status(200).json(`Post with id: ${postId} was successfully removed from saved post lists and deleted from database`)
