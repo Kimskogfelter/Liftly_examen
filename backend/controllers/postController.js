@@ -288,9 +288,6 @@ export const savePost = async (req, res, next) => {
             return res.status(200).json({ message: "You saved post: ", postId })
 
 
-
-
-
     } catch (error) {
         // Om något går fel när vi försöker följa en användaren:
         // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
@@ -308,50 +305,33 @@ export const savePost = async (req, res, next) => {
 
 export const unsavePost = async (req, res, next) => {
 
-    try {
+      try {
 
         // fetch post id from params
         const { postId } = req.params;
 
-        // hämta inloggade användarens objekt via id
-        const loggedInUser = await User.findById(req.user.id);
-        // hämta endast inloggande användarens id och gör om till sträng
-        const loggedInUserId = loggedInUser._id.toString();
-
-        // error ifall man försöker avfölja sig själv
-        if (userId === loggedInUserId) {
-
-            return next(new HttpError("You cant unfollow yourself", 422))
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
         }
 
-        // kolla om man följer användaren
-        const alreadyFollowingUser = loggedInUser.following.includes(new mongoose.Types.ObjectId(userId));
+        // check if post exists
+        const post = await Post.findById(postId);
 
-        // om man INTE följer meddela det
-        if (!alreadyFollowingUser) {
+        if (!post) {
 
-            return next(new HttpError("You are not following this user.", 422));
-
+            return res.status(404).json({ message: "Post does not exist", postId })
         }
 
-        // 1. om man FÖLJER användaren ta bort den från "following"
-        // 2. samt ta bort inloggade användaren som "follower"
+        // unsave post
+        await User.findByIdAndUpdate(req.user.id, { $pull: { savedPosts: postId } }, { new: true })
 
-        if (alreadyFollowingUser) {
+        // show response
+        return res.status(200).json({ message: "Post removed from saved posts", postId })
 
-            // 1
-            await User.findByIdAndUpdate(loggedInUserId, { $pull: { following: userId } }, { new: true })
-            // 2
-            await User.findByIdAndUpdate(userId, { $pull: { followers: loggedInUserId } }, { new: true })
-
-            // meddela att det gick att sluta följa användaren
-            return res.status(200).json({ message: "You unfollowed: ", userId })
-
-
-        }
 
     } catch (error) {
-        // Om något går fel när vi försöker sluta följa en användaren:
+        // Om något går fel när vi försöker följa en användaren:
         // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
