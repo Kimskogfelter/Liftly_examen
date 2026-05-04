@@ -8,14 +8,11 @@ import { upload } from '../middleware/cloudinaryUpload.js'
 export const postRouter = Router();
 
 
-// ---------------------------- post routes --------------------------- 
+// ---------------------------- post routes SUBROUTES --------------------------- 
 postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
-
-
 postRouter.get('/users/:userId/posts', authMiddleware, getUserPosts)
 postRouter.get('/following',authMiddleware, getFollowingPosts)
 postRouter.get('/saved', authMiddleware, getSavedPosts)
-postRouter.get('/:postId',authMiddleware, getPost)
 postRouter.get('/',authMiddleware, getPosts)
 
 postRouter.post('/:postId/save', authMiddleware, savePost)
@@ -26,11 +23,6 @@ postRouter.delete('/:postId/unlike',authMiddleware, unlikePost)
 
 postRouter.patch('/:postId/update', authMiddleware, updatePost) 
 
-postRouter.delete('/:postId',authMiddleware, deletePost)
-
-
-
-
 
 // ---------------------------- comment routes ---------------------------
 
@@ -38,3 +30,8 @@ postRouter.post('/:postId/comments/create', authMiddleware, createComment)
 postRouter.get('/:postId/comments',authMiddleware, getComments)
 postRouter.get('/comments/:commentId',authMiddleware, getComment)
 postRouter.delete('/comments/:commentId',authMiddleware, deleteComment)
+
+// ---------------------------- post routes GENERIC ---------------------------
+
+postRouter.get('/:postId',authMiddleware, getPost)
+postRouter.delete('/:postId',authMiddleware, deletePost)
