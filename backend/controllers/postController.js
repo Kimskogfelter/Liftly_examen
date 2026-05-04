@@ -16,6 +16,14 @@ export const createPost = async (req, res, next) => {
 
     try {
 
+
+        // --------- check if user exist in database ----------
+        const user = await User.findById(req.user.id)
+
+        if (!user) {
+            return next(new HttpError("User not found", 404));
+        }
+
         // get content input from frontend
         const { content } = req.body;
 
@@ -30,13 +38,6 @@ export const createPost = async (req, res, next) => {
         // validate if content length is too short
         if (content.length < 5) {
             return next(new HttpError("Content should be at least 5 characters long", 422))
-        }
-
-        // --------- check if user exist in database ----------
-        const user = await User.findById(req.user.id)
-
-        if (!user) {
-            return next(new HttpError("User not found", 404));
         }
 
         // --------- create new post to database ----------
