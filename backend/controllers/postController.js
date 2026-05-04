@@ -376,14 +376,14 @@ export const likePost = async (req, res, next) => {
         // get post id
         const { postId } = req.params;
         // fetch post from db
-        const fetchPost = await Post.findById(postId);
+        const post = await Post.findById(postId);
         // check if post exists
-        if (!fetchPost) {
+        if (!post) {
             return next(new HttpError("Post not found", 404));
         }
 
         // check if post is liked be the req user
-        const alreadyLikedPost = fetchPost.likes.includes(req.user.id);
+        const alreadyLikedPost = post.likes.includes(req.user.id);
 
         // if LIKED 
         if (alreadyLikedPost) {
@@ -568,15 +568,14 @@ export const deletePost = async (req, res, next) => {
         // remove all comments from the post
         await Comment.deleteMany({ post: postId });
 
+
         // remove post from user model
         await User.findByIdAndUpdate(req.user.id, {$pull: {posts: postId}})
 
         // delete post
         await Post.findByIdAndDelete(postId);
+
         return res.status(200).json(`Post with id: ${postId} was successfully removed from saved post lists and deleted from database`)
-
-
-
 
 
     } catch (error) {
