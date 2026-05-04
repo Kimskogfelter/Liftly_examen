@@ -428,14 +428,14 @@ export const unlikePost = async (req, res, next) => {
         // get post id
         const { postId } = req.params;
         // fetch post from db
-        const fetchPost = await Post.findById(postId);
+        const post = await Post.findById(postId);
         // check if post exists
-        if (!fetchPost) {
+        if (!post) {
             return next(new HttpError("Post not found", 404));
         }
 
         // check if post is liked be the req user
-        const alreadyLikedPost = fetchPost.likes.includes(req.user.id);
+        const alreadyLikedPost = post.likes.includes(req.user.id);
 
         // if not LIKED 
         if (!alreadyLikedPost) {
