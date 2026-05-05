@@ -187,6 +187,24 @@ export const deleteBooking = async (req, res) => {
 
 För att hjälpa mig skapa funktionen som med hjälp av Multer laddar upp filer direkt till Cloudinary storage så har jag använt mig av denna tutorialen: https://salmasaaiou.medium.com/file-uploads-using-cloudinary-and-multer-eb22bf928f18
 
+Använde även chatGPTs hjälp för att få till funktionen "fileFilter" som kollar filtyp innan den går vidare och laddar upp filen till cloudinary.
+```js
+ // ------------- written with help of chatGPT ------------------
+    fileFilter: (req, file, cb) => {
+      if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/webp"
+      ) {
+        cb(null, true);
+      } else {
+        cb(new Error("Only image files are allowed", 400), false);
+      }
+    },
+    // -------------------------------------------------------------
+```
+
+
 
 #### middleware/authMiddleware.js
 Denna middleware används för att kontrollera om en användare är inloggad genom att verifiera deras JWT-token. Den ser till att endast autentiserade användare kan nå skyddade routes.

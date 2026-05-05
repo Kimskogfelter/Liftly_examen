@@ -22,3 +22,6 @@ Fortsatt skapa logiken i userController, nu för att logga in användare. Även 
 ## Vecka 17
 Lagt till så filer laddas upp direkt till cloudinary genom en upload middleware innan filen skickas och sparas i databasen.
 Fått klart controllers, models och routes för user, post och comments i backend. Även kollat att samtliga routes fungerar via postman.
+
+## Vecka 18
+Fortsätter med controller för post och user då jag velat byta plats så allt som har att göra med post ligger under post controller/routes. Även försökt få till att spara/ta bort inlägg från sparade inlägg för en användare så de kan kolla på senare. Jag har nog fastnat på små detaljer istället för att bara köra vidare. Ville att man skulle köra en check ifall savedPosts har uppdaterats och isåfall skicka tillbaka resultatet då jag använder addToSet som endast körs ifall det finns något att lägga till som inte redan finns i arrayen. Men jag har valt att bara skicka resultatet även ifall arrayen inte ändras för att komma vidare och få börja med frontend. Så kan jag sitta med sånt här ifall jag hinner sen mot slutet. 
