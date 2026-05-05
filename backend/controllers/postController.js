@@ -47,13 +47,13 @@ export const createPost = async (req, res, next) => {
         if (req.file) {
 
             // creates and adds post to "post" database
-            newPost = await Post.create({ createdBy: user._id, content: content, media: req.file.path }) 
+            newPost = await Post.create({ createdBy: user._id, content: content, media: req.file.path })
             // updates user database with created post in "user -> post"
-            await User.findByIdAndUpdate(newPost.createdBy, {$push: {posts: newPost._id}}) 
+            await User.findByIdAndUpdate(newPost.createdBy, { $push: { posts: newPost._id } })
         } else {
 
             newPost = await Post.create({ createdBy: user._id, content: content })
-            await User.findByIdAndUpdate(newPost.createdBy, {$push: {posts: newPost._id}})
+            await User.findByIdAndUpdate(newPost.createdBy, { $push: { posts: newPost._id } })
 
         }
 
@@ -83,17 +83,17 @@ export const getPost = async (req, res, next) => {
         // fetch post from database using id from URL params
         const { postId } = req.params;
 
-         // check id
+        // check id
         if (!mongoose.Types.ObjectId.isValid(postId)) {
             return res.status(404).json({ message: 'Post Id is not valid' });
         }
 
         // populate replaces createdBy ObjectId with user data (username + profileImage)
         const post = await Post.findById(postId)
-        .populate("createdBy", "username profileImage")
-        // populate replaces comment ObjectIds with full comment documents
-        // path is needed because we use the sorting option, if not path would not be required
-        .populate({path: "comments", options: {sort: {createdAt: -1}}});
+            .populate("createdBy", "username profileImage")
+            // populate replaces comment ObjectIds with full comment documents
+            // path is needed because we use the sorting option, if not path would not be required
+            .populate({ path: "comments", options: { sort: { createdAt: -1 } } });
 
         // check if post doesnt exists
         if (!post) {
@@ -213,7 +213,7 @@ export const getFollowingPosts = async (req, res, next) => {
         const loggedInUser = await User.findById(req.user.id);
 
         // fetch all posts from users you are following
-        const followingPosts = await Post.find({createdBy: {$in: loggedInUser.following}})
+        const followingPosts = await Post.find({ createdBy: { $in: loggedInUser.following } })
             .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
             .sort({ createdAt: -1 }) // sort by newest first
 
@@ -248,15 +248,26 @@ export const getSavedPosts = async (req, res, next) => {
 
 
         // fetch user
-        // without populate = only IDs, with populate = full objects
-        const user = await User.findById(req.user.id).populate("savedPosts");
+        const user = await User.findById(req.user.id);
 
+        // check if user exist
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // populate savedPosts so we get full post objects instead of just IDs
+        await user.populate({
+            path: "savedPosts",
+            options: { sort: { createdAt: -1 } }
+        });
+
+        // fetch only saved posts
         const savedPosts = user.savedPosts;
-           
+
         return res.status(200).json({ message: "Saved posts: ", savedPosts })
 
 
-        
+
 
     } catch (error) {
         // Om något går fel när vi försöker sluta följa en användaren:
@@ -298,7 +309,7 @@ export const savePost = async (req, res, next) => {
         // addToSet adds the post to the savedPosts array only if it doesnt already exists 
         await User.findByIdAndUpdate(req.user.id, { $addToSet: { savedPosts: postId } }, { new: true })
 
-        
+
         return res.status(200).json({ message: "You saved post: ", postId })
 
 
@@ -319,7 +330,7 @@ export const savePost = async (req, res, next) => {
 
 export const unsavePost = async (req, res, next) => {
 
-      try {
+    try {
 
         // fetch post id from params
         const { postId } = req.params;
@@ -598,7 +609,7 @@ export const deletePost = async (req, res, next) => {
 
 
         // remove post from user model
-        await User.findByIdAndUpdate(req.user.id, {$pull: {posts: postId}})
+        await User.findByIdAndUpdate(req.user.id, { $pull: { posts: postId } })
 
         // delete post
         await Post.findByIdAndDelete(postId);
