@@ -81,22 +81,29 @@ export const getPost = async (req, res, next) => {
     try {
 
         // fetch post from database using id from URL params
+        const { postId } = req.params;
+
+         // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
+
         // populate replaces createdBy ObjectId with user data (username + profileImage)
-        const foundPost = await Post.findById(req.params.postId)
+        const post = await Post.findById(postId)
         .populate("createdBy", "username profileImage")
         // populate replaces comment ObjectIds with full comment documents
         // path is needed because we use the sorting option, if not path would not be required
         .populate({path: "comments", options: {sort: {createdAt: -1}}});
 
         // check if post doesnt exists
-        if (!foundPost) {
+        if (!post) {
 
             return next(new HttpError("No post could be found with that id", 404))
 
         }
 
         // return post data
-        return res.status(200).json({ message: 'Post found: ', foundPost });
+        return res.status(200).json({ message: 'Post found: ', post });
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
@@ -153,6 +160,11 @@ export const getUserPosts = async (req, res, next) => {
     try {
 
         const { userId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(404).json({ message: 'User Id is not valid' });
+        }
 
         // fetch user from database 
         const user = await User.findById(userId);
@@ -369,6 +381,12 @@ export const likePost = async (req, res, next) => {
 
         // get post id
         const { postId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
+
         // fetch post from db
         const post = await Post.findById(postId);
         // check if post exists
@@ -421,6 +439,12 @@ export const unlikePost = async (req, res, next) => {
 
         // get post id
         const { postId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
+
         // fetch post from db
         const post = await Post.findById(postId);
         // check if post exists
@@ -475,6 +499,11 @@ export const updatePost = async (req, res, next) => {
 
         // fetch current post id
         const { postId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
 
         // fecth post from db
         const fetchPost = await Post.findById(postId);
@@ -533,6 +562,11 @@ export const deletePost = async (req, res, next) => {
 
         // fetch post id from url params
         const { postId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
 
         // find post in database
         const post = await Post.findById(postId);
