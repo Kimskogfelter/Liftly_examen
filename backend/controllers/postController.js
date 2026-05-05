@@ -234,11 +234,14 @@ export const getSavedPosts = async (req, res, next) => {
 
     try {
 
-           const savedPosts = await User.findById(req.user.id).populate({path: 'savedPosts', model: 'Post'})
-           
 
-            // meddela att det gick att sluta följa användaren
-            return res.status(200).json({ message: "Saved posts: ", savedPosts })
+        // fetch user
+        // without populate = only IDs, with populate = full objects
+        const user = await User.findById(req.user.id).populate("savedPosts");
+
+        const savedPosts = user.savedPosts;
+           
+        return res.status(200).json({ message: "Saved posts: ", savedPosts })
 
 
         
@@ -281,11 +284,10 @@ export const savePost = async (req, res, next) => {
 
         // save post
         // addToSet adds the post to the savedPosts array only if it doesnt already exists 
-        const savePost = await User.findByIdAndUpdate(req.user.id, { $addToSet: { savedPosts: postId } }, { new: true })
+        await User.findByIdAndUpdate(req.user.id, { $addToSet: { savedPosts: postId } }, { new: true })
 
-        // check if savedPosts array is updated and show response
-        if (savePost)
-            return res.status(200).json({ message: "You saved post: ", postId })
+        
+        return res.status(200).json({ message: "You saved post: ", postId })
 
 
     } catch (error) {
@@ -321,6 +323,19 @@ export const unsavePost = async (req, res, next) => {
         if (!post) {
 
             return res.status(404).json({ message: "Post does not exist", postId })
+        }
+
+
+        const user = await User.findById(req.user.id);
+
+        // check if post is saved be the req user
+        const alreadySavedPost = user.savedPosts.includes(postId);
+
+        // if NOT saved 
+        if (!alreadySavedPost) {
+
+            return next(new HttpError("You havent saved this post.", 422));
+
         }
 
         // unsave post
