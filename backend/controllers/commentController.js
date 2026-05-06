@@ -34,9 +34,9 @@ export const createComment = async (req, res, next) => {
         const { postId } = req.params;
 
         // check if post exists
-        const postExist = await Post.findById(postId);
+        const post = await Post.findById(postId);
 
-        if (!postExist) {
+        if (!post) {
 
             return next(new HttpError("Post not found", 404));
 
@@ -76,16 +76,16 @@ export const getComment = async (req, res, next) => {
 
         // use populate to display data from another model "User"
         // only shows username and profile image in "createdBy" insted of objectId
-        const foundComment = await Comment.findById(commentId).populate("createdBy", "username profileImage");
+        const comment = await Comment.findById(commentId).populate("createdBy", "username profileImage");
 
         // check if comment doesnt exists
-        if (!foundComment) {
+        if (!comment) {
 
             return next(new HttpError("No comment could be found with that id", 404))
         }
 
         // return comment data
-        return res.status(200).json({ message: 'Comment found: ', foundComment });
+        return res.status(200).json({ message: 'Comment found: ', comment });
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
@@ -156,10 +156,10 @@ export const deleteComment = async (req, res, next) => {
         const { commentId } = req.params;
 
         // find comment
-        const findComment = await Comment.findById(commentId);
+        const comment = await Comment.findById(commentId);
 
         // check if comments exists
-        if (!findComment) {
+        if (!comment) {
 
             return res.status(404).json({ message: 'Comment not found' });
 
@@ -167,13 +167,13 @@ export const deleteComment = async (req, res, next) => {
 
         // check if the user is the correct user
         // converting createdBy objectId to string so the createdBy id can be compared to the logged in users id
-        if (findComment.createdBy.toString() !== req.user.id) {
+        if (comment.createdBy.toString() !== req.user.id) {
             return res.status(403).json({ message: 'You cant delete this comment' })
         }
 
 
         // find correct post for comment in database
-        const postId = findComment.post;
+        const postId = comment.post;
 
 
         // remove comment from post
