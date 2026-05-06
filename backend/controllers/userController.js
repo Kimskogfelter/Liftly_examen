@@ -167,6 +167,11 @@ export const getUser = async (req, res, next) => {
         // extract user id from route parameters
         const { userId } = req.params;
 
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(404).json({ message: 'User Id is not valid' });
+        }
+
         // fetch user from database
         const findUser = await User.findById(userId);
 
@@ -271,6 +276,11 @@ export const followUser = async (req, res, next) => {
         // hämta id från användarens profil vi besöker via url(routes)
         const { userId } = req.params;
 
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(404).json({ message: 'User Id is not valid' });
+        }
+
         // hämta inloggade användarens objekt via id
         const loggedInUser = await User.findById(req.user.id);
         // hämta endast inloggande användarens id och gör om till sträng
@@ -333,6 +343,11 @@ export const unfollowUser = async (req, res, next) => {
 
         // hämta id från användarens profil vi besöker via url(routes)
         const { userId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(404).json({ message: 'User Id is not valid' });
+        }
 
         // hämta inloggade användarens objekt via id
         const loggedInUser = await User.findById(req.user.id);
@@ -429,6 +444,11 @@ export const changeProfileImage = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
 
     const { userId } = req.params;
+
+    // check id
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(404).json({ message: 'User Id is not valid' });
+    }
 
     try {
 
