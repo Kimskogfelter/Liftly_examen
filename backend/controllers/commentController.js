@@ -33,6 +33,11 @@ export const createComment = async (req, res, next) => {
         // get postId from url
         const { postId } = req.params;
 
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
+
         // check if post exists
         const post = await Post.findById(postId);
 
@@ -74,6 +79,11 @@ export const getComment = async (req, res, next) => {
         // fetch comment id from URL params
         const { commentId } = req.params;
 
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(commentId)) {
+            return res.status(404).json({ message: 'Comment Id is not valid' });
+        }
+
         // use populate to display data from another model "User"
         // only shows username and profile image in "createdBy" insted of objectId
         const comment = await Comment.findById(commentId).populate("createdBy", "username profileImage");
@@ -109,6 +119,11 @@ export const getComments = async (req, res, next) => {
 
         // fetch id for current post
         const { postId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({ message: 'Post Id is not valid' });
+        }
 
         // check if post exists in database
         const post = await Post.findById(postId);
@@ -154,6 +169,11 @@ export const deleteComment = async (req, res, next) => {
 
         // fetch comment id from url params
         const { commentId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(commentId)) {
+            return res.status(404).json({ message: 'Comment Id is not valid' });
+        }
 
         // find comment
         const comment = await Comment.findById(commentId);
