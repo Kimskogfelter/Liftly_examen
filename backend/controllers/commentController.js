@@ -110,7 +110,7 @@ export const getComment = async (req, res, next) => {
 }
 
 
-// ---------------------------- GET COMMENTS --------------------------- 
+// ---------------------------- GET POST COMMENTS --------------------------- 
 // GET req: api/posts/:postId/comments
 // PROTECTED
 
@@ -138,8 +138,8 @@ export const getComments = async (req, res, next) => {
         // fetch all comments from current postId
         const getAllComments = await Comment.find({ post: postId })
             .populate("createdBy", "username profileImage")
+            .limit(20)
             .sort({ createdAt: -1 })
-            .limit(20);
 
 
         // return list of comments
