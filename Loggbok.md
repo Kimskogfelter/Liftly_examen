@@ -24,4 +24,10 @@ Lagt till så filer laddas upp direkt till cloudinary genom en upload middleware
 Fått klart controllers, models och routes för user, post och comments i backend. Även kollat att samtliga routes fungerar via postman.
 
 ## Vecka 18
-Fortsätter med controller för post och user då jag velat byta plats så allt som har att göra med post ligger under post controller/routes. Även försökt få till att spara/ta bort inlägg från sparade inlägg för en användare så de kan kolla på senare. Jag har nog fastnat på små detaljer istället för att bara köra vidare. Ville att man skulle köra en check ifall savedPosts har uppdaterats och isåfall skicka tillbaka resultatet då jag använder addToSet som endast körs ifall det finns något att lägga till som inte redan finns i arrayen. Men jag har valt att bara skicka resultatet även ifall arrayen inte ändras för att komma vidare och få börja med frontend. Så kan jag sitta med sånt här ifall jag hinner sen mot slutet. 
+Har fått till alla models, controllers och routes för backend och testat dem i Postman, så allt fungerar som det ska. Nu har jag börjat med frontend och har därför initierat React samt installerat de dependencies jag tänkt använda.
+
+Till en början tänkte jag bara använda Axios och React Router DOM utöver React, men tutorialen jag följer använder även Redux Toolkit, React Redux och React Timeago. Jag kollade lite på vad de paketen gör och kände att jag ville testa dem i mitt eget projekt.
+
+React Timeago verkar bra eftersom det gör datum mer användarvänliga och visar t.ex. “yesterday” eller “2 hours ago” istället för exakta datum, vilket passar en social media-app bra.
+
+Redux Toolkit och React Redux används för att hantera global state i applikationen. Det gör det enklare att dela data mellan olika delar av appen, vilket är bra i större projekt som sociala medier där man har mycket data som användare, inlägg och kommentarer som ska kunna nås från flera komponenter. Redux Toolkit gör dessutom Redux enklare att använda och minskar mängden kod man behöver skriva
