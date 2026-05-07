@@ -247,8 +247,17 @@ AI har använts som stöd för:
 * genererat och strukturerat GitHub Issues baserat på projektets krav i README-filen
 * felsökning och optimering av kod
 
-## Framtida utveckling 
+## Framtida utveckling
+
+Planerade features för framtida versioner av appen:
 
 * Notiser
-* Se online användare
-* Chatt funktion
+* Visa online-användare
+* Realtidschatt med Socket.IO
+
+### Referenser
+
+- Chat/tutorial inspiration:
+  https://www.youtube.com/watch?v=FeLz47gWj9E&t=7393s
+
+  Relevant del börjar cirka 2h 13m in i videon.
