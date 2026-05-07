@@ -55,7 +55,7 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 
 ## Teknik & programmeringsspråk
 
-* **Frontend:** React, HTML, CSS, Tailwind, React Router DOM, Axios, React Icons, Redux Toolkit, React Redux
+* **Frontend:** React, HTML, CSS, Tailwind, React Router DOM, Axios, React Icons, Redux Toolkit, React Redux, React Timeago
 * **Backend:** Node.js, Express.js, Mongoose
 * **Databas:** MongoDB
 * **Säkerhet:** JWT, bcrypt
