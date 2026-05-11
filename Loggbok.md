@@ -31,3 +31,7 @@ Till en början tänkte jag bara använda Axios och React Router DOM utöver Rea
 React Timeago verkar bra eftersom det gör datum mer användarvänliga och visar t.ex. “yesterday” eller “2 hours ago” istället för exakta datum, vilket passar en social media-app bra.
 
 Redux Toolkit och React Redux används för att hantera global state i applikationen. Det gör det enklare att dela data mellan olika delar av appen, vilket är bra i större projekt som sociala medier där man har mycket data som användare, inlägg och kommentarer som ska kunna nås från flera komponenter. Redux Toolkit gör dessutom Redux enklare att använda och minskar mängden kod man behöver skriva
+
+## Vecka 20
+Jag har tydligen lyckats missa skriva för vecka 19 i loggboken då jag trodde det var vecka 19 nu. Så vecka 18 är en blandning från vecka 18 och 19. 
+
