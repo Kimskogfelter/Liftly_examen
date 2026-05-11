@@ -23,7 +23,7 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path="/logout" element={<Logout/>} />
           <Route path="/register" element={<Register/>} />
-          <Route path="/home" element={userLoggedIn ? <Home/> : <Navigate to="/login" />} />
+          <Route path="/home" element={<Home/>} />
           <Route path="/savedPosts" element={userLoggedIn ? <SavedPosts/> : <Navigate to="/login" />} />
           <Route path="/users/:userId" element={userLoggedIn ? <ProfilePage/> : <Navigate to="/login" />} />
           <Route path="/posts/:postId" element={userLoggedIn ? <Post/> : <Navigate to="/login" />} />
