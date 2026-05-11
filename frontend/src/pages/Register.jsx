@@ -26,7 +26,7 @@ function Register() {
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-          <input type="submit" value="Sign up" />
+          <input type="submit" value="Sign up" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
         </form>
         <div><p>Already have an account? <a href="/login">Login here</a></p></div>
     </section>
