@@ -1,9 +1,35 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/images/liftly-logo.png';
+
 function Register() {
+
+  // states for form inputs from user
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
   return (
-    <div>
-      <h1>Register User</h1>
-      {/* Registration form goes here */}
-    </div>
+    <section>
+        <div><img src={logo} alt="Liftly logo" />
+        <p>Where training meets community</p>
+        <p>Join us today!</p>
+        </div>
+        <form action="POST">
+          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+          <input type="submit" value="Sign up" />
+        </form>
+        <div><p>Already have an account? <a href="/login">Login here</a></p></div>
+    </section>
   );
 }
 
