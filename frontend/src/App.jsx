@@ -12,8 +12,11 @@ import Logout from './pages/Logout';
 
 function App() {
 
-  // state to check if user is logged in, if not redirect to login page
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
+const [loggedInUser, setLoggedInUser] = useState(false);
+const [currentUser, setCurrentUser] = useState(
+  JSON.parse(localStorage.getItem("currentUser")) || null
+);
+const [onlineUsers, setOnlineUsers] = useState([]);
 
   return (
     <>
@@ -23,10 +26,10 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path="/logout" element={<Logout/>} />
           <Route path="/register" element={<Register/>} />
-          <Route path="/home" element={<Home/>} />
-          <Route path="/savedPosts" element={userLoggedIn ? <SavedPosts/> : <Navigate to="/login" />} />
-          <Route path="/users/:userId" element={userLoggedIn ? <ProfilePage/> : <Navigate to="/login" />} />
-          <Route path="/posts/:postId" element={userLoggedIn ? <Post/> : <Navigate to="/login" />} />
+          <Route path="/home" element={loggedInUser ? <Home currentUser={currentUser}/> : <Navigate to="/login" />} />
+          <Route path="/savedPosts" element={loggedInUser ? <SavedPosts currentUser={currentUser}/> : <Navigate to="/login" />} />
+          <Route path="/users/:userId" element={loggedInUser ? <ProfilePage currentUser={currentUser}/> : <Navigate to="/login" />} />
+          <Route path="/posts/:postId" element={loggedInUser ? <Post currentUser={currentUser}/> : <Navigate to="/login" />} />
         </Routes>
       </Router>
 
