@@ -1,5 +1,12 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import SavedPosts from './pages/SavedPosts';
+import ProfilePage from './pages/ProfilePage';
+import Post from './pages/Post';
+import Logout from './pages/Logout';
 
 
 
@@ -13,10 +20,13 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<h1>Home Page</h1>} />
-          <Route path="/login" element={<h1>Login Page</h1>} />
-          <Route path="/register" element={<h1>Register Page</h1>} />
-          <Route path="/feed" element={userLoggedIn ? <h1>Feed</h1> : <Navigate to="/login" />} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/logout" element={<Logout/>} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/home" element={userLoggedIn ? <Home/> : <Navigate to="/login" />} />
+          <Route path="/savedPosts" element={userLoggedIn ? <SavedPosts/> : <Navigate to="/login" />} />
+          <Route path="/users/:userId" element={userLoggedIn ? <ProfilePage/> : <Navigate to="/login" />} />
+          <Route path="/posts/:postId" element={userLoggedIn ? <Post/> : <Navigate to="/login" />} />
         </Routes>
       </Router>
 

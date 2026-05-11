@@ -1,4 +1,4 @@
-function RegisterUser() {
+function Register() {
   return (
     <div>
       <h1>Register User</h1>
@@ -7,4 +7,4 @@ function RegisterUser() {
   );
 }
 
-export default RegisterUser;
+export default Register;
