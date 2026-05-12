@@ -16,7 +16,7 @@ function Login() {
     <section>
         <div><img src={logo} alt="Liftly logo" />
         <p>Where training meets community</p>
-        <p>Join us today!</p>
+        <p>Welcome back! Please log in to your account</p>
         </div>
         <form action="GET">
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
