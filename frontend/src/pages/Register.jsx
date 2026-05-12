@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from '../assets/images/liftly-logo.png';
@@ -11,10 +12,19 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
+
+  // function to handle user registration
+  const registerUser = async (e) => {
+    e.preventDefault();     
+    try {
+      const response =await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, email, password, confirmPassword });
+      return response;
+    } catch (err) {
+      setError("An error occurred while registering. Please try again.", err);
+    }
+  };
 
   return (
     <section>
@@ -22,7 +32,7 @@ function Register() {
         <p>Where training meets community</p>
         <p>Join us today!</p>
         </div>
-        <form action="POST">
+        <form onSubmit={registerUser}>
           {/* username */}
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
           {/* email */}
