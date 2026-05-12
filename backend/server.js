@@ -25,7 +25,6 @@ server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
 // koppla ihop multer med cloudinary senare för storage av bilder/vidoes
 // const uploadImage = multer({dest: 'uploads'})
 
-
 // API routes
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
