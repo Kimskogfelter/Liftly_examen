@@ -104,8 +104,15 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
 
     ```env
     PORT=5000
-    MONGO_URI=din_mongodb_connection_string
-    JWT_SECRET=din_hemliga_nyckel
+    DB_USERNAME=your_database_username
+    DB_PASSWORD=your_database_password
+    MONGO_URI=your_mongodb_connection_string
+
+    JWT_SECRET=your_super_secret_jwt_key
+
+    LIFTLY_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+    LIFTLY_CLOUDINARY_API_KEY=your_cloudinary_api_key
+    LIFTLY_CLOUDINARY_API_SECRET=your_cloudinary_api_secret
     ```
 
 4. Starta applikationen
