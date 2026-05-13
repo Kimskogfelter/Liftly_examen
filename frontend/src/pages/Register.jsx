@@ -19,10 +19,23 @@ function Register() {
   const registerUser = async (e) => {
     e.preventDefault();     
     try {
-      const response =await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, email, password, confirmPassword });
+
+      // check if password and confirm password match before sending request to backend
+      if (password !== confirmPassword) {
+        setError("Passwords do not match. Please try again.");
+        return;
+      };
+
+      // send registration data to backend
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, email, password, confirmPassword });
+      console.log("Registration successful:", response.data);
       return response;
+
     } catch (err) {
-      setError("An error occurred while registering. Please try again.", err);
+
+      // handle errors and display error message to user
+      const errorResponse = err.response.data;
+      setError(errorResponse.message);
     }
   };
 
@@ -54,6 +67,8 @@ function Register() {
           {/* Sign up button */}
           <input type="submit" value="Sign up" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
         </form>
+        {/* Error message */}
+        {error && <p>{error}</p>}
         <div><p>Already have an account? <a href="/login">Login here</a></p></div>
     </section>
   );
