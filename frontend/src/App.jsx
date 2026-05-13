@@ -23,13 +23,13 @@ const [onlineUsers, setOnlineUsers] = useState([]);
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/login" element={<Login/>} />
+          <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
           <Route path="/logout" element={<Logout/>} />
           <Route path="/register" element={<Register/>} />
-          <Route path="/home" element={loggedInUser ? <Home currentUser={currentUser}/> : <Navigate to="/login" />} />
-          <Route path="/savedPosts" element={loggedInUser ? <SavedPosts currentUser={currentUser}/> : <Navigate to="/login" />} />
-          <Route path="/users/:userId" element={loggedInUser ? <ProfilePage currentUser={currentUser}/> : <Navigate to="/login" />} />
-          <Route path="/posts/:postId" element={loggedInUser ? <Post currentUser={currentUser}/> : <Navigate to="/login" />} />
+          <Route path="/home" element={currentUser ? <Home currentUser={currentUser}/> : <Navigate to="/login" />} />
+          <Route path="/savedPosts" element={currentUser ? <SavedPosts currentUser={currentUser}/> : <Navigate to="/login" />} />
+          <Route path="/users/:userId" element={currentUser ? <ProfilePage currentUser={currentUser}/> : <Navigate to="/login" />} />
+          <Route path="/posts/:postId" element={currentUser ? <Post currentUser={currentUser}/> : <Navigate to="/login" />} />
         </Routes>
       </Router>
 
