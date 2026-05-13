@@ -20,12 +20,6 @@ function Register() {
     e.preventDefault();     
     try {
 
-      // check if password and confirm password match before sending request to backend
-      if (password !== confirmPassword) {
-        setError("Passwords do not match. Please try again.");
-        return;
-      };
-
       // send registration data to backend
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, email, password, confirmPassword });
       console.log("Registration successful:", response.data);
