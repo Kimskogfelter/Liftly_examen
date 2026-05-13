@@ -168,6 +168,8 @@ export const getUser = async (req, res, next) => {
         // extract user id from route parameters
         const { userId } = req.params;
 
+        console.log(userId);
+
         // check id
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(404).json({ message: 'User Id is not valid' });
