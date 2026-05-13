@@ -23,7 +23,10 @@ function Register() {
       // send registration data to backend
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, email, password, confirmPassword });
       console.log("Registration successful:", response.data);
-      return response;
+      // redirect to login page after successful registration
+      if (response.status === 201) {
+        navigate('/login');
+      }
 
     } catch (err) {
 
