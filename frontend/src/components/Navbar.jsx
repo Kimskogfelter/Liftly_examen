@@ -4,12 +4,9 @@ import logo from '../assets/images/liftly-logo.png';
 import { CiSearch } from "react-icons/ci";
 import ProfileImage from "./ProfileImage";
 
-function Navbar() {
+function Navbar({ currentUser }) {
 
-  // Get current user from localStorage
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
-  // Get token, profile photo, and user ID from localStorage
+  // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
   // ? is there to prevent errors if currentUser is null or undefined
   const token = currentUser?.token;
   const profileImage = currentUser?.profileImage;

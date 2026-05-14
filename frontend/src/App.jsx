@@ -12,7 +12,6 @@ import Logout from './pages/Logout';
 
 function App() {
 
-const [loggedInUser, setLoggedInUser] = useState(false);
 const [currentUser, setCurrentUser] = useState(
   JSON.parse(localStorage.getItem("currentUser")) || null
 );

@@ -1,11 +1,11 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 
-function Home() {
+function Home({currentUser}) {
   return (
     <>
       <div className="flex">
-        <Navbar />
+        <Navbar currentUser={currentUser} />
         <section className="flex-1 p-4">
           <h1 className="items-center flex justify-center text-center">Welcome to the Home Page</h1>
         </section>
