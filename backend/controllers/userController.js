@@ -123,16 +123,16 @@ export const loginUser = async (req, res, next) => {
         }
 
         // ensure user exists before proceeding
-        const getUserFromDB = await User.findOne({ username: username })
+        const user = await User.findOne({ username: username })
 
-        if (!getUserFromDB) {
+        if (!user) {
 
             return next(new HttpError("Username doesnt exist", 422))
         }
 
 
         // compare password with hashed password
-        const correctPassword = await bcrypt.compare(password, getUserFromDB.password);
+        const correctPassword = await bcrypt.compare(password, user.password);
         if (!correctPassword) {
 
             return next(new HttpError("Incorrect password", 422))
@@ -140,9 +140,9 @@ export const loginUser = async (req, res, next) => {
         }
 
         // generate authentication token for login
-        const token = await jwt.sign({ id: getUserFromDB._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        // sends token and user id to client
-        return res.status(200).json({ token, id: getUserFromDB._id })
+        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        // sends token, user id and profile image to client
+        return res.status(200).json({ token, id: user._id, profileImage: user.profileImage, })
 
 
     } catch (error) {
@@ -168,24 +168,22 @@ export const getUser = async (req, res, next) => {
         // extract user id from route parameters
         const { userId } = req.params;
 
-        console.log(userId);
-
         // check id
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(404).json({ message: 'User Id is not valid' });
         }
 
         // fetch user from database
-        const findUser = await User.findById(userId);
+        const user = await User.findById(userId);
 
         // check if user doesnt exists
-        if (!findUser) {
+        if (!user) {
 
             return next(new HttpError("No user could be found with that id", 404))
         }
 
         // return user data
-        return res.status(200).json({ message: 'User found: ', findUser });
+        return res.status(200).json({ message: 'User found: ', user });
 
     } catch (error) {
         // Om något går fel när vi försöker hämta en användaren:
