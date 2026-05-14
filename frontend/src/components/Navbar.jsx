@@ -1,11 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from '../assets/images/liftly-logo.png';
+import { CiSearch } from "react-icons/ci";
+import ProfileImage from "./ProfileImage";
 
 function Navbar() {
+
+  // Get current user from localStorage
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  // Get token, profile photo, and user ID from localStorage
+  // ? is there to prevent errors if currentUser is null or undefined
+  const token = currentUser?.token;
+  const profileImage = currentUser?.profileImage;
+  const userId = currentUser?.userId;
+
   return (
-    <nav className="bg-[#0D0D0E] p-4 text-white w-[90px] h-screen text-[10px] flex flex-col justify-between items-center">
-      
+    <nav className="bg-[#0D0D0E] p-4 text-white w-22.5 h-screen text-[10px] flex flex-col justify-between items-center">
+
       <div>
         {/* Logo */}
         <div className="mb-4">
@@ -13,17 +25,26 @@ function Navbar() {
             <img src={logo} alt="Liftly logo" />
           </Link>
         </div>
+        {/* search bar */}
+        <form className="mb-2">
+          <input className="w-[70%]" type="search" placeholder="Search..." />
+          <button className="cursor-pointer" type="submit"><CiSearch /></button>
+        </form>
         {/* Navigation links */}
         <ul>
-          <li><Link to="/users/:userId">Profile</Link></li>
+          <li><Link to={`/users/${userId}`}><ProfileImage image={profileImage} /></Link></li>
           <li><Link to="/savedPosts">Saved Posts</Link></li>
           <li><Link to="/post">Create post</Link></li>
-          
+
         </ul>
       </div>
       {/* Logout button */}
-      <div>
-        <input className="cursor-pointer bg-amber-50 hover:bg-gray-600 text-black font-bold py-2 px-4 rounded" type="button" value="Logout" />
+      {/* only shown when user is logged in with a valid token */}
+      <div>{token ?
+        <Link to="/logout">
+          <input className="cursor-pointer bg-amber-50 hover:bg-gray-600 text-black font-bold py-2 px-4 rounded" type="button" value="Logout" />
+        </Link> : <Link to="/login">Login</Link>
+      }
       </div>
     </nav>
   );
