@@ -13,7 +13,7 @@ function Navbar() {
   // ? is there to prevent errors if currentUser is null or undefined
   const token = currentUser?.token;
   const profileImage = currentUser?.profileImage;
-  const userId = currentUser?.userId;
+  const userId = currentUser?.id;
 
   return (
     <nav className="bg-[#0D0D0E] p-4 text-white w-22.5 h-screen text-[10px] flex flex-col justify-between items-center">
