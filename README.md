@@ -261,6 +261,7 @@ Planerade features för framtida versioner av appen:
 * Notiser
 * Visa online-användare
 * Realtidschatt med Socket.IO
+* Förbättrad sessionshantering och säkerhetsfunktioner (t.ex. token-uppdatering och enhetshantering)
 
 ### Referenser
 
