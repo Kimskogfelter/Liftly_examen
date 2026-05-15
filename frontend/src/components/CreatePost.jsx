@@ -9,6 +9,31 @@ function CreatePost({ currentUser, onClose }) {
   const profileImage = currentUser?.profileImage;
   const userId = currentUser?.id;
 
+   // function to create post
+  const createPost = async (e) => {
+    e.preventDefault();     
+    try {
+
+      // send post data to backend
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts`, { content, media }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log("Post created successfully:", response.data);
+      // redirect to home page after successful post creation
+      if (response.status === 201) {
+        navigate('/home');
+      }
+
+    } catch (err) {
+
+      // handle errors and display error message to user
+      const errorResponse = err.response.data;
+      setError(errorResponse.message || "Your post could not be created. Please try again.");
+    }
+  };
+
   return (
     <>
     <form action="POST" method="post">
