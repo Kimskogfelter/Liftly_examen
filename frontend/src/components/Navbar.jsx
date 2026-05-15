@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from '../assets/images/liftly-logo.png';
 import { CiSearch } from "react-icons/ci";
+import logo from '../assets/images/liftly-logo.png';
 import ProfileImage from "./ProfileImage";
+import CreatePost from "./CreatePost";
 
 function Navbar({ currentUser }) {
 
@@ -31,7 +32,7 @@ function Navbar({ currentUser }) {
         <ul>
           <li><Link to={`/users/${userId}`}><ProfileImage image={profileImage} /></Link></li>
           <li><Link to="/savedPosts">Saved Posts</Link></li>
-          <li><Link to="/post">Create post</Link></li>
+          <li><Link to="/post"><CreatePost onCreatePost={createPost} currentUser={currentUser} /></Link></li>
 
         </ul>
       </div>

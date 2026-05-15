@@ -36,3 +36,7 @@ Redux Toolkit och React Redux används för att hantera global state i applikati
 Jag har tydligen lyckats missa skriva för vecka 19 i loggboken då jag trodde det var vecka 19 nu. Så vecka 18 är en blandning från vecka 18 och 19. 
 
 Denna veckan har jag fortsatt med att lägga till sidorna som behövs för frontend. Valde även just nu att ta bort det som har att göra med redux toolkit då jag bara vart mer förvirrad utav det och kör med vanliga useState istället på de ställen jag behöver. 
+
+Jag är väldigt förvirrad och stressad över hur frontend fungerar, trodde det skulle vara lättare än backend, men state, props etc blir förvirrande när jag satt och höll på med backend så länge. Speciellt när jag är stressad för att få klart allt i tid. Sitter och bollar mycket med AI just nu om hur jag ska strukturera koden samt förklaring av hur allt fungerar tillsammas för att jag ska kunna skriva koden som jag tänkt. Jag hoppas bara saker klarnar snart och jag inte blir mer förvirrad mot slutet för då lär jag sitta som en tom fågelholk på redovisningen. 
+
+Sitter just nu och håller på med komponent för att skapa inlägg och vart den ska renderas. Funderar på att han den i navigations menyn och att den kommer upp som en modal över "feed" eller som en egen sida.. modal måste ju vara mindre kod. Får se... mycket tankar nu.
