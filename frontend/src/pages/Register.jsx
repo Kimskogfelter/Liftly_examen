@@ -32,7 +32,7 @@ function Register() {
 
       // handle errors and display error message to user
       const errorResponse = err.response.data;
-      setError(errorResponse.message);
+      setError(errorResponse.message || "Your registration attempt was unsuccessful. Please check your input and try again.");
     }
   };
 
