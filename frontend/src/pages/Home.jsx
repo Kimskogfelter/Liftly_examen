@@ -1,6 +1,8 @@
 import { useState, React } from "react";
 import Navbar from "../components/Navbar";
 import CreatePost from "../components/CreatePost";
+import GetPosts from "../components/GetPosts";
+import Feed from "../components/Feed";
 
 function Home({ currentUser }) {
 
@@ -9,8 +11,6 @@ function Home({ currentUser }) {
   const [error, setError] = useState("");
   const token = currentUser?.token;
   const [showCreatePost, setShowCreatePost] = useState(false);
-
-
 
   return (
     <>
@@ -31,6 +31,17 @@ function Home({ currentUser }) {
               />
             )
           }
+          {/* render GetPosts component to fetch all posts */}
+          <GetPosts
+            currentUser={currentUser}
+            setPosts={setPosts}
+            posts={posts}
+          />
+          {/* render Feed component to display posts */}
+          <Feed
+            posts={posts}
+            onSetPosts={setPosts}
+          />
         </section>
       </div>
     </>
