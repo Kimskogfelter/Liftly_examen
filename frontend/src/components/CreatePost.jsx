@@ -52,6 +52,7 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
         {/* Content textarea */}
         <textarea name="content" placeholder="What's on your mind?" value={content} onChange={(e) => setContent(e.target.value)}></textarea>
         {/* Media input */}
+        <label htmlFor="media">Upload an image or video:</label>
         <input type="file" name="media" accept="image/*" onChange={(e) => setMedia(e.target.files[0])} />
         {/* Error message */}
         {error && <p>{error}</p>}
