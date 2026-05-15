@@ -23,7 +23,7 @@ const [onlineUsers, setOnlineUsers] = useState([]);
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
-          <Route path="/logout" element={<Logout/>} />
+          <Route path="/logout" element={<Logout setCurrentUser={setCurrentUser} />} />
           <Route path="/register" element={<Register/>} />
           <Route path="/home" element={currentUser ? <Home currentUser={currentUser}/> : <Navigate to="/login" />} />
           <Route path="/savedPosts" element={currentUser ? <SavedPosts currentUser={currentUser}/> : <Navigate to="/login" />} />
