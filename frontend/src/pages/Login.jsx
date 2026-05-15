@@ -32,7 +32,7 @@ function Login({ setCurrentUser }) {
 
       // handle errors and display error message to user
       const errorResponse = err.response.data;
-      setError(errorResponse.message);
+      setError(errorResponse.message || "Something went wrong");
     }
   };
 
