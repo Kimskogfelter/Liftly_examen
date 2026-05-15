@@ -5,7 +5,7 @@ import logo from '../assets/images/liftly-logo.png';
 import ProfileImage from "./ProfileImage";
 import CreatePost from "./CreatePost";
 
-function Navbar({ currentUser }) {
+function Navbar({ currentUser, onOpenCreatePost }) {
 
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
   // ? is there to prevent errors if currentUser is null or undefined
@@ -32,7 +32,8 @@ function Navbar({ currentUser }) {
         <ul>
           <li><Link to={`/users/${userId}`}><ProfileImage image={profileImage} /></Link></li>
           <li><Link to="/savedPosts">Saved Posts</Link></li>
-          <li><Link to="/post"><CreatePost onCreatePost={createPost} currentUser={currentUser} /></Link></li>
+          {/* Create Post button */}
+          <li><button onClick={onOpenCreatePost}>Create Post</button></li>
 
         </ul>
       </div>
