@@ -10,8 +10,6 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
   // ? is there to prevent errors if currentUser is null or undefined
   const token = currentUser?.token;
-  const profileImage = currentUser?.profileImage;
-  const userId = currentUser?.id;
   const [content, setContent] = useState("");
   const [media, setMedia] = useState(null);
   const [error, setError] = useState("");
