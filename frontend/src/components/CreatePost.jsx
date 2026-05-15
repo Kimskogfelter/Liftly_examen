@@ -44,6 +44,9 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
       setMedia(null);
       setError("");
 
+      // close the CreatePost component after successful post creation
+      onClose();
+
     } catch (err) {
 
       // handle errors and display error message to user
@@ -59,7 +62,7 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
         <textarea name="content" placeholder="What's on your mind?" value={content} onChange={(e) => setContent(e.target.value)}></textarea>
         {/* Media input */}
         <label htmlFor="media"><SlPicture/></label>
-        <input type="file" name="media" accept="image/*" onChange={(e) => setMedia(e.target.files[0])} />
+        <input className="hidden" type="file" name="media" id="media" accept="image/*" onChange={(e) => setMedia(e.target.files[0])} />
         {/* Error message */}
         {error && <p>{error}</p>}
         {/* Submit button */}
