@@ -24,6 +24,8 @@ function Home({ currentUser }) {
           {
             showCreatePost && (
               <CreatePost
+                setPosts={setPosts}
+                posts={posts}
                 currentUser={currentUser}
                 onClose={() => setShowCreatePost(false)}
               />
