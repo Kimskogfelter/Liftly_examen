@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { SlPicture } from "react-icons/sl";
 
 function CreatePost({ currentUser, onClose, setPosts, posts }) {
 
@@ -52,7 +53,7 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
         {/* Content textarea */}
         <textarea name="content" placeholder="What's on your mind?" value={content} onChange={(e) => setContent(e.target.value)}></textarea>
         {/* Media input */}
-        <label htmlFor="media">Upload an image or video:</label>
+        <label htmlFor="media"><SlPicture/></label>
         <input type="file" name="media" accept="image/*" onChange={(e) => setMedia(e.target.files[0])} />
         {/* Error message */}
         {error && <p>{error}</p>}
