@@ -23,7 +23,7 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
     try {
 
       // send post data to backend
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts`, { content, media }, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/create`, { content, media }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -38,6 +38,11 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
       if (response.status === 201) {
         navigate('/home');
       }
+
+      // reset form fields and error message
+      setContent("");
+      setMedia(null);
+      setError("");
 
     } catch (err) {
 
