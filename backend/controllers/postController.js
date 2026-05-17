@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { upload } from "../middleware/cloudinaryUpload.js";
 // loading env var from .env
 import 'dotenv/config';
+import path from "path";
 
 
 // ---------------------------- CREATE POST --------------------------- 
@@ -91,9 +92,11 @@ export const getPost = async (req, res, next) => {
         // populate replaces createdBy ObjectId with user data (username + profileImage)
         const post = await Post.findById(postId)
             .populate("createdBy", "username profileImage")
-            // populate replaces comment ObjectIds with full comment documents
+            // first populate replaces comment ObjectIds with full comment documents
             // path is needed because we use the sorting option, if not path would not be required
-            .populate({ path: "comments", options: { sort: { createdAt: -1 } } });
+            // second nested populate replaces the createdBy ObjectId with username and profile image
+            .populate({ path: "comments", options: { sort: { createdAt: -1 } }, 
+                populate: {path: "createdBy", select: "username profileImage"}});
 
         // check if post doesnt exists
         if (!post) {
