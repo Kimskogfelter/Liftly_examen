@@ -24,8 +24,8 @@ function GetPost({ currentUser, setPosts, posts }) {
                 }
             });
 
-            // update the posts state with the fetched posts data to update the UI
-            setPosts(response.data);
+            // update the posts state with the fetched array of posts from the backend
+            setPosts(response.data.getAllPosts);
             console.log("Posts fetched successfully:", response.data);
 
            
