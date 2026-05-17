@@ -18,7 +18,10 @@ function DisplayPost({ post }) {
                     <h2>{post.content}</h2>
                     {post.media && <img src={post.media} alt="Post media" />}
                     <p><TimeAgo date={post.createdAt} /></p>
+                    {/* Display comment count */}
+                    <p>{post.comments.length} comments</p>
                 </Link>
+
             </section>
         </>
     );
