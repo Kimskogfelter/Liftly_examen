@@ -7,7 +7,6 @@ import Feed from "../components/Feed";
 function Home({ currentUser }) {
 
   const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const token = currentUser?.token;
   const [showCreatePost, setShowCreatePost] = useState(false);
