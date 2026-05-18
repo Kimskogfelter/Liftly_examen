@@ -77,7 +77,7 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
 
 ## Installation
 
-1. Klona projektet
+1. Klona ner projektet i en mapp på din dator
 
     ```bash
     git clone https://github.com/Kimskogfelter/Liftly_examen
@@ -86,21 +86,24 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
 
 2. Installera dependencies
 
-    Backend:
+    Öppna två separata terminaler i projektmappen och kör följande kommandon:
 
-    ```bash
-    cd backend
-    npm install
-    ```
+      Backend:
 
-    Frontend:
+      ```bash
+      cd backend
+      npm install
+      ```
 
-    ```bash
-    cd frontend
-    npm install
-    ```
 
-3. Skapa `.env` fil
+      Frontend:
+
+      ```bash
+      cd frontend
+      npm install
+      ```
+
+3. Skapa `.env` fil i **backend** med nedan variabler
 
     ```env
     PORT=5000
@@ -115,7 +118,34 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
     LIFTLY_CLOUDINARY_API_SECRET=your_cloudinary_api_secret
     ```
 
-4. Starta applikationen
+4. Skapa `.env` fil i **frontend** med nedan variabler
+
+    ```env
+    VITE_API_URL=your_backend_url
+    ```
+
+5. MongoDB setup
+
+    1. Skapa ett konto på MongoDB Atlas
+    2. Skapa ett cluster
+    3. Klicka på "Connect"
+    4. Välj "Drivers"
+    5. Kopiera connection string
+    6. Lägg in den i `MONGO_URI` i `.env` för backend
+
+6. Cloudinary setup
+
+    1. Skapa ett konto på Cloudinary
+    2. Gå till Dashboard
+    3. Kopiera:
+        - Cloud Name
+        - API Key
+        - API Secret
+    4. Lägg in värdena i `.env` för backend
+
+7. Starta applikationen
+
+    Kör följande kommandon i respektive terminal:
 
     Backend:
 
@@ -128,9 +158,17 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
     ```bash
     npm run dev
     ```
+    ### Lokala url
+    Frontend: http://localhost:5173  
+    Backend API: http://localhost:5000
 
-Frontend: http://localhost:5173  
-Backend API: http://localhost:5000
+    ### Live demo
+    Frontend:
+    https://din-frontend-url.com
+
+    Backend API:
+    https://din-backend-url.com
+
 
 ## Design
 
