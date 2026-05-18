@@ -16,9 +16,8 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 8. Ska kunna se andra användares inlägg
 9. Ska kunna gilla andra användares inlägg
 10. Ska kunna spara andra användares inlägg för att kolla på senare
-11. Ska kunna sortera sparade inlägg efter kategorier
-12. Ska kunna besöka en annan användares profil 
-13. Ska ha en egen profil sida
+11. Ska kunna besöka en annan användares profil 
+12. Ska ha en egen profil sida
 
 
 #### Besökare
@@ -26,23 +25,18 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 
 ### Backend
 #### Databas
-1. Spara användarnamn
-2. Spara inlägg med: text, bild, video, datum, likes, kommentarer, skapad av user_id, post_id
+1. Spara användare med: användarnamn, email, lösenord, profilbild, profil bio, följare, användare man följer, sparade inlägg, skapade inlägg
+2. Spara inlägg med: text, bild, datum, likes, kommentarer, skapad av user_id, post_id
 3. Spara kommentarer: text, likes, skapad av user_id, datum, kopplat till inlägg
 4. Sparade inlägg: user_id + post_id relation
-5. Admin inlogg? : spara blockarade användare, raderade användare, datum, admin_id
-6. Relationer: user -> post (1 till många)
-7. Relationer: post -> comment (1 till många)
-8. Relationer: user -> likes (många-till-många)
+5. Relationer: user -> post (1 till många)
+6. Relationer: post -> comment (1 till många)
+7. Relationer: user -> likes (många-till-många)
 
 #### Funktioner 
-1. Lösenordhantering: glömt/ändra lösenord
-2. Validering: se till att text, bild/video, profilinfo följer rätt format/filstorlek
-3. Säkerhet: sessionshantering, token-baserad autentisering, skydd mot oönskad åtkomst
-4. Filhantering: hur bilder/videos lagras – lokalt eller moln?
-5. Notiser/feedback: bekräftelse på like, kommentar eller radering
-6. Sök och filter: sök efter användare eller inlägg
-7. Relationer i databasen: t.ex. “följare”
+1. Validering: se till att text, bild/video, profilinfo följer rätt format/filstorlek
+2. Säkerhet: sessionshantering, token-baserad autentisering, skydd mot oönskad åtkomst
+3. Filhantering: hur bilder/videos lagras – lokalt eller moln?
 
 ## Teknik & programmeringsspråk
 
@@ -295,10 +289,16 @@ Planerade features för framtida versioner av appen:
 * Admin - Ska kunna radera en användare från appen via en admin panel
 * Frontend - Ska kunna använda sökfunktion
 * Frontend - Ska kunna filtrera inlägg efter kategori
+* Frontend - Ska kunna sortera sparade inlägg efter kategorier
 * Frontend - Ska kunna följa andra användare
 * Frontend - Ska kunna kommentera på andra användares inlägg
 * Frontend - Ska kunna gilla andra användares kommentarer
 * Frontend - Ska kunna skapa egna inlägg med video
+* Funktion - Notiser/feedback: bekräftelse på like, kommentar eller radering
+* Funktion - Sök och filter: sök efter användare eller inlägg
+* Funktion - Lösenordhantering: glömt/ändra lösenord
+
+
 
 
 
