@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ProfileImage from "./ProfileImage";
+import ProfileImage from "../users/ProfileImage";
 import TimeAgo from "react-timeago";
 
-function DisplayComment({ comment }) {
+function CommentCard({ comment }) {
 
     return (
         <>
@@ -21,4 +21,4 @@ function DisplayComment({ comment }) {
     );
 }
 
-export default DisplayComment;
+export default CommentCard;

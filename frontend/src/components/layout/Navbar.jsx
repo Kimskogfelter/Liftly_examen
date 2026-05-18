@@ -1,17 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-import logo from '../assets/images/liftly-logo.png';
-import ProfileImage from "./ProfileImage";
-import CreatePost from "./CreatePost";
+import logo from '../../assets/images/liftly-logo.png';
+import ProfileImage from "../users/ProfileImage";
+import CreatePost from "../posts/CreatePostModal";
+import { Logout } from "../../functions/Logout";
 
-function Navbar({ currentUser, onOpenCreatePost }) {
+function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
 
-  // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
-  // ? is there to prevent errors if currentUser is null or undefined
-  const token = currentUser?.token;
   const profileImage = currentUser?.profileImage;
-  const userId = currentUser?.id;
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-[#0D0D0E] p-4 text-white w-22.5 h-screen text-[10px] flex flex-col justify-between items-center">
@@ -30,7 +29,7 @@ function Navbar({ currentUser, onOpenCreatePost }) {
         </form>
         {/* Navigation links */}
         <ul>
-          <li><Link to={`/users/${userId}`}><ProfileImage image={profileImage} /></Link></li>
+          <li><Link to={`/users/${currentUser?.id}`}><ProfileImage image={profileImage} /></Link></li>
           <li><Link to="/savedPosts">Saved Posts</Link></li>
           {/* Create Post button */}
           <li><button onClick={onOpenCreatePost}>Create Post</button></li>
@@ -38,12 +37,11 @@ function Navbar({ currentUser, onOpenCreatePost }) {
         </ul>
       </div>
       {/* Logout button */}
-      {/* only shown when user is logged in with a valid token */}
-      <div>{token ?
-        <Link to="/logout">
+      <div>
+          <button onClick={() => Logout(setCurrentUser, navigate)}>
           <input className="cursor-pointer bg-amber-50 hover:bg-gray-600 text-black font-bold py-2 px-4 rounded" type="button" value="Logout" />
-        </Link> : <Link to="/login">Login</Link>
-      }
+        </button>
+      
       </div>
     </nav>
   );

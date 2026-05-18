@@ -1,18 +1,17 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../components/Navbar";
-import CreatePost from "../components/CreatePost";
-import ProfileImage from "../components/ProfileImage";
+import Navbar from "../components/layout/Navbar";
+import CreatePost from "../components/posts/CreatePostModal";
+import ProfileImage from "../components/users/ProfileImage";
+import { useParams } from "react-router-dom";
 
 function ProfilePage({ currentUser }) {
 
-  const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
   const token = currentUser?.token;
-  const userId  = currentUser?.id;
+  const { userId } = useParams(); // get user ID from URL parameters
   const [userInfo, setUserInfo] = useState(null);
-  const [showCreatePost, setShowCreatePost] = useState(false);
 
    // function to fetch user information and posts
     const getUserInfo = async () => {
@@ -45,21 +44,7 @@ function ProfilePage({ currentUser }) {
     }, []);
 
   return (
-    <div className="flex">
-      {/* Navbar */}
-      {/* onOpenCreatePost prop passed to Navbar */}
-      <Navbar currentUser={currentUser} onOpenCreatePost={() => setShowCreatePost(true)} />
-      {/* render CreatePost component when showCreatePost is true */}
-      {
-        showCreatePost && (
-          <CreatePost
-            setPosts={setPosts}
-            posts={posts}
-            currentUser={currentUser}
-            onClose={() => setShowCreatePost(false)}
-          />
-        )
-      }
+  
       <section className="flex-1 p-4">
         {/* display user information */}
         <div>
@@ -75,7 +60,7 @@ function ProfilePage({ currentUser }) {
         {/* display user's posts */}
         <div></div>
       </section>
-    </div>
+   
   );
 }
 

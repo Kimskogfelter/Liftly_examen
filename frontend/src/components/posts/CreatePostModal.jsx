@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { SlPicture } from "react-icons/sl";
 
-function CreatePost({ currentUser, onClose, setPosts, posts }) {
+function CreatePostModal({ currentUser, onClose }) {
 
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
   // ? is there to prevent errors if currentUser is null or undefined
@@ -28,28 +28,24 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
       });
       console.log("Post created successfully:", response.data);
 
-      // add the new post to the posts state to update the UI
-      const newPost = response.data;
-      setPosts([newPost, ...posts]);
-
-      // redirect to home page after successful post creation
-      if (response.status === 201) {
-        navigate('/home');
-      }
-
       // reset form fields and error message
       setContent("");
       setMedia(null);
       setError("");
 
+
+      // redirect to home page after successful creation of post
+      if (response.status === 201) {
+        navigate('/home');
+      }
       // close the CreatePost component after successful post creation
       onClose();
 
     } catch (err) {
 
       // handle errors and display error message to user
-      const errorResponse = err.response.data;
-      setError(errorResponse.message || "Your post could not be created. Please try again.");
+      const errorResponse = err.response?.data;
+      setError(errorResponse?.message || "Your post could not be created. Please try again.");
     }
   };
 
@@ -59,7 +55,7 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
         {/* Content textarea */}
         <textarea name="content" placeholder="What's on your mind?" value={content} onChange={(e) => setContent(e.target.value)}></textarea>
         {/* Media input */}
-        <label htmlFor="media"><SlPicture/></label>
+        <label htmlFor="media"><SlPicture /></label>
         <input className="hidden" type="file" name="media" id="media" accept="image/*" onChange={(e) => setMedia(e.target.files[0])} />
         {/* Error message */}
         {error && <p>{error}</p>}
@@ -72,4 +68,4 @@ function CreatePost({ currentUser, onClose, setPosts, posts }) {
   );
 }
 
-export default CreatePost;
+export default CreatePostModal;

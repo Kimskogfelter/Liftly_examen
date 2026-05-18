@@ -1,5 +1,5 @@
 import React from "react";
-import DisplayPost from "./DisplayPost";
+import PostCard from "./posts/PostCard";
 
 function Feed({ posts, currentUser, onSetPosts }) {
 
@@ -24,7 +24,7 @@ function Feed({ posts, currentUser, onSetPosts }) {
                     <p>No posts available.</p>
                 ) : (
                     posts.map((post) => (
-                        <DisplayPost key={post._id} post={post} currentUser={currentUser} onEditPost={handleEditPost} onDeletePost={handleDeletePost} />
+                        <PostCard key={post._id} post={post} currentUser={currentUser} onEditPost={handleEditPost} onDeletePost={handleDeletePost} />
                     ))
                 )}
             </div>

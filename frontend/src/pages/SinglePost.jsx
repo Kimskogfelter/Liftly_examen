@@ -1,11 +1,12 @@
 import React from "react";
 import { useState } from "react";
-import axios from "axios";
 import { useEffect } from "react";
-import DisplayPost from "../components/DisplayPost";
-import CreateComment from "../components/CreateComment";
-import CommentList from "../components/CommentList";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import PostCard from "../components/posts/PostCard";
+import CreateComment from "../components/comments/CreateCommentModal";
+import CommentList from "../components/comments/CommentList";
+
 
 function SinglePost({ currentUser }) {
 
@@ -37,8 +38,8 @@ function SinglePost({ currentUser }) {
 
             console.log(err.response);
             // handle errors and display error message to user
-            const errorResponse = err.response.data;
-            setError(errorResponse.message || "Your post details could not be fetched. Please try again.");
+            const errorResponse = err.response?.data;
+            setError(errorResponse?.message || "Your post details could not be fetched. Please try again.");
 
             // reset post and comments state to null
             setPost(null);
@@ -58,7 +59,7 @@ function SinglePost({ currentUser }) {
             {/* if post exist execute below code */}
             {post && (
                 <>
-                    <DisplayPost post={post} />
+                    <PostCard post={post} />
 
                     <CreateComment
                         currentUser={currentUser}

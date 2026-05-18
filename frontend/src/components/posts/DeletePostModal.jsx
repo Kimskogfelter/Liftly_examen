@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-function DeletePost ({ post, onClose }) {
+function DeletePostModal ({ post, onClose }) {
 
     const token = localStorage.getItem("token");
     const [error, setError] = useState(""); 
@@ -48,4 +48,4 @@ function DeletePost ({ post, onClose }) {
     )
 }   
 
-export default DeletePost;
+export default DeletePostModal;

@@ -1,14 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import ProfileImage from "./ProfileImage";
+import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
 import { FiHeart } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 
-function DisplayPost({ post, currentUser, onEditPost, onDeletePost }) {
+function PostCard({ post, currentUser, onEditPost, onDeletePost }) {
 
     const [showPostActions, setShowPostActions] = useState(false);
     const [likePost, setLikePost] = useState(false);
@@ -31,7 +31,7 @@ function DisplayPost({ post, currentUser, onEditPost, onDeletePost }) {
                     {/* only shows if the current user id matches the post creator's id */}
                     {post.createdBy._id === currentUser?.id && (
                         <>
-                            {showPostActions && <PostActionsMenu post={post} onEditPost={onEditPost} onDeletePost={onDeletePost} />}
+                            {showPostActions && <PostActionsMenu currentUser={currentUser} post={post} onEditPost={onEditPost} onDeletePost={onDeletePost} />}
                             <button onClick={() => setShowPostActions(!showPostActions)}>
                                 <BsThreeDots />
                             </button>
@@ -59,4 +59,4 @@ function DisplayPost({ post, currentUser, onEditPost, onDeletePost }) {
     );
 }
 
-export default DisplayPost;
+export default PostCard;

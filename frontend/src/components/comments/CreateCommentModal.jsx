@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-function CreateComment({ currentUser, comments, setComments, postId }) {
+function CreateCommentModal({ currentUser, comments, setComments, postId }) {
 
   // states and variables
   const token = currentUser?.token;
@@ -53,4 +53,4 @@ function CreateComment({ currentUser, comments, setComments, postId }) {
   );
 }
 
-export default CreateComment;
+export default CreateCommentModal;

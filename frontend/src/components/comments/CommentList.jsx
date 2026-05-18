@@ -1,5 +1,5 @@
 import React from "react";
-import DisplayComment from "./DisplayComment";
+import DisplayComment from "./CommentCard";
 
 function CommentList({ comments }) {
 
