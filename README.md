@@ -11,29 +11,20 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 3. Ska kunna logga ut med sin skapade användare
 4. Ska kunna skapa egna inlägg med text
 5. Ska kunna skapa egna inlägg med bild
-6. Ska kunna skapa egna inlägg med video
-7. Ska kunna redigera egna inlägg
-8. Ska kunna radera egna inlägg
-9. Ska kunna se andra användares inlägg
-10. Ska kunna kommentera på andra användares inlägg
-11. Ska kunna gilla andra användares kommentarer
-12. Ska kunna gilla andra användares inlägg
-13. Ska kunna spara andra användares inlägg för att kolla på senare
-14. Ska kunna sortera sparade inlägg efter kategorier
-15. Ska kunna besöka en annan användares profil 
-16. Ska kunna följa andra användare
-17. Ska ha en egen profil sida
-18. Ska kunna använda sökfunktion
-19. Ska kunna filtrera inlägg efter kategori
+6. Ska kunna redigera egna inlägg
+7. Ska kunna radera egna inlägg
+8. Ska kunna se andra användares inlägg
+9. Ska kunna gilla andra användares inlägg
+10. Ska kunna spara andra användares inlägg för att kolla på senare
+11. Ska kunna sortera sparade inlägg efter kategorier
+12. Ska kunna besöka en annan användares profil 
+13. Ska ha en egen profil sida
+
 
 #### Besökare
 1. Ska kunna se alla inlägg på hemsidan
 
 ### Backend
-#### Admin
-1. Ska kunna blockera en användare från appen
-2. Ska kunna radera en användare från appen 
-
 #### Databas
 1. Spara användarnamn
 2. Spara inlägg med: text, bild, video, datum, likes, kommentarer, skapad av user_id, post_id
@@ -300,6 +291,17 @@ Planerade features för framtida versioner av appen:
 * Visa online-användare
 * Realtidschatt med Socket.IO
 * Förbättrad sessionshantering och säkerhetsfunktioner (t.ex. token-uppdatering och enhetshantering)
+* Admin - Ska kunna blockera en användare från appen via en admin panel
+* Admin - Ska kunna radera en användare från appen via en admin panel
+* Frontend - Ska kunna använda sökfunktion
+* Frontend - Ska kunna filtrera inlägg efter kategori
+* Frontend - Ska kunna följa andra användare
+* Frontend - Ska kunna kommentera på andra användares inlägg
+* Frontend - Ska kunna gilla andra användares kommentarer
+* Frontend - Ska kunna skapa egna inlägg med video
+
+
+
 
 ### Referenser
 
