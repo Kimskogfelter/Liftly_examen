@@ -40,6 +40,7 @@ function Home({ currentUser }) {
           <Feed
             posts={posts}
             onSetPosts={setPosts}
+            currentUser={currentUser}
           />
         </section>
       </div>
