@@ -9,7 +9,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark } from "react-icons/fi"; 
 import { FaHeart, FaRegComment } from "react-icons/fa";
 
-function PostCard({ post, currentUser, onEditPost, onDeletePost }) {
+function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
     const [showPostActions, setShowPostActions] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
@@ -24,20 +24,20 @@ function PostCard({ post, currentUser, onEditPost, onDeletePost }) {
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full overflow-hidden object-cover">
-                            <ProfileImage image={post.createdBy.profileImage} />
+                            <ProfileImage image={post.createdBy?.profileImage} />
                         </div>
-                        <Link to={`/users/${post.createdBy._id}`} className="font-semibold text-lg hover:underline text-black">
+                        <Link to={`/users/${post.createdBy?._id}`} className="font-semibold text-lg hover:underline text-black">
                             {post.createdBy.username}
                         </Link> {/* Link to user profile page */}
                     </div>
 
                     {/* Post actions menu */}
                     {/* only shows if the current user id matches the post creator's id */}
-                    {post.createdBy._id === currentUser?.id && (
+                    {post.createdBy?._id === currentUser?.id && (
                         <div className="relative">
                             {showPostActions && (
                                 <div className="absolute right-0 mt-2 z-10">
-                                    <PostActionsMenu currentUser={currentUser} post={post} onEditPost={onEditPost} onDeletePost={onDeletePost} />
+                                    <PostActionsMenu currentUser={currentUser} post={post} handleEditPost={handleEditPost} handleDeletePost={handleDeletePost} />
                                 </div>
                             )}
                             <button 
