@@ -549,9 +549,12 @@ export const updatePost = async (req, res, next) => {
         // fetch content from frontend
         const { content } = req.body;
 
-
-        // update post
-        const updatedPost = await Post.findByIdAndUpdate(postId, { content }, { new: true })
+        // update post and populate user info
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId, 
+            { content }, 
+            { new: true } 
+            ).populate("createdBy");
 
 
         // success message
