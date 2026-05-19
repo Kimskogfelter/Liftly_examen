@@ -17,6 +17,7 @@ const uploadFile = (folderName) => {
         folder: folderPath,
         public_id: publicId,
         format: "webp",
+        // added with help from Mattias Lager, teacher at Glimåkra folkhögskola
         transformation: [
           {
             width: 1920, 
