@@ -276,6 +276,7 @@ AI har använts som stöd för:
 * förklaring av tekniska koncept
 * genererat och strukturerat GitHub Issues baserat på projektets krav i README-filen
 * felsökning och optimering av kod
+* Tailwind-styling baserat på min Figma-design, för att kunna lägga mer fokus på applikationens logik och funktionalitet
 
 ## Framtida utveckling
 
