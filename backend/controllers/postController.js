@@ -41,16 +41,21 @@ export const createPost = async (req, res, next) => {
             return next(new HttpError("Content should be at least 5 characters long", 422))
         }
 
+        // --------- media -----------
+
+        let mediaFile = req.file;
+
         // --------- create new post to database ----------
 
         let newPost;
 
-        if (req.file) {
+        if (mediaFile) {
 
             // creates and adds post to "post" database
-            newPost = await Post.create({ createdBy: user._id, content: content, media: req.file.path })
+            newPost = await Post.create({ createdBy: user._id, content: content, media: mediaFile.path })
             // updates user database with created post in "user -> post"
             await User.findByIdAndUpdate(newPost.createdBy, { $push: { posts: newPost._id } })
+
         } else {
 
             newPost = await Post.create({ createdBy: user._id, content: content })
@@ -59,6 +64,7 @@ export const createPost = async (req, res, next) => {
         }
 
         return res.status(201).json({ message: 'Post created: ', newPost });
+
 
 
     } catch (error) {
@@ -95,8 +101,10 @@ export const getPost = async (req, res, next) => {
             // first populate replaces comment ObjectIds with full comment documents
             // path is needed because we use the sorting option, if not path would not be required
             // second nested populate replaces the createdBy ObjectId with username and profile image
-            .populate({ path: "comments", options: { sort: { createdAt: -1 } }, 
-                populate: {path: "createdBy", select: "username profileImage"}});
+            .populate({
+                path: "comments", options: { sort: { createdAt: -1 } },
+                populate: { path: "createdBy", select: "username profileImage" }
+            });
 
         // check if post doesnt exists
         if (!post) {
