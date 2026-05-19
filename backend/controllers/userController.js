@@ -174,7 +174,10 @@ export const getUser = async (req, res, next) => {
         }
 
         // fetch user from database
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).populate({
+            path: "posts",
+            populate: { path: "createdBy" }
+        });
 
         // check if user doesnt exists
         if (!user) {
