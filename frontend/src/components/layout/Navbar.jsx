@@ -16,7 +16,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
     // Updated width to md:w-20 (80px) for a sleek, non-intrusive desktop sidebar
     <nav className="bg-[#0D0D0E] text-white p-3 flex flex-row md:flex-col justify-between items-center w-full md:w-20 h-auto md:h-screen border-b md:border-b-0 md:border-r border-zinc-800 sticky md:fixed top-0 left-0 z-50">
 
-      {/* Container for Logo, Search, and Links */}
+      {/* Container for Logo and Links */}
       <div className="flex md:flex-col items-center w-full gap-4 md:gap-6">
         {/* Logo */}
         <div className="mb-0 md:mb-2 shrink-0">
@@ -24,19 +24,6 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
             <img className="h-7 md:h-8 w-auto object-contain mx-auto" src={logo} alt="Liftly logo" />
           </Link>
         </div>
-
-        {/* search bar */}
-        {/* The form container stays visible on sm and up, taking full layout block sizing on desktop */}
-        <form className="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 md:p-2 focus-within:border-zinc-600 transition-colors w-full max-w-12 md:max-w-none">
-          <input
-            className="bg-transparent text-xs w-full focus:outline-none placeholder-zinc-600 text-white block"
-            type="search"
-            placeholder="Search..."
-          />
-          <button className="cursor-pointer text-zinc-400 hover:text-white transition-colors ml-1 shrink-0" type="submit">
-            <CiSearch size={20} />
-          </button>
-        </form>
 
         {/* Navigation links */}
         <ul className="flex flex-row md:flex-col items-center gap-5 md:gap-6 ml-auto md:ml-0 text-[11px] font-medium tracking-wide text-center w-full justify-end md:justify-start">
