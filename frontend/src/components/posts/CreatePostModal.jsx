@@ -23,7 +23,8 @@ function CreatePostModal({ currentUser, onClose }) {
       // send post data to backend
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/create`, { content, media }, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
         }
       });
       console.log("Post created successfully:", response.data);
