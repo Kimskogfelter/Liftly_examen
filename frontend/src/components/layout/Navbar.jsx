@@ -29,6 +29,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         </form>
         {/* Navigation links */}
         <ul>
+          {/* Logged in users profile link */}
           <li><Link to={`/users/${currentUser?.id}`}><ProfileImage image={profileImage} /></Link></li>
           <li><Link to="/savedPosts">Saved Posts</Link></li>
           {/* Create Post button */}
