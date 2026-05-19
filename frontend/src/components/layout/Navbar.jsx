@@ -27,7 +27,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
 
         {/* search bar */}
         {/* The form container stays visible on sm and up, taking full layout block sizing on desktop */}
-        <form className="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 md:p-2 focus-within:border-zinc-600 transition-colors w-full max-w-[48px] md:max-w-none">
+        <form className="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 md:p-2 focus-within:border-zinc-600 transition-colors w-full max-w-12 md:max-w-none">
           <input
             className="bg-transparent text-xs w-full focus:outline-none placeholder-zinc-600 text-white block"
             type="search"
@@ -41,7 +41,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         {/* Navigation links */}
         <ul className="flex flex-row md:flex-col items-center gap-5 md:gap-6 ml-auto md:ml-0 text-[11px] font-medium tracking-wide text-center w-full justify-end md:justify-start">
           {/* Logged in users profile link */}
-          <li className="order-3 md:order-none">
+          <li className="order-3 md:order-0">
             <Link to={`/users/${currentUser?.id}`} className="block w-8 h-8 rounded-full overflow-hidden border border-zinc-800 hover:border-zinc-500 transition-colors mx-auto">
               <ProfileImage image={profileImage} />
             </Link>
