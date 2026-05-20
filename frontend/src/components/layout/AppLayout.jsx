@@ -5,6 +5,9 @@ import { Outlet } from "react-router-dom";
 
 function AppLayout({ currentUser, setCurrentUser }) {
 
+    // STATE FOR SHOW CREATE POST FORM
+    // the state to controll if create post form should be visable or not must be in the app layout 
+    // as we want the create post form to render in the overall layout, not in the navbar
     const [showCreatePost, setShowCreatePost] = useState(false);
 
     return (
