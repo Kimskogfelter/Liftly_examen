@@ -272,7 +272,7 @@ Liftly syftar till att lösa detta problem genom att erbjuda en plattform där a
 ## AI användning
 
 AI har använts som stöd för:
-* formulering av texter
+* formulering av texter, commits och kommentarer i koden
 * förklaring av tekniska koncept
 * genererat och strukturerat GitHub Issues baserat på projektets krav i README-filen
 * felsökning och optimering av kod
