@@ -1,7 +1,7 @@
 import React from "react";
-import PostCard from "./posts/PostCard";
+import PostCard from "./PostCard";
 
-function Feed({ posts, currentUser, handleDeletePost, handleEditPost  }) {
+function PostFeed({ posts, currentUser, handleDeletePost, handleEditPost  }) {
 
 
     return (
@@ -20,4 +20,4 @@ function Feed({ posts, currentUser, handleDeletePost, handleEditPost  }) {
     );
 }
 
-export default Feed;
+export default PostFeed;
