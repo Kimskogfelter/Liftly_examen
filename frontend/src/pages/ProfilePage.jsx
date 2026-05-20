@@ -27,7 +27,7 @@ function ProfilePage({ currentUser }) {
 
       // update the user info and posts state with the fetched user information
       setUserInfo(response.data.user);
-      setPosts(response.data.user.posts); // Storing the user's specific posts here
+      setPosts(response.data.user.posts); 
 
     } catch (err) {
       // handle errors and display error message to user
