@@ -17,7 +17,7 @@ function Register() {
 
   // function to handle user registration
   const registerUser = async (e) => {
-    e.preventDefault();     
+    e.preventDefault();
     try {
 
       // send registration data to backend
@@ -37,36 +37,113 @@ function Register() {
   };
 
   return (
-    <section>
-        <div><img src={logo} alt="Liftly logo" />
-        <p>Where training meets community</p>
-        <p>Join us today!</p>
+    <section className="flex min-h-screen flex-col items-center justify-center bg-[#0D0D0E] px-4 font-sans text-white">
+      {/* Centrerad register-box (låst till 320px bredd) */}
+      <div className="w-full max-w-xs flex flex-col items-center">
+
+        {/* Logo & Slogan Container */}
+        <div className="mb-14 flex flex-col items-center text-center">
+          <img src={logo} alt="Liftly logo" className="h-9 w-auto mb-2 object-contain" />
+          <p className="text-sm font-normal text-white tracking-wide">
+            Where training meets community
+          </p>
+          <p className="text-xs font-light text-gray-400 mt-1">
+            Join us today!
+          </p>
         </div>
-        <form onSubmit={registerUser}>
-          {/* username */}
-          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-          {/* email */}
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          {/* password */}
-          <div>
-            <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <button type="button" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <FaEye/> : <FaEyeSlash/>}
+
+        {/* Form Container */}
+        <form onSubmit={registerUser} className="w-full flex flex-col gap-3">
+          {/* Username */}
+          <div className="flex flex-col">
+            <input
+              type="text"
+              placeholder="Username:"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full rounded bg-white px-3 py-2 text-xs text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+          </div>
+
+          {/* Email */}
+          <div className="flex flex-col">
+            <input
+              type="email"
+              placeholder="Email:"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full rounded bg-white px-3 py-2 text-xs text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+          </div>
+
+          {/* Password */}
+          <div className="relative flex flex-col">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password:"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full rounded bg-white pl-3 pr-10 py-2 text-xs text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <FaEye size={14} /> : <FaEyeSlash size={14} />}
             </button>
           </div>
-          {/* confirm password */}
-          <div>
-            <input type={showPassword ? "text" : "password"} placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-            <button type="button" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <FaEye/> : <FaEyeSlash/>}
+
+          {/* Confirm Password */}
+          <div className="relative flex flex-col">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Confirm Password:"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className="w-full rounded bg-white pl-3 pr-10 py-2 text-xs text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <FaEye size={14} /> : <FaEyeSlash size={14} />}
             </button>
           </div>
+
           {/* Sign up button */}
-          <input type="submit" value="Sign up" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
+          <button
+            type="submit"
+            className="mt-1 w-full rounded bg-[#4A4545] py-2 text-xs font-medium text-white transition-colors hover:bg-[#575151] focus:outline-none focus:ring-1 focus:ring-gray-400"
+          >
+            Sign up
+          </button>
         </form>
+
         {/* Error message */}
-        {error && <p>{error}</p>}
-        <div><p>Already have an account? <a href="/login">Login here</a></p></div>
+        {error && (
+          <p className="mt-3 text-xs font-semibold text-red-500 bg-red-500/10 px-2 py-1 rounded border border-red-500/20 w-full text-center">
+            {error}
+          </p>
+        )}
+
+        {/* Login link */}
+        <div className="mt-4 text-center">
+          <p className="text-xs text-gray-300">
+            Already have an account?{/* {" "} renders space between the paragraph and link */}
+            {" "}
+            <a href="/login" className="font-semibold text-white hover:underline">
+              Login
+            </a>
+          </p>
+        </div>
+
+      </div>
     </section>
   );
 }
