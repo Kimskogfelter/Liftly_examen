@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileImage from "../components/users/ProfileImage";
-import Feed from "../components/Feed"; 
+import PostFeed from "../components/posts/PostFeed"; 
 import { useParams } from "react-router-dom";
 
 function ProfilePage({ currentUser }) {
@@ -82,8 +82,8 @@ function ProfilePage({ currentUser }) {
       {/* display user's posts */}
       <div>
         <h3 className="text-lg font-bold mb-4 text-black">Posts</h3>
-        {/* render Feed component to display posts */}
-        <Feed
+        {/* render Post feed component to display posts */}
+        <PostFeed
           posts={posts}
           currentUser={currentUser}
           handleEditPost={handleEditPost}
