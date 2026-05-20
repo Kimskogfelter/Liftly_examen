@@ -99,7 +99,7 @@ function ProfilePage({ currentUser }) {
 
           {/* Third row: User bio */}
           <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
-            {userInfo?.profileBio || "Lorem ipsum dolor sit amet consectetur. Velit turpis ut est et in ultrices. Pretium placerat pellentesque proin gravida quis."}
+            {userInfo?.profileBio || "No bio yet."}
           </p>
 
         </div>
