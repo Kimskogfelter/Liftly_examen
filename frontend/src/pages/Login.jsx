@@ -13,7 +13,7 @@ function Login({ setCurrentUser }) {
 
   // function to handle user login
   const loginUser = async (e) => {
-    e.preventDefault();     
+    e.preventDefault();
     try {
 
       // send login data to backend
@@ -37,22 +37,69 @@ function Login({ setCurrentUser }) {
   };
 
   return (
-    <section>
-        <div><img src={logo} alt="Liftly logo" />
-        <p>Where training meets community</p>
-        <p>Welcome back! Please log in to your account</p>
+    <section className="flex min-h-screen flex-col items-center justify-center bg-[#0D0D0E] px-4 font-sans text-white">
+      {/* Centrerad login-box */}
+      <div className="w-full max-w-xs flex flex-col items-center">
+
+        {/* Logo & Slogan Container - Ändrad från mb-6 till mb-14 för mer luft i botten */}
+        <div className="mb-14 flex flex-col items-center text-center">
+          <img src={logo} alt="Liftly logo" className="h-9 w-auto mb-2 object-contain" />
+          <p className="text-sm font-normal text-white tracking-wide">
+            Where training meets community
+          </p>
         </div>
-        <form onSubmit={loginUser}>
-          {/* username */}
-          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-          {/* password */}
-          <input type={"password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+
+        {/* Form Container */}
+        <form onSubmit={loginUser} className="w-full flex flex-col gap-3">
+          {/* Username */}
+          <div className="flex flex-col">
+            <input
+              type="text"
+              placeholder="Username:"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full rounded bg-white px-3 py-2 text-xs text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+          </div>
+
+          {/* Password */}
+          <div className="flex flex-col">
+            <input
+              type="password"
+              placeholder="Password:"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full rounded bg-white px-3 py-2 text-xs text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+          </div>
+
           {/* Log in button */}
-          <input type="submit" value="Log in" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
+          <button
+            type="submit"
+            className="mt-1 w-full rounded bg-[#4A4545] py-2 text-xs font-medium text-white transition-colors hover:bg-[#575151] focus:outline-none focus:ring-1 focus:ring-gray-400"
+          >
+            Log in
+          </button>
         </form>
+
         {/* Error message */}
-        {error && <p>{error}</p>}
-        <div><p>Don't have an account? <a href="/register">Sign up here</a></p></div>
+        {error && (
+          <p className="mt-3 text-xs font-semibold text-red-500 bg-red-500/10 px-2 py-1 rounded border border-red-500/20 w-full text-center">
+            {error}
+          </p>
+        )}
+
+        {/* Sign up link */}
+        <div className="mt-4 text-center">
+          <p className="text-xs text-gray-300">
+            Don’t have an account?{" "}  {/* {" "} renders space between the paragraph and link */}
+            <a href="/register" className="font-semibold text-white hover:underline"> Sign up </a>
+          </p>
+        </div>
+
+      </div>
     </section>
   );
 }
