@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import logo from '../../assets/images/liftly-logo.png';
 import ProfileImage from "../users/ProfileImage";
-import CreatePost from "../posts/CreatePostModal";
+import CreatePost from "../posts/CreatePostForm";
 import { Logout } from "../../functions/Logout";
 
 function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
