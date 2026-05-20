@@ -14,10 +14,9 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 6. Ska kunna redigera egna inlägg
 7. Ska kunna radera egna inlägg
 8. Ska kunna se andra användares inlägg
-9. Ska kunna gilla andra användares inlägg
-10. Ska kunna spara andra användares inlägg för att kolla på senare
-11. Ska kunna besöka en annan användares profil 
-12. Ska ha en egen profil sida
+9. Ska kunna spara andra användares inlägg för att kolla på senare
+10. Ska kunna besöka en annan användares profil 
+11. Ska ha en egen profil sida
 
 
 #### Besökare
@@ -40,7 +39,7 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 
 ## Teknik & programmeringsspråk
 
-* **Frontend:** React, HTML, CSS, Tailwind, React Router DOM, Axios, React Icons, Redux Toolkit, React Redux, React Timeago
+* **Frontend:** React, HTML, CSS, Tailwind, React Router DOM, Axios, React Icons, React Timeago
 * **Backend:** Node.js, Express.js, Mongoose
 * **Databas:** MongoDB
 * **Säkerhet:** JWT, bcrypt
@@ -283,15 +282,16 @@ Eftersom jag ibland tycker det är utmanande att formulera texter, har jag anvä
 
 Planerade features för framtida versioner av appen:
 
-* Notiser
 * Visa online-användare
 * Realtidschatt med Socket.IO
 * Förbättrad sessionshantering och säkerhetsfunktioner (t.ex. token-uppdatering och enhetshantering)
 * Admin - Ska kunna blockera en användare från appen via en admin panel
 * Admin - Ska kunna radera en användare från appen via en admin panel
 * Frontend - Ska kunna använda sökfunktion
+* Frontend - Ska kunna lägga till hashtags på sina egna inlägg
 * Frontend - Ska kunna filtrera inlägg efter kategori
 * Frontend - Ska kunna sortera sparade inlägg efter kategorier
+* Frontend - Ska kunna gilla andra användares inlägg
 * Frontend - Ska kunna följa andra användare
 * Frontend - Ska kunna kommentera på andra användares inlägg
 * Frontend - Ska kunna gilla andra användares kommentarer
@@ -299,10 +299,6 @@ Planerade features för framtida versioner av appen:
 * Funktion - Notiser/feedback: bekräftelse på like, kommentar eller radering
 * Funktion - Sök och filter: sök efter användare eller inlägg
 * Funktion - Lösenordhantering: glömt/ändra lösenord
-
-
-
-
 
 
 ### Referenser
