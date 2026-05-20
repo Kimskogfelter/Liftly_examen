@@ -1,21 +1,51 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
+import { FaHeart } from "react-icons/fa";
 import TimeAgo from "react-timeago";
 
 function CommentCard({ comment }) {
 
     return (
         <>
-            <section>
-                {/* display user information */}
-                <div>
-                    <ProfileImage image={comment.createdBy.profileImage} />
-                    <Link to={`/users/${comment.createdBy._id}`}>{comment.createdBy.username}</Link> Link to user profile page
+            <section className="w-full max-w-md mx-auto bg-white p-3 flex items-start gap-3 font-sans">
+
+                {/* Profile image */}
+                <div className="w-8 h-8 rounded-full overflow-hidden object-cover shrink-0">
+                    <ProfileImage image={comment.createdBy?.profileImage} />
                 </div>
-                {/* Display comment content */}
-                <p>{comment.content}</p>
-                <p><TimeAgo date={comment.createdAt} /></p>
+
+                {/* Comment content container */}
+                <div className="flex-1 text-left min-w-0">
+
+                    {/* User name and comment text */}
+                    <div className="text-xs text-gray-800 leading-relaxed wrap-break-word">
+                        <Link
+                            to={`/users/${comment.createdBy?._id}`}
+                            className="font-bold text-black hover:underline mr-1.5 inline-block"
+                        >
+                            {comment.createdBy?.username}
+                        </Link>
+                        <span>{comment.content}</span>
+                    </div>
+
+                    {/* Footer row: Time, Reply action */}
+                    <div className="flex items-center gap-4 text-[10px] text-gray-400 mt-1 font-medium">
+                        <span><TimeAgo date={comment.createdAt} /></span>
+                        <button className="hover:text-gray-600 transition-colors cursor-pointer">
+                            Reply
+                        </button>
+                    </div>
+
+                </div>
+
+                {/* Right side: Clean black heart icon  */}
+                <div className="flex flex-col items-center justify-center shrink-0 text-black hover:text-red-500 transition-colors cursor-pointer pt-1">
+                    
+                    <FaHeart size={11} />
+                    <span className="text-[9px] font-bold text-black mt-0.5">55</span>
+                </div>
+
             </section>
         </>
     );
