@@ -49,11 +49,15 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
 
   return (
     <>
-      {/* Outer card wrapper */}
-      <div className="bg-white p-6 rounded-xl max-w-md mx-auto shadow-md border border-gray-100 font-sans">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Edit Post</h3>
+      {/* Outer card wrapper - modal */}
+     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
+      
+      {/* edit container */}
+      <div className="w-full max-w-md bg-white rounded-xl p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
         
-        <form onSubmit={editPost} className="space-y-4">
+        <h3 className="text-sm font-bold text-gray-900 mb-3 text-left">Edit Post</h3>
+        
+        <form onSubmit={editPost} className="space-y-3">
           {/* Content textarea */}
           <div className="relative">
             <textarea 
@@ -61,45 +65,36 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
               placeholder="What's on your mind?" 
               value={content} 
               onChange={(e) => setContent(e.target.value)}
-              className="w-full min-h-30 p-3 text-gray-800 placeholder-gray-400 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm bg-gray-50 transition-all"
+              className="w-full min-h-30 p-3 text-gray-800 placeholder-gray-400 border border-gray-200 rounded-lg resize-none focus:outline-none text-xs bg-gray-50/50 transition-all focus:border-zinc-400"
             ></textarea>
           </div>
 
-          {/* Media input (commented out for now, but pre-styled for later!) */}
-          {/* <div className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors">
-            <label htmlFor="media" className="cursor-pointer flex items-center gap-2 text-sm font-medium">
-              <SlPicture className="text-xl text-blue-500" />
-              <span>Change media</span>
-            </label>
-            <input className="hidden" type="file" name="media" id="media" accept="image/*" onChange={(e) => setMedia(e.target.files[0])} />
-          </div> 
-          */}
-
           {/* Error message */}
           {error && (
-            <div className="bg-red-50 text-red-600 text-xs p-2.5 rounded-lg font-medium border border-red-100">
+            <div className="bg-red-50 text-red-600 text-[11px] p-2 rounded-lg font-medium border border-red-100 text-left">
               {error}
             </div>
           )}
 
-          {/* Buttons footer */}
-          <div className="flex gap-3 justify-end pt-2 border-t border-gray-50">
+          {/* Buttons */}
+          <div className="flex gap-2 justify-end pt-2 border-t border-gray-100">
             <button 
               type="button" 
               onClick={onClose}
-              className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-2 px-4 rounded-lg transition-colors cursor-pointer text-sm"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-1.5 px-3 rounded-md transition-colors cursor-pointer text-xs"
             >
               Cancel
             </button>
             <button 
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors cursor-pointer text-sm shadow-sm"
+              className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-3 rounded-md transition-colors cursor-pointer text-xs shadow-sm"
             >
               Update Post
             </button>
           </div>
         </form>
       </div>
+    </div>
     </>
   );
 }
