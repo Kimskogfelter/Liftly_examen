@@ -23,7 +23,7 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
       });
       console.log("Comment created successfully:", response.data);
 
-      // add the new comment to the posts state to update the UI
+      // add the new comment to the comments state to update the UI
       const newComment = response.data.comments;
       setComments([newComment, ...comments]);
 
