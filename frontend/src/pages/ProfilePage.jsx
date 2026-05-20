@@ -79,7 +79,7 @@ function ProfilePage({ currentUser }) {
             </h2>
 
             {/* Follow-button*/}
-            <button className="bg-[#3A3939] hover:bg-zinc-800 text-white text-[10px] font-bold rounded transition-all cursor-pointer w-[62px] h-[22px] flex items-center justify-center shrink-0">
+            <button className="bg-[#3A3939] hover:bg-zinc-800 text-white text-[10px] font-bold rounded transition-all cursor-pointer w-15.5 h-5.5 flex items-center justify-center shrink-0">
               Follow
             </button>
           </div>
