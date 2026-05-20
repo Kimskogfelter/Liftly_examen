@@ -269,14 +269,15 @@ Idag är innehåll relaterat till träning, kost och hälsa ofta utspritt över 
 
 Liftly syftar till att lösa detta problem genom att erbjuda en plattform där allt träningsrelaterat innehåll samlas och kan organiseras på ett strukturerat sätt. Användare ska enkelt kunna spara, sortera och återvända till innehåll inom kategorier som träning, kost och livsstil.
 
-## AI användning
+## AI-användning
 
-AI har använts som stöd för:
-* formulering av texter, commits och kommentarer i koden
-* förklaring av tekniska koncept
-* genererat och strukturerat GitHub Issues baserat på projektets krav i README-filen
-* felsökning och optimering av kod
-* Tailwind-styling baserat på min Figma-design, för att kunna lägga mer fokus på att förstå och utveckla applikationens logik och funktionalitet
+Eftersom jag ibland tycker det är utmanande att formulera texter, har jag använt AI som ett stöd och bollplank genom projektet. Det har hjälpt mig att hålla dokumentationen tydlig och strukturerad, samt låtit mig lägga mer fokus på att förstå och utveckla applikationens logik.
+
+**AI har använts som stöd för:**
+* **Formulering:** Utformning av texter, commit-meddelanden och kommentarer i koden.
+* **Figma till kod:** Tailwind-styling baserat på min Figma-design.
+* **Projektplanering:** Generering och strukturering av GitHub Issues baserat på projektkraven.
+* **Felsökning & Lärande:** Felsökning, optimering av kod samt förklaring av tekniska koncept.
 
 ## Framtida utveckling
 
