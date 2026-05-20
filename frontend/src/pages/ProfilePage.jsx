@@ -2,14 +2,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileImage from "../components/users/ProfileImage";
-import PostFeed from "../components/posts/PostFeed"; 
+import PostFeed from "../components/posts/PostFeed";
 import { useParams } from "react-router-dom";
 
 function ProfilePage({ currentUser }) {
 
   const [error, setError] = useState("");
   const token = currentUser?.token;
-  const { userId } = useParams(); 
+  const { userId } = useParams();
   const [userInfo, setUserInfo] = useState(null);
   const [posts, setPosts] = useState([]);
 
@@ -27,7 +27,7 @@ function ProfilePage({ currentUser }) {
 
       // update the user info and posts state with the fetched user information
       setUserInfo(response.data.user);
-      setPosts(response.data.user.posts); 
+      setPosts(response.data.user.posts);
 
     } catch (err) {
       // handle errors and display error message to user
@@ -59,21 +59,49 @@ function ProfilePage({ currentUser }) {
 
   return (
     <section className="flex-1 p-6 max-w-4xl mx-auto font-sans text-gray-800">
-      
-      {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">{error}</div>}
 
+      {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">{error}</div>}
       {/* display user information */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8 flex flex-col sm:flex-row items-center gap-6">
-        <div className="w-20 h-20 shrink-0">
+      <div className="w-full max-w-md mx-auto bg-white p-5 mb-6 flex items-start gap-5 font-sans">
+
+        {/* Profile image */}
+        <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
           <ProfileImage image={userInfo?.profileImage} />
         </div>
-        
-        <div className="text-center sm:text-left space-y-2">
-          <h2 className="text-2xl font-bold text-black">{userInfo?.username}</h2>
-          {/* display user's bio */}
-          <p className="text-gray-600 text-sm max-w-xl leading-relaxed">
-            {userInfo?.profileBio}
+
+        {/* Info container */}
+        <div className="flex-1 space-y-3 text-left">
+
+          {/* First row: username + Follow-button */}
+          <div className="flex items-center gap-3">
+            <h2 className="text-base md:text-lg font-bold text-black tracking-wide leading-none">
+              {userInfo?.username || "Kim Moberg"}
+            </h2>
+
+            {/* Follow-button*/}
+            <button className="bg-[#3A3939] hover:bg-zinc-800 text-white text-[10px] font-bold rounded transition-all cursor-pointer w-[62px] h-[22px] flex items-center justify-center shrink-0">
+              Follow
+            </button>
+          </div>
+
+          {/* (Second row: Posts, Followers, Following) */}
+          <div className="flex items-center gap-4 text-xs text-gray-600">
+            <div>
+              <span className="font-bold text-black text-sm">312</span> posts
+            </div>
+            <div>
+              <span className="font-bold text-black text-sm">21</span> followers
+            </div>
+            <div>
+              <span className="font-bold text-black text-sm">500</span> following
+            </div>
+          </div>
+
+          {/* Third row: User bio */}
+          <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
+            {userInfo?.profileBio || "Lorem ipsum dolor sit amet consectetur. Velit turpis ut est et in ultrices. Pretium placerat pellentesque proin gravida quis."}
           </p>
+
         </div>
       </div>
 
@@ -81,7 +109,6 @@ function ProfilePage({ currentUser }) {
 
       {/* display user's posts */}
       <div>
-        <h3 className="text-lg font-bold mb-4 text-black">Posts</h3>
         {/* render Post feed component to display posts */}
         <PostFeed
           posts={posts}
