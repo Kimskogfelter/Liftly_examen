@@ -32,14 +32,22 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
                     {/* Post actions menu */}
                     {post.createdBy?._id === currentUser?.id && (
-                        <div className="relative">
+                        <div className="flex items-center gap-1 relative">
+
                             {showPostActions && (
-                                <div className="absolute right-0 mt-1 z-10">
-                                    <PostActionsMenu currentUser={currentUser} post={post} handleEditPost={handleEditPost} handleDeletePost={handleDeletePost} />
+                                <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 rounded-lg p-0.5 transition-all">
+                                    <PostActionsMenu
+                                        currentUser={currentUser}
+                                        post={post}
+                                        handleEditPost={handleEditPost}
+                                        handleDeletePost={handleDeletePost}
+                                    />
                                 </div>
                             )}
+
+                            {/* "..." menu icon */}
                             <button
-                                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors cursor-pointer text-gray-500"
+                                className={`p-1.5 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
                                 onClick={() => setShowPostActions(!showPostActions)}
                             >
                                 <BsThreeDots size={16} />
