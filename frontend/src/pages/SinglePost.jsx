@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import PostCard from "../components/posts/PostCard";
-import CreateComment from "../components/comments/CreateCommentModal";
+import CreateCommentForm from "../components/comments/CreateCommentForm";
 import CommentList from "../components/comments/CommentList";
 
 
@@ -61,7 +61,7 @@ function SinglePost({ currentUser }) {
                 <>
                     <PostCard post={post} />
 
-                    <CreateComment
+                    <CreateCommentForm
                         currentUser={currentUser}
                         comments={comments}
                         setComments={setComments}
