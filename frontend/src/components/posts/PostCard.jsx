@@ -6,8 +6,7 @@ import PostActionsMenu from "./PostActionsMenu";
 import { handleLikeToggle } from "../../functions/HandleLikeToggle";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
-import { FiHeart, FiBookmark } from "react-icons/fi";
-import { FaHeart, FaRegComment } from "react-icons/fa";
+import { FiHeart, FiBookmark, FiMessageCircle } from "react-icons/fi";
 
 function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
@@ -88,25 +87,27 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                             {/* display post likes */}
                             <div className="flex items-center gap-1.5">
                                 <button
-                                    className={`text-xl cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-red-500"}`}
+                                    className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
                                     onClick={() => handleLikeToggle(isLiked, setIsLiked, post, currentUser)}
                                 >
-                                    {isLiked ? <FaHeart /> : <FiHeart />}
+                                    {/* Om det är gillat visar vi ett ifyllt hjärta (eller rött), annars det snygga tunna linjehjärtat */}
+                                    {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={18} /> : <FiHeart size={18} />}
                                 </button>
-                                <span className="font-medium text-xs">{post.likes.length}</span>
+                                <span className="font-medium text-xs text-gray-700">{post.likes.length}</span>
                             </div>
 
                             {/* Display comment count */}
-                            <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-xl">
-                                <FaRegComment />
-                                <span className="font-medium text-xs">{post.comments.length}</span>
+                            <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-lg">
+                                {/* Bytte till FiMessageCircle som har mycket tunnare och renare linjer */}
+                                <FiMessageCircle size={18} />
+                                <span className="font-medium text-xs text-gray-700">{post.comments.length}</span>
                             </Link>
 
                         </div>
 
                         {/* Save / Bookmark Button */}
-                        <button className="text-xl text-black hover:text-gray-600 cursor-pointer">
-                            <FiBookmark />
+                        <button className="text-lg text-black hover:text-gray-600 cursor-pointer">
+                            <FiBookmark size={18} />
                         </button>
                     </div>
                 </div>
