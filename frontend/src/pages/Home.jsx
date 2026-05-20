@@ -1,12 +1,48 @@
-import { useState, React } from "react";
-import GetPosts from "../functions/GetPosts";
-import Feed from "../components/Feed";
+import { useState, React, useEffect } from "react";
+import axios from "axios";
+import PostFeed from "../components/posts/PostFeed";
 import { useParams } from "react-router-dom";
 import SearchBar from "../components/layout/SearchBar";
 
 function Home({ currentUser }) {
 
   const [posts, setPosts] = useState([]);
+  const token = currentUser?.token;
+  const [error, setError] = useState("");
+
+  // function to fetch posts
+    const getPosts = async () => {
+
+        try {
+
+            // fetched created posts data from backend
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+             console.log("Posts fetched successfully:", response.data);
+            // update the posts state with the fetched array of posts from the backend
+            setPosts(response.data.getAllPosts);
+           
+
+           
+
+        } catch (err) {
+
+            // handle errors and display error message to user
+            const errorResponse = err.response.data;
+            setError(errorResponse.message || "Posts could not be fetched. Please try again.");
+        }
+    };
+
+    // call getPosts function
+    useEffect(() => {
+        getPosts();
+    }, []);
+
+    console.log("Posts in home page:", posts);
 
   // function to handle post editing and update the posts state
   const handleEditPost = (updatedPost) => {
@@ -21,18 +57,14 @@ function Home({ currentUser }) {
     setPosts(updatedPosts);
   };
 
+ 
+
   return (
     <>
       <SearchBar/>
       <section className="flex-1 p-4">
-        {/* render GetPosts component to fetch all posts */}
-        <GetPosts
-          currentUser={currentUser}
-          setPosts={setPosts}
-          posts={posts}
-        />
-        {/* render Feed component to display posts */}
-        <Feed
+        {/* render post feed component to display posts */}
+        <PostFeed
           posts={posts}
           currentUser={currentUser}
           handleEditPost={handleEditPost}
