@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser, loginUser, getUser, getUsers, updateUser, followUser, unfollowUser, changeProfileImage, deleteUser } from '../controllers/userController.js';
+import { registerUser, loginUser, getUser, getUsers, updateUser, followUser, unfollowUser, changeProfileImage, deleteUser, getSavedPosts, } from '../controllers/userController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
 
@@ -20,5 +20,11 @@ userRouter.post('/profile-image',authMiddleware, upload.single("profileImage"), 
 userRouter.post('/:userId/follow',authMiddleware, followUser) 
 userRouter.delete('/:userId/unfollow',authMiddleware, unfollowUser) 
 
+// ---------------------------- user saved posts --------------------------- 
+userRouter.get('/savedposts', authMiddleware, getSavedPosts)
+
 userRouter.get('/:userId', getUser)
 userRouter.delete('/:userId', deleteUser)
+
+
+
