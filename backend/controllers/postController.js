@@ -249,48 +249,6 @@ export const getFollowingPosts = async (req, res, next) => {
 
 }
 
-// ---------------------------- GET SAVED POSTS --------------------------- 
-// GET req: api/posts/saved
-// PROTECTED
-
-export const getSavedPosts = async (req, res, next) => {
-
-    try {
-
-
-        // fetch user
-        const user = await User.findById(req.user.id);
-
-        // check if user exist
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // populate savedPosts so we get full post objects instead of just IDs
-        await user.populate({
-            path: "savedPosts",
-            options: { sort: { createdAt: -1 } }
-        });
-
-        // fetch only saved posts
-        const savedPosts = user.savedPosts;
-
-        return res.status(200).json({ message: "Saved posts: ", savedPosts })
-
-
-
-
-    } catch (error) {
-        // Om något går fel när vi försöker sluta följa en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
-    }
-
-}
-
 
 // ---------------------------- SAVE POST --------------------------- 
 // POST req: api/posts/:postId/save
