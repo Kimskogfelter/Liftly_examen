@@ -28,7 +28,7 @@ export const HandleSavePost = async (isSaved, setIsSaved, post, currentUser) => 
             });
 
             console.log("saved post data:", response.data);
-            console.log(`Post with id${post._id} have been saved`)
+            console.log(`Post with id ${post._id} have been saved`)
 
         }
 
