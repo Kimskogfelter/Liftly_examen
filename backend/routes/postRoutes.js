@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPost, getPost, getPosts, getUserPosts, getFollowingPosts, getSavedPosts, savePost, unsavePost, likePost, unlikePost, updatePost, deletePost } from '../controllers/postController.js';
+import { createPost, getPost, getPosts, getUserPosts, getFollowingPosts, savePost, unsavePost, likePost, unlikePost, updatePost, deletePost } from '../controllers/postController.js';
 import { createComment, getComment, getComments, deleteComment } from '../controllers/commentController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
@@ -12,7 +12,6 @@ export const postRouter = Router();
 postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
 postRouter.get('/users/:userId/posts', authMiddleware, getUserPosts)
 postRouter.get('/following',authMiddleware, getFollowingPosts)
-postRouter.get('/saved', authMiddleware, getSavedPosts)
 postRouter.get('/',authMiddleware, getPosts)
 
 postRouter.post('/:postId/save', authMiddleware, savePost)
