@@ -21,7 +21,7 @@ const port = process.env.PORT || 3000;
 // middleware funktioner
 server.use(express.urlencoded({extended: true}))
 server.use(express.json({extended: true}))
-server.use(cors({credentials: true, origin: ["http://localhost:5173"]}))
+server.use(cors({credentials: true, origin: ["http://localhost:5173", "https://liftly-examen.vercel.app"]}))
 // koppla ihop multer med cloudinary senare för storage av bilder/vidoes
 // const uploadImage = multer({dest: 'uploads'})
 
