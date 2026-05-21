@@ -45,6 +45,7 @@ Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en
 * **Säkerhet:** JWT, bcrypt
 * **Verktyg:** Nodemon, Dotenv, CORS, uuid, Postman (API testing), Validator
 * **Filhantering:** Multer, Cloudinary
+* **Hosting:** Vercel för frontend, Render för backend
 
 ## Arkitektur
 Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend och databas är separerade men kommunicerar via ett REST-API.
@@ -148,10 +149,10 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
 
     ### Live demo
     Frontend:
-    https://din-frontend-url.com
+    https://liftly-examen.vercel.app/login
 
     Backend API:
-    https://din-backend-url.com
+    https://liftly-examen.onrender.com
 
 
 ## Design
