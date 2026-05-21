@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
-import { handleLikeToggle } from "../../functions/HandleLikeToggle";
+import { HandleLikeToggle } from "../../functions/HandleLikeToggle";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle } from "react-icons/fi";
