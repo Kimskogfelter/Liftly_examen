@@ -495,3 +495,51 @@ export const deleteUser = async (req, res, next) => {
     }
 
 }
+
+// ---------------------------- POSTS ---------------------------
+
+// ---------------------------- GET SAVED POSTS --------------------------- 
+// GET req: api/users/savedposts
+// PROTECTED
+
+export const getSavedPosts = async (req, res, next) => {
+
+    try {
+        
+        // fetch user
+        const user = await User.findById(req.user.id);
+
+        // check if user exist
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // populate savedPosts so we get full post objects instead of just IDs
+        // same with createdBy to be able to display username and profile image at saved posts page
+        await user.populate({
+            path: "savedPosts",
+            options: { sort: { createdAt: -1 } },
+            populate: {
+                path: "createdBy",          // Field inside post model with only object id
+                select: "username profileImage" 
+            }
+        });
+
+        // fetch only saved posts
+        const savedPosts = user.savedPosts;
+
+        return res.status(200).json({ message: "Saved posts: ", savedPosts })
+
+
+
+
+    } catch (error) {
+        // Om något går fel när vi försöker sluta följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
