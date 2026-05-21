@@ -14,16 +14,16 @@ function SavedPosts({ currentUser }) {
   const getSavedPosts = async () => {
     try {
       // fetched saved posts from backend
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${currentUser.id}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/savedposts`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      console.log("Saved posts fetched successfully:", response.data.user);
+      console.log("Saved posts fetched successfully:", response.data.savedPosts);
 
       // update the saved posts state with the fetched user information
-      setSavedPosts(response.data.user.savedPosts);
+      setPosts(response.data.savedPosts);
 
     } catch (err) {
       // handle errors and display error message to user
@@ -36,6 +36,8 @@ function SavedPosts({ currentUser }) {
   useEffect(() => {
     getSavedPosts();
   }, []);
+
+  console.log("posts", posts)
 
   return (
     <>
