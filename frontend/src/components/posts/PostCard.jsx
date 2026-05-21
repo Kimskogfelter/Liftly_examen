@@ -4,14 +4,17 @@ import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
 import { HandleLikeToggle } from "../../functions/HandleLikeToggle";
+import { HandleSavePost } from "../../functions/HandleSavePost";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle } from "react-icons/fi";
+import { FaBookmark } from "react-icons/fa";
 
 function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
     const [showPostActions, setShowPostActions] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
 
     console.log("Current User:", currentUser);
     console.log("post data in DisplayPost:", post);
@@ -98,7 +101,8 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
                                     onClick={() => handleLikeToggle(isLiked, setIsLiked, post, currentUser)}
                                 >
-                                    {/* Om det är gillat visar vi ett ifyllt hjärta (eller rött), annars det snygga tunna linjehjärtat */}
+                                    
+                                    {/* heart icon */}
                                     {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={18} /> : <FiHeart size={18} />}
                                 </button>
                                 <span className="font-medium text-xs text-gray-700">{post.likes.length}</span>
@@ -106,7 +110,6 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
                             {/* Display comment count */}
                             <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-lg">
-                                {/* Bytte till FiMessageCircle som har mycket tunnare och renare linjer */}
                                 <FiMessageCircle size={18} />
                                 <span className="font-medium text-xs text-gray-700">{post.comments.length}</span>
                             </Link>
@@ -114,8 +117,8 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                         </div>
 
                         {/* Save / Bookmark Button */}
-                        <button className="text-lg text-black hover:text-gray-600 cursor-pointer">
-                            <FiBookmark size={18} />
+                        <button onClick={() => HandleSavePost(isSaved, setIsSaved, post, currentUser)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
+                            {isSaved ? <FaBookmark size={18} />  : <FiBookmark size={18} /> }
                         </button>
                     </div>
                 </div>
