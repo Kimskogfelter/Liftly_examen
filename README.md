@@ -77,7 +77,7 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
 
       ```bash
       cd backend
-      npm install
+      npm install --legacy-peer-deps
       ```
 
 
