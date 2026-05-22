@@ -118,7 +118,7 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
     3. Skapa ett cluster
     4. Klicka på "Connect"
     5. Kopiera "username" värdet du får från MongoDB och lägg till som värde i DB_USERNAME variabeln i .env filen i backend mappen.
-    6. Kopiera "password" värdet du får från MongoDB och lägg till somv värde i i DB_PASSWORD variabeln i .env filen i backend mappen.
+    6. Kopiera "password" värdet du får från MongoDB och lägg till som värde i i DB_PASSWORD variabeln i .env filen i backend mappen.
     7. Klicka sedan på knappen "Create user" i MongoDB
     8. Klicka på knappen "Choose a connection method"
     9. Välj "Drivers"
