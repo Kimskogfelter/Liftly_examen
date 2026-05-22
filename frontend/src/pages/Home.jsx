@@ -62,7 +62,7 @@ function Home({ currentUser }) {
   return (
     <>
       <SearchBar/>
-      <section className="flex-1 p-4">
+      <section className="pt-24 flex-1 p-4">
         {/* render post feed component to display posts */}
         <PostFeed
           posts={posts}
