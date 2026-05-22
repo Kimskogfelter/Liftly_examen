@@ -103,6 +103,8 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
     LIFTLY_CLOUDINARY_API_SECRET=your_cloudinary_api_secret
     ```
 
+    Lägg till en egen sträng för variabeln JWT_SECRET
+
 4. Skapa `.env` fil i **frontend** med nedan variabler
 
     ```env
@@ -112,11 +114,18 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
 5. MongoDB setup
 
     1. Skapa ett konto på MongoDB Atlas
-    2. Skapa ett cluster
-    3. Klicka på "Connect"
-    4. Välj "Drivers"
-    5. Kopiera connection string
-    6. Lägg in den i `MONGO_URI` i `.env` för backend
+    2. Skapa ett nytt projekt
+    3. Skapa ett cluster
+    4. Klicka på "Connect"
+    5. Kopiera "username" värdet du får från MongoDB och lägg till som värde i DB_USERNAME variabeln i .env filen i backend mappen.
+    6. Kopiera "password" värdet du får från MongoDB och lägg till somv värde i i DB_PASSWORD variabeln i .env filen i backend mappen.
+    7. Klicka sedan på knappen "Create user" i MongoDB
+    8. Klicka på knappen "Choose a connection method"
+    9. Välj "Drivers"
+    10. Steg 1: Välj Node.js som driver, version senaste
+    11. Steg 2: Installera driver genom att kopiera texten "npm install mongodb --legacy-peer-deps" och kör i din backend terminal, kör inte kommandot MongoDB säger
+    12. Steg 3: Kopiera connection string och klistra in i variabeln MONGO_URI i .env filen i backend mappen
+    13. Klicka på done. Nu är MongoDB synkroniserat till backend
 
 6. Cloudinary setup
 
