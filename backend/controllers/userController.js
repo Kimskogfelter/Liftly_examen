@@ -140,7 +140,7 @@ export const loginUser = async (req, res, next) => {
         }
 
         // generate authentication token for login
-        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
         // sends token, user id and profile image to client
         return res.status(200).json({ token, id: user._id, profileImage: user.profileImage, })
 
