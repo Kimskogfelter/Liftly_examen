@@ -50,6 +50,7 @@ function SavedPosts({ currentUser }) {
             <PostFeed
               posts={posts}
               currentUser={currentUser}
+              layout="grid-3x3"
             />
           </div>
         </section>
