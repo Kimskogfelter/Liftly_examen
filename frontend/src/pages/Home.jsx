@@ -26,9 +26,6 @@ function Home({ currentUser }) {
             // update the posts state with the fetched array of posts from the backend
             setPosts(response.data.getAllPosts);
            
-
-           
-
         } catch (err) {
 
             // handle errors and display error message to user
@@ -69,6 +66,7 @@ function Home({ currentUser }) {
           currentUser={currentUser}
           handleEditPost={handleEditPost}
           handleDeletePost={handleDeletePost}
+          layout="list"
         />
       </section>
 
