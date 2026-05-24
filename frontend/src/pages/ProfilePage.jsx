@@ -115,6 +115,7 @@ function ProfilePage({ currentUser }) {
           currentUser={currentUser}
           handleEditPost={handleEditPost}
           handleDeletePost={handleDeletePost}
+          layout="grid-3x3"
         />
       </div>
     </section>
