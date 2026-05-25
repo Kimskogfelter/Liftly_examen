@@ -21,74 +21,79 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
     return (
         <>
-            <section className="max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative">
-                {/* display user information */}
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full overflow-hidden object-cover">
-                            <ProfileImage image={post.createdBy?.profileImage} />
+            <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-[460px] flex flex-col justify-between">
+                <div>
+                    {/* display user information */}
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-full overflow-hidden object-cover">
+                                <ProfileImage image={post.createdBy?.profileImage} />
+                            </div>
+                            <Link to={`/users/${post.createdBy?._id}`} className="font-semibold text-sm hover:underline text-black tracking-wide">
+                                {post.createdBy.username}
+                            </Link>
                         </div>
-                        <Link to={`/users/${post.createdBy?._id}`} className="font-semibold text-sm hover:underline text-black tracking-wide">
-                            {post.createdBy.username}
-                        </Link>
+
+                        {/* Post actions menu */}
+                        {post.createdBy?._id === currentUser?.id && (
+                            <div className="flex items-center gap-1 relative">
+
+                                {showPostActions && (
+                                    <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 rounded-lg p-0.5 transition-all">
+                                        <PostActionsMenu
+                                            currentUser={currentUser}
+                                            post={post}
+                                            handleEditPost={handleEditPost}
+                                            handleDeletePost={handleDeletePost}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* "..." menu icon */}
+                                <button
+                                    className={`p-1.5 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
+                                    onClick={() => setShowPostActions(!showPostActions)}
+                                >
+                                    <BsThreeDots size={16} />
+                                </button>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Post actions menu */}
-                    {post.createdBy?._id === currentUser?.id && (
-                        <div className="flex items-center gap-1 relative">
+                    <div>
+                        {/* Display post content */}
+                        <Link to={`/posts/${post._id}`} className="block group mb-2 text-left">
 
-                            {showPostActions && (
-                                <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 rounded-lg p-0.5 transition-all">
-                                    <PostActionsMenu
-                                        currentUser={currentUser}
-                                        post={post}
-                                        handleEditPost={handleEditPost}
-                                        handleDeletePost={handleDeletePost}
+                            {/* Placeholder tags */}
+                            <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
+                                <span>#training</span>
+                                <span>#fit</span>
+                                <span>#pushup</span>
+                            </div>
+
+                            {/* Post media */}
+                            {post.media?.[0] ? (
+                                <div className="w-full h-56 md:h-60 rounded-lg overflow-hidden mb-3">
+                                    <img
+                                        src={post.media[0]}
+                                        alt="Post media"
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = "none";
+                                        }}
                                     />
                                 </div>
+                            ) : (
+                                <div className="w-full h-12"></div>
                             )}
 
-                            {/* "..." menu icon */}
-                            <button
-                                className={`p-1.5 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
-                                onClick={() => setShowPostActions(!showPostActions)}
-                            >
-                                <BsThreeDots size={16} />
-                            </button>
-                        </div>
-                    )}
+                            <p className="text-gray-600 leading-snug text-xs mb-1.5 line-clamp-6 overflow-hidden">{post.content}</p>
+                        </Link>
+                    </div>
                 </div>
 
                 <div>
-                    {/* Display post content */}
-                    <Link to={`/posts/${post._id}`} className="block group mb-2">
-
-                        {/* Placeholder tags */}
-                        <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
-                            <span>#training</span>
-                            <span>#fit</span>
-                            <span>#pushup</span>
-                        </div>
-
-                        {/* Post media */}
-                        {post.media?.[0] && (
-                            <div className="w-full h-56 md:h-64 rounded-lg overflow-hidden mb-3">
-                                <img
-                                    src={post.media[0]}
-                                    alt="Post media"
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.currentTarget.style.display = "none";
-                                    }}
-                                />
-                            </div>
-                        )}
-
-                        <p className="text-gray-600 leading-snug text-xs mb-1.5">{post.content}</p>
-
-                        <p className="text-[10px] text-gray-400"><TimeAgo date={post.createdAt} /></p>
-                    </Link>
-
+                    <p className="text-[10px] text-gray-400 mb-2"><TimeAgo date={post.createdAt} /></p>
                     <hr className="border-gray-100 my-3" />
 
                     {/* Footer Row containing actions and metrics */}
@@ -101,7 +106,6 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
                                     onClick={() => handleLikeToggle(isLiked, setIsLiked, post, currentUser)}
                                 >
-                                    
                                     {/* heart icon */}
                                     {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={18} /> : <FiHeart size={18} />}
                                 </button>
@@ -118,11 +122,11 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
                         {/* Save / Bookmark Button */}
                         <button onClick={() => HandleSavePost(isSaved, setIsSaved, post, currentUser)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
-                            {isSaved ? <FaBookmark size={18} />  : <FiBookmark size={18} /> }
+                            {isSaved ? <FaBookmark size={18} /> : <FiBookmark size={18} />}
                         </button>
                     </div>
                 </div>
-            </section>
+</section>
         </>
     );
 }
