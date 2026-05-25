@@ -6,7 +6,7 @@ function PostFeed({ posts, currentUser, handleDeletePost, handleEditPost, layout
 
     // 
     const feedLayout = layout === "grid-3x3" 
-    ? "grid grid-cols-3 gap-2 md:gap-4" // 3x3 layout
+    ? "grid grid-cols-3 gap-2 md:gap-4 max-w-[1000px] mx-auto justify-center" // 3x3 layout
     : "flex flex-col gap-4 w-full max-w-2xl mx-auto"; // Long list at home page
 
 
