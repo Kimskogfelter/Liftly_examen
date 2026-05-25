@@ -12,7 +12,7 @@ export const postRouter = Router();
 postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
 postRouter.get('/users/:userId/posts', authMiddleware, getUserPosts)
 postRouter.get('/following',authMiddleware, getFollowingPosts)
-postRouter.get('/',authMiddleware, getPosts)
+postRouter.get('/', getPosts) // Public route so home page can fetch and display all posts for visitors
 
 postRouter.post('/:postId/save', authMiddleware, savePost)
 postRouter.delete('/:postId/unsave', authMiddleware, unsavePost)
