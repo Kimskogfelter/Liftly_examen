@@ -51,8 +51,13 @@ export const createComment = async (req, res, next) => {
         // store only req.user.id, not username, in cause the user changes username later on
         // to avoid duplicating mutable data like username
         const newComment = await Comment.create({ createdBy: req.user.id, content: content, post: postId })
+
+        // Populate createdBy field with username and profile image instead of only objectID
+        // The comment needs to be created first before you can use populate, therefore it's on its own row
+        await newComment.populate("createdBy", "username profileImage");
+
         // add comment to post
-        await Post.findByIdAndUpdate(postId, {$push: {comments: newComment._id}})
+        await Post.findByIdAndUpdate(postId, { $push: { comments: newComment._id } })
 
         return res.status(201).json({ message: 'Comment created: ', newComment });
 
