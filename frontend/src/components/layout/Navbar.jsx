@@ -69,17 +69,29 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         </ul>
       </div>
 
-      {/* Logout button (Desktop) */}
-      <div className="hidden md:block w-full border-t border-zinc-900 pt-2">
-        <button
-          onClick={() => Logout(setCurrentUser, navigate)}
-          className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-500 hover:text-red-400 transition-colors text-xs font-medium cursor-pointer rounded-lg md:hover:bg-red-950/10"
-        >
-          <FiLogOut size={14} className="shrink-0" />
-          <span>Logout</span>
-        </button>
-      </div>
-
+      {/* Logout/log in button (Desktop) */}
+      {currentUser ? (
+        <div className="hidden md:block w-full border-t border-zinc-900 pt-2">
+          <button
+            onClick={() => Logout(setCurrentUser, navigate)}
+            className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-500 hover:text-red-400 transition-colors text-xs font-medium cursor-pointer rounded-lg md:hover:bg-red-950/10"
+          >
+            <FiLogOut size={14} className="shrink-0" />
+            <span>Logout</span>
+          </button>
+        </div>
+      ) : (
+        <div className="hidden md:block w-full border-t border-zinc-900 pt-2">
+          <Link
+            to="/login"
+            className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-500 hover:text-white transition-colors text-xs font-medium cursor-pointer rounded-lg md:hover:bg-zinc-900/50"
+            style={{ fontSize: '0.75rem', fontWeight: 500 }} // 🌟 En extra säkerhetsåtgärd för att överstyra webbläsarens standardstil för länkar
+          >
+            <FiLogOut size={14} className="shrink-0" />
+            <span>Log in</span>
+          </Link>
+        </div>
+      )}
       {/* Quick Logout for mobile view */}
       <div className="block md:hidden">
         <button
