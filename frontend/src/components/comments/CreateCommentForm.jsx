@@ -24,7 +24,7 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
       console.log("Comment created successfully:", response.data);
 
       // add the new comment to the comments state to update the UI
-      const newComment = response.data.comments;
+      const newComment = response.data.newComment;
       setComments([newComment, ...comments]);
 
       // reset form fields and error message
@@ -60,7 +60,7 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
         {/* Submit button */}
         <button
           type="submit"
-          className="text-xs font-bold text-red-500 hover:text-red-600 disabled:text-gray-300 transition-colors cursor-pointer px-2 py-1 shrink-0"
+          className="text-xs font-bold text-gray-800 hover:text-gray-800 disabled:text-gray-300 transition-colors cursor-pointer px-2 py-1 shrink-0"
           disabled={!content.trim()}
         >
           Post
