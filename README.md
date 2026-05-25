@@ -2,6 +2,11 @@
 
 Liftly är ett examensprojekt för Glimåkra Folkhögskola där jag utvecklar en social plattform för personer med intresse för gym och hälsa. Användare kan skapa konton, dela och redigera inlägg, kommentera och gilla andras innehåll samt spara inlägg för senare användning. Plattformen täcker ämnen som träning, kost, recept och mode, och skapar en interaktiv community för inspiration och kunskapsdelning.
 
+## Video Demo
+Här kommer en demonstration av min hemsida som jag hittills har hunnit bygga inför redovisningen av examensprojektet. Tanken är att fortsätta utveckla denna applikation även efter examen tills jag har fått samtliga delar på plats under framtida vidareutveckling. 
+
+[Titta på videodemonstrationen här](https://youtu.be/jiMySRc3GsM)
+
 ## Krav
 
 ### Frontend
