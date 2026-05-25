@@ -16,11 +16,7 @@ function Home({ currentUser }) {
         try {
 
             // fetched created posts data from backend
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`);
 
              console.log("Posts fetched successfully:", response.data);
             // update the posts state with the fetched array of posts from the backend
