@@ -13,7 +13,6 @@ import { Logout } from "../../functions/Logout";
 
 function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
 
-  const profileImage = currentUser?.profileImage;
   const navigate = useNavigate();
 
   return (
@@ -40,7 +39,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
               className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all"
             >
               <div className="w-5 h-5 rounded-full overflow-hidden border border-zinc-800 shrink-0">
-                <ProfileImage image={profileImage} />
+                <ProfileImage currentUser={currentUser} />
               </div>
               <span className="hidden md:inline text-xs font-medium tracking-wide">Profile</span>
             </Link>
