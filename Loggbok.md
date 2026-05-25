@@ -41,7 +41,7 @@ Jag är väldigt förvirrad och stressad över hur frontend fungerar, trodde det
 
 Sitter just nu och håller på med komponent för att skapa inlägg och vart den ska renderas. Funderar på att han den i navigations menyn och att den kommer upp som en modal över "feed" eller som en egen sida.. modal måste ju vara mindre kod. Får se... mycket tankar nu.
 
-## Vecka 21
+## Vecka 21/22
 Har hunnit strukturera om koden mycket i frontend, delat upp komponenter i egna mappar för users, posts, comments och layout. Flyttat request till API:t till sidorna som har hand om visst innehåll istället för i en komponent. Om det inte är formulären för att skapa, redigerar eller radera då de hanterar sina egna requests för att kunna uppdatera backend korrekt. 
 
 Lagt till en hel del styling med tailwind med hjälp av AI så jag ska slippa tänka på den biten. Känner att jag har hyffsad koll på css och tailwind är lätt att förstå så vill fokusera mer på ren logik i funktioner, sidor, komponenter, controllers etc etc. Det är mycket att ta in och försöker ändra så alla delar har den mest logiska placeringen i koden. Finns en hel del buggar men de tänker jag jobba med när redovisningen är klar. Tex blir det ett error när man försöker skapa en kommentar, sidan laddas inte om korrekt. Men laddar man om sidan själv manuellt så dyker kommentaren upp så den registreras ju på backend. Ska även lägga till att man kan ändra sin profilbild när man är inloggad. Sen finns det en lång lista i readme om framtida utveckling för appen jag kommer gå igenom punkt för punkt innan jag lanserar den på "riktigt" sen.
