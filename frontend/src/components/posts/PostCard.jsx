@@ -21,7 +21,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
     return (
         <>
-            <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-[460px] flex flex-col justify-between">
+            <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-115 flex flex-col justify-between">
                 <div>
                     {/* display user information */}
                     <div className="flex items-center justify-between mb-3">
@@ -126,7 +126,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                         </button>
                     </div>
                 </div>
-</section>
+            </section>
         </>
     );
 }
