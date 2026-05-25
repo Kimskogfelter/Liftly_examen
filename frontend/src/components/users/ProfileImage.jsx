@@ -1,13 +1,11 @@
 import React from "react";
 import defaultProfileImage from "../../assets/images/Liftly_profile_avatar_image.png";
 
-function ProfileImage({ currentUser }) {
-
+function ProfileImage({ currentUser, profileImage }) {
   return (
-
     <div className="w-full h-full rounded-full overflow-hidden">
       <img
-        src={currentUser?.profileImage || defaultProfileImage} // if logged in user show logged in users profile image, else show default image imported at the top
+        src={profileImage || currentUser?.profileImage || defaultProfileImage}
         alt="Profile"
         className="w-full h-full object-cover"
       />
