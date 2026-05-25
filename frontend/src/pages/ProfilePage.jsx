@@ -66,7 +66,7 @@ function ProfilePage({ currentUser }) {
 
         {/* Profile image */}
         <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
-          <ProfileImage image={userInfo?.profileImage} />
+          <ProfileImage profileImage={userInfo?.profileImage} />
         </div>
 
         {/* Info container */}
