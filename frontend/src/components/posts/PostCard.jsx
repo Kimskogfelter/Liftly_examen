@@ -15,10 +15,6 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
     const [showPostActions, setShowPostActions] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
-
-    console.log("Current User:", currentUser);
-    console.log("post data in DisplayPost:", post);
-
     return (
         <>
             <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-115 flex flex-col justify-between">
@@ -27,7 +23,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-full overflow-hidden object-cover">
-                                <ProfileImage image={post.createdBy?.profileImage} />
+                                <ProfileImage profileImage={post.createdBy?.profileImage} />
                             </div>
                             <Link to={`/users/${post.createdBy?._id}`} className="font-semibold text-sm hover:underline text-black tracking-wide">
                                 {post.createdBy.username}
