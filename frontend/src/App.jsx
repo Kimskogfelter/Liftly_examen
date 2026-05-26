@@ -29,7 +29,7 @@ function App() {
           <Route element={<AppLayout currentUser={currentUser} setCurrentUser={setCurrentUser} />}>
             <Route path="/home" element={<Home currentUser={currentUser} />} /> {/* NOT protected, uses the AppLayout component to render layout and navbar */}
             <Route path="/savedPosts" element={currentUser ? <SavedPosts currentUser={currentUser} /> : <Navigate to="/login" />} />
-            <Route path="/users/:userId" element={currentUser ? <ProfilePage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/users/:userId" element={currentUser ? <ProfilePage currentUser={currentUser} setCurrentUser={setCurrentUser}/> : <Navigate to="/login" />} />
             <Route path="/posts/:postId" element={currentUser ? <SinglePost currentUser={currentUser} /> : <Navigate to="/login" />} />
           </Route>
 
