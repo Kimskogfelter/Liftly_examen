@@ -2,16 +2,18 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileImage from "../components/users/ProfileImage";
+import EditProfileImage from "../components/users/EditProfileImage";
 import PostFeed from "../components/posts/PostFeed";
 import { useParams } from "react-router-dom";
 
-function ProfilePage({ currentUser }) {
+function ProfilePage({ currentUser, setCurrentUser }) {
 
   const [error, setError] = useState("");
   const token = currentUser?.token;
   const { userId } = useParams();
   const [userInfo, setUserInfo] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [showEditProfileImage, setShowEditProfileImage] = useState(false);
 
   // function to fetch user information and posts
   const getUserInfo = async () => {
@@ -50,7 +52,6 @@ function ProfilePage({ currentUser }) {
   };
 
   // function to handle post deletion and update the posts state
-  // FIX: Changed parameter to postId since modals send up strings, not full objects
   const handleDeletePost = (postId) => {
     // Filter out the deleted post from the posts state
     const updatedPosts = posts.filter((post) => post._id !== postId);
@@ -66,8 +67,21 @@ function ProfilePage({ currentUser }) {
 
         {/* Profile image */}
         <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
+        {/* IF logged in user display change image option when hovering */}
+        {userInfo?._id === currentUser?.id ? (
+          <div className="relative group cursor-pointer w-full h-full" onClick={() => setShowEditProfileImage(true)}>
           <ProfileImage profileImage={userInfo?.profileImage} />
-        </div>
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs">
+            Change
+          </div>
+        </div>) : (
+          // if another user or logged out display ONLY image
+          <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
+            <ProfileImage profileImage={userInfo?.profileImage} />
+          </div>)}
+          </div>
+          {/* show edit profile image form */}
+           {showEditProfileImage && (<EditProfileImage getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser}  onClose={() => setShowEditProfileImage(false)}/>)}
 
         {/* Info container */}
         <div className="flex-1 space-y-3 text-left">
@@ -75,7 +89,7 @@ function ProfilePage({ currentUser }) {
           {/* First row: username + Follow-button */}
           <div className="flex items-center gap-3">
             <h2 className="text-base md:text-lg font-bold text-black tracking-wide leading-none">
-              {userInfo?.username || "Kim Moberg"}
+              {userInfo?.username || "Username"}
             </h2>
 
             {/* Follow-button*/}
