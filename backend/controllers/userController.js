@@ -241,20 +241,24 @@ export const updateUser = async (req, res, next) => {
 
     try {
 
-        // hämta username/bio för användare som ska uppdateras
-        const { username, profileBio } = req.body;
+        // get username, email and/or profile bio from frontend
+        const { username, email, profileBio } = req.body;
 
-        // uppdatera endast de fält som användaren skickat med i req.body
-        // dubbelkollar att rätt användare är inloggad/gör ändringen  via req.user.id och auth middleware
-        const updatedUser = await User.findByIdAndUpdate(req.user.id, { username, profileBio }, { new: true })
+        // update only the fields sent in req.body
+        // check that the correct user are doing the changes via req.user.id and auth middleware
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id, 
+            { $set: req.body }, // $set ONLY updates the data that is sent from frontend, ex if only profile bio is edited only that is changed in the database
+            { new: true, runValidators: true } // runValidators make sure that the backend rules (such as unique email, minLenght etc that is set in the user model) still follows 
+        ).select("-password"); // removes the hashed password so it doenst get sent to frontend
 
-        // error om användaren ej hittas
+        // error if no user could be found
         if (!updatedUser) {
 
             return next(new HttpError("User not found", 404))
         }
 
-        // skicka tillbaka uppdaterade användaren
+        // Send successful response with the updated user data
         return res.status(200).json({ message: "User updated: ", updatedUser })
 
 
