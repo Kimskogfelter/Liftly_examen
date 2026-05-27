@@ -1,10 +1,12 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, React } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import ProfileImage from "../components/users/ProfileImage";
 import EditProfileImage from "../components/users/EditProfileImage";
+import EditProfileBio from "../components/users/EditProfileBio";
 import PostFeed from "../components/posts/PostFeed";
-import { useParams } from "react-router-dom";
+import { FaRegEdit } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 
 function ProfilePage({ currentUser, setCurrentUser }) {
 
@@ -14,6 +16,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
   const [userInfo, setUserInfo] = useState(null);
   const [posts, setPosts] = useState([]);
   const [showEditProfileImage, setShowEditProfileImage] = useState(false);
+  const [showEditProfileBio, setShowEditProfileBio] = useState(false);
 
   // function to fetch user information and posts
   const getUserInfo = async () => {
@@ -67,28 +70,28 @@ function ProfilePage({ currentUser, setCurrentUser }) {
 
         {/* Profile image */}
         <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
-        {/* IF logged in user display change image option when hovering */}
-        {userInfo?._id === currentUser?.id ? (
-          <div className="relative group cursor-pointer w-full h-full" onClick={() => setShowEditProfileImage(true)}>
-          <ProfileImage profileImage={userInfo?.profileImage} />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs">
-            Change
-          </div>
-        </div>) : (
-          // if another user or logged out display ONLY image
-          <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
-            <ProfileImage profileImage={userInfo?.profileImage} />
-          </div>)}
-          </div>
-          {/* show edit profile image form */}
-           {showEditProfileImage && (<EditProfileImage getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser}  onClose={() => setShowEditProfileImage(false)}/>)}
+          {/* IF logged in user display change image option when hovering */}
+          {userInfo?._id === currentUser?.id ? (
+            <div className="relative group cursor-pointer w-full h-full" onClick={() => setShowEditProfileImage(true)}>
+              <ProfileImage profileImage={userInfo?.profileImage} />
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs">
+                <FaCamera size={12} />
+              </div>
+            </div>) : (
+            // if another user or logged out display ONLY image
+            <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
+              <ProfileImage profileImage={userInfo?.profileImage} />
+            </div>)}
+        </div>
+        {/* show edit profile image form */}
+        {showEditProfileImage && (<EditProfileImage getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileImage(false)} />)}
 
         {/* Info container */}
-        <div className="flex-1 space-y-3 text-left">
+        <div className="flex-1 space-y-3 text-left max-w-70 sm:max-w-75">
 
           {/* First row: username + Follow-button */}
-          <div className="flex items-center gap-3">
-            <h2 className="text-base md:text-lg font-bold text-black tracking-wide leading-none">
+          <div className="flex items-center justify-between gap-3 w-full">
+            <h2 className="text-base md:text-lg font-bold text-black tracking-wide leading-none truncate">
               {userInfo?.username || "Username"}
             </h2>
 
@@ -101,20 +104,35 @@ function ProfilePage({ currentUser, setCurrentUser }) {
           {/* (Second row: Posts, Followers, Following) */}
           <div className="flex items-center gap-4 text-xs text-gray-600">
             <div>
-              <span className="font-bold text-black text-sm">312</span> posts
+              <span className="font-bold text-black text-sm">{userInfo?.posts.length}</span> posts
             </div>
             <div>
-              <span className="font-bold text-black text-sm">21</span> followers
+              <span className="font-bold text-black text-sm">{userInfo?.followers.length}</span> followers
             </div>
             <div>
-              <span className="font-bold text-black text-sm">500</span> following
+              <span className="font-bold text-black text-sm">{userInfo?.following.length}</span> following
             </div>
           </div>
 
+
           {/* Third row: User bio */}
-          <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
-            {userInfo?.profileBio || "No bio yet."}
-          </p>
+          {/* IF logged in user display change bio option when hovering */}
+          {userInfo?._id === currentUser?.id ? (
+            <p
+              className="text-gray-700 text-xs leading-relaxed pt-0.5 p-1.5 -m-1.5 rounded-lg cursor-pointer hover:bg-gray-50/80 hover:text-black transition-all flex items-center justify-between group w-full"
+              onClick={() => setShowEditProfileBio(true)}
+              title="Click to edit bio"
+            >
+              <span className="wrap-break-words pr-4">{userInfo?.profileBio || "No bio yet."}</span>
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 group-hover:text-black shrink-0">
+                <FaRegEdit size={14} />
+              </span>
+            </p>) : (
+            <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
+              {userInfo?.profileBio || "No bio yet."}
+            </p>)}
+          {/* show edit profile bio form */}
+          {showEditProfileBio && (<EditProfileBio getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileBio(false)} />)}
 
         </div>
       </div>
