@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { SlPicture } from "react-icons/sl";
+import { IoCloseCircle } from "react-icons/io5";
 
 function CreatePostForm({ currentUser, onClose }) {
 
@@ -75,6 +76,24 @@ function CreatePostForm({ currentUser, onClose }) {
               ></textarea>
             </div>
 
+            {/* Image preview box */}
+            {media && (
+              <div className="relative w-full max-h-60 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
+                <img
+                  src={URL.createObjectURL(media)}
+                  alt="Preview"
+                  className="w-full max-h-60 object-contain rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => setMedia(null)}
+                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer p-1"
+                >
+                  <IoCloseCircle size={22} />
+                </button>
+              </div>
+            )}
+
             {/* Error message */}
             {error && (
               <div className="bg-red-50 text-red-600 text-[11px] p-2 rounded-lg font-medium border border-red-100">
@@ -96,7 +115,12 @@ function CreatePostForm({ currentUser, onClose }) {
                   name="media"
                   id="media"
                   accept="image/*"
-                  onChange={(e) => setMedia(e.target.files[0])}
+                  onChange={(e) => {
+                    if (e.target.files[0]) {
+                      setMedia(e.target.files[0]);
+                      setError("");
+                    }
+                  }}
                 />
               </div>
 
