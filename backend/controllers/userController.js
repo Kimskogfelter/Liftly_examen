@@ -141,8 +141,8 @@ export const loginUser = async (req, res, next) => {
 
         // generate authentication token for login
         const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
-        // sends token, user id and profile image to client
-        return res.status(200).json({ token, id: user._id, profileImage: user.profileImage, })
+        // sends token, user id, profile bio and profile image to client
+        return res.status(200).json({ token, id: user._id, profileImage: user.profileImage, profileBio: user.profileBio, })
 
 
     } catch (error) {
@@ -247,8 +247,8 @@ export const updateUser = async (req, res, next) => {
         // update only the fields sent in req.body
         // check that the correct user are doing the changes via req.user.id and auth middleware
         const updatedUser = await User.findByIdAndUpdate(
-            req.user.id, 
-            { $set: req.body }, // $set ONLY updates the data that is sent from frontend, ex if only profile bio is edited only that is changed in the database
+            req.user.id,
+            { $set: { username, email, profileBio }}, // $set ONLY updates the data that is sent from frontend, ex if only profile bio is edited only that is changed in the database
             { new: true, runValidators: true } // runValidators make sure that the backend rules (such as unique email, minLenght etc that is set in the user model) still follows 
         ).select("-password"); // removes the hashed password so it doenst get sent to frontend
 
@@ -458,6 +458,11 @@ export const deleteUser = async (req, res, next) => {
         return res.status(404).json({ message: 'User Id is not valid' });
     }
 
+    // Verify authorization: users can only delete themselves
+    if (req.user.id !== userId) {
+        return next(new HttpError("You can only delete your own account", 403))
+    }
+
     try {
 
         // find user 
@@ -509,7 +514,7 @@ export const deleteUser = async (req, res, next) => {
 export const getSavedPosts = async (req, res, next) => {
 
     try {
-        
+
         // fetch user
         const user = await User.findById(req.user.id);
 
@@ -525,7 +530,7 @@ export const getSavedPosts = async (req, res, next) => {
             options: { sort: { createdAt: -1 } },
             populate: {
                 path: "createdBy",          // Field inside post model with only object id
-                select: "username profileImage" 
+                select: "username profileImage"
             }
         });
 
