@@ -11,7 +11,7 @@ export const userRouter = Router();
 userRouter.post('/register', registerUser)
 userRouter.post('/login', loginUser)
 
-userRouter.get('/', getUsers)
+userRouter.get('/', authMiddleware, getUsers)
 
 userRouter.patch('/update', authMiddleware, updateUser) 
 
@@ -23,8 +23,8 @@ userRouter.delete('/:userId/unfollow',authMiddleware, unfollowUser)
 // ---------------------------- user saved posts --------------------------- 
 userRouter.get('/savedposts', authMiddleware, getSavedPosts)
 
-userRouter.get('/:userId', getUser)
-userRouter.delete('/:userId', deleteUser)
+userRouter.get('/:userId', authMiddleware, getUser)
+userRouter.delete('/:userId', authMiddleware, deleteUser)
 
 
 
