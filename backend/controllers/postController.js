@@ -498,13 +498,23 @@ export const updatePost = async (req, res, next) => {
             return res.status(403).json({ message: "You are not allowed to edit this post" })
         }
 
-        // fetch content, media from frontend
-        const { content, media } = req.body;
+        // fetch content from frontend
+        const { content } = req.body;
+
+        // PREPARE UPDATE OBJECT: Start with updating the text content
+        const updateData = { content };
+
+        // Check if Multer received a new file in req.file (uploaded to Cloudinary)
+        if (req.file) {
+            // Put the Cloudinary URL path inside an array to match your schema!
+            updateData.media = [req.file.path]; 
+            console.log("New file found in backend req.file, updating media array with:", req.file.path);
+        }
 
         // update post and populate user info
         const updatedPost = await Post.findByIdAndUpdate(
             postId, 
-            { $set: {content, media} }, 
+            { $set: updateData }, 
             { new: true, runValidators: true } 
             ).populate("createdBy");
 
