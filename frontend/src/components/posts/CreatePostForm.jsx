@@ -20,11 +20,14 @@ function CreatePostForm({ currentUser, onClose }) {
     e.preventDefault();
     try {
 
+      const formData = new FormData();
+      formData.append('content', content);
+      if (media) formData.append('media', media);
+
       // send post data to backend
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/create`, { content, media }, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/create`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
+          Authorization: `Bearer ${token}`
         }
       });
       console.log("Post created successfully:", response.data);
