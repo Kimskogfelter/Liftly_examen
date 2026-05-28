@@ -3,7 +3,7 @@ import axios from "axios";
 
 function EditProfileBio({ onClose, currentUser, setCurrentUser, getUserInfo }) {
 
-    const [profileBio, setProfileBio] = useState("");
+    const [profileBio, setProfileBio] = useState(currentUser.profileBio);
     const [error, setError] = useState("");
 
     // function to edit profile bio
