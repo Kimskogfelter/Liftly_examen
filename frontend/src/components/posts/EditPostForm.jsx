@@ -9,7 +9,7 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
   const postId = post._id;
   const navigate = useNavigate();
   const [content, setContent] = useState(post.content);
-  // const [media, setMedia] = useState(null);
+  const [media, setMedia] = useState(post.media);
   const [error, setError] = useState("");
 
   // function to edit post
@@ -17,8 +17,12 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
     e.preventDefault();
     try {
 
+      const formData = new FormData();
+      formData.append('content', content);
+      // if (media) formData.append('media', media);
+
       // send updated post data to backend
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${postId}/update`, { content }, {
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${postId}/update`, formData, {
         headers: {
           Authorization: `Bearer ${currentUser?.token}`
         }
