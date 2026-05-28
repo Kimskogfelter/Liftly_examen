@@ -504,14 +504,14 @@ export const updatePost = async (req, res, next) => {
             return res.status(403).json({ message: "You are not allowed to edit this post" })
         }
 
-        // fetch content from frontend
-        const { content } = req.body;
+        // fetch content, media from frontend
+        const { content, media } = req.body;
 
         // update post and populate user info
         const updatedPost = await Post.findByIdAndUpdate(
             postId, 
-            { content }, 
-            { new: true } 
+            { $set: {content, media} }, 
+            { new: true, runValidators: true } 
             ).populate("createdBy");
 
 
