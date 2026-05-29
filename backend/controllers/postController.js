@@ -25,25 +25,19 @@ export const createPost = async (req, res, next) => {
             return next(new HttpError("User not found", 404));
         }
 
-        // get content input from frontend
+        // get inputs from frontend
+        // --------- content -----------
         const { content } = req.body;
 
-        // validate required field
-        if (!content) {
-
-            return next(new HttpError("Fill in content", 422))
-        }
-
-        // --------- content ----------
-
-        // validate if content length is too short
-        if (content.length < 5) {
-            return next(new HttpError("Content should be at least 5 characters long", 422))
-        }
-
         // --------- media -----------
-
         let mediaFile = req.file;
+        
+        // validate required fields
+        // if theres NO text OR empty spaces, 
+        // AND theres NO picture... throw an error!
+        if ((!content || content.trim().length === 0) && !mediaFile) {
+            return next(new HttpError("You can't create an empty post. Add some text or an image!", 422));
+        }
 
         // --------- create new post to database ----------
 
@@ -189,7 +183,7 @@ export const getUserPosts = async (req, res, next) => {
             .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
             .sort({ createdAt: -1 }) // sort by newest first
 
-       
+
         // return list of posts
         return res.status(200).json({ message: "Posts found: ", getPosts })
 
@@ -506,16 +500,16 @@ export const updatePost = async (req, res, next) => {
         // Check if Multer received a new file in req.file (uploaded to Cloudinary)
         if (req.file) {
             // Put the Cloudinary URL path inside an array to match your schema!
-            updateData.media = [req.file.path]; 
+            updateData.media = [req.file.path];
             console.log("New file found in backend req.file, updating media array with:", req.file.path);
         }
 
         // update post and populate user info
         const updatedPost = await Post.findByIdAndUpdate(
-            postId, 
-            { $set: updateData }, 
-            { new: true, runValidators: true } 
-            ).populate("createdBy");
+            postId,
+            { $set: updateData },
+            { new: true, runValidators: true }
+        ).populate("createdBy");
 
 
         // success message
