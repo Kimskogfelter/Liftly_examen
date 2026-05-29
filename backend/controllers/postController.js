@@ -140,7 +140,6 @@ export const getPosts = async (req, res, next) => {
         const getAllPosts = await Post.find()
             .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
             .sort({ createdAt: -1 }) // sort by newest first
-            .limit(20); // show only 20 at a time
 
         // check if posts doesnt exists
         if (getAllPosts.length === 0) {

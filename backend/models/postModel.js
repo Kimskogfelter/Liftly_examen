@@ -6,7 +6,8 @@ const postSchema = new mongoose.Schema({
     media: [{ type: String }],
     content: {type: String, required: true},
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    likes: [{ type: Schema.Types.ObjectId, ref: "User" }]
+    likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    hashtags: [{ type: String }],
 
 }, {timestamps: true})
 
