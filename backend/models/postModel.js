@@ -4,7 +4,7 @@ import mongoose, { Schema } from "mongoose";
 const postSchema = new mongoose.Schema({
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     media: [{ type: String }],
-    content: {type: String, required: true},
+    content: {type: String},
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     hashtags: [{ type: String }],
