@@ -57,15 +57,33 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
           </li>
 
           {/* Create Post */}
-          <li className="w-full">
-            <button
-              onClick={onOpenCreatePost}
+          {currentUser ? (
+
+            // IF LOGGED IN, open create post form
+            <li className="w-full">
+              <button
+                onClick={onOpenCreatePost}
+                className="flex items-center gap-2.5 w-full text-left py-2 md:px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all cursor-pointer"
+              >
+                <FiPlusSquare size={16} className="shrink-0" />
+                <span className="hidden md:inline text-xs font-medium tracking-wide">Create</span>
+              </button>
+            </li>
+
+
+          ) : (
+
+            //  IF LOGGED OUT, link to login page
+            <Link
+              to="/login"
               className="flex items-center gap-2.5 w-full text-left py-2 md:px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all cursor-pointer"
             >
               <FiPlusSquare size={16} className="shrink-0" />
               <span className="hidden md:inline text-xs font-medium tracking-wide">Create</span>
-            </button>
-          </li>
+            </Link>
+
+
+          )}
         </ul>
       </div>
 
