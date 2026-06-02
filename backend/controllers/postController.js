@@ -26,12 +26,12 @@ export const createPost = async (req, res, next) => {
         }
 
         // get inputs from frontend
-        // --------- content -----------
-        const { content } = req.body;
+        // --------- content, hashtags -----------
+        const { content, hashtags } = req.body;
 
         // --------- media -----------
         let mediaFile = req.file;
-        
+
         // validate required fields
         // if theres NO text OR empty spaces, 
         // AND theres NO picture... throw an error!
@@ -41,23 +41,36 @@ export const createPost = async (req, res, next) => {
 
         // --------- create new post to database ----------
 
-        let newPost;
-
-        if (mediaFile) {
-
-            // creates and adds post to "post" database
-            newPost = await Post.create({ createdBy: user._id, content: content, media: mediaFile.path })
-            // updates user database with created post in "user -> post"
-            await User.findByIdAndUpdate(newPost.createdBy, { $push: { posts: newPost._id } })
-
-        } else {
-
-            newPost = await Post.create({ createdBy: user._id, content: content })
-            await User.findByIdAndUpdate(newPost.createdBy, { $push: { posts: newPost._id } })
-
+        // 1. Remake HASHTAGS from JSON-string to real array (becuase its sent via FormData)
+        // If hashtags is missing or empty, set empty arrah [] as fallback
+        let parsedHashtags = [];
+        if (hashtags) {
+            parsedHashtags = JSON.parse(hashtags);
         }
 
-        return res.status(201).json({ message: 'Post created: ', newPost });
+        // 2. Build post object with fields that ALWAYS should be there
+        const postObject = {
+            createdBy: user._id,
+            hashtags: parsedHashtags
+        };
+
+        // 3. Add CONTENT only if user have written text
+        if (content && content.trim().length > 0) {
+            postObject.content = content;
+        }
+
+        // 4. Add MEDIA only if user have choosen a image/video
+        if (mediaFile) {
+            postObject.media = mediaFile.path;
+        }
+
+        // 5. Create post once in database with finished post object
+        const newPost = await Post.create(postObject);
+
+        // 6. Update users database information with new post
+        await User.findByIdAndUpdate(newPost.createdBy, { $push: { posts: newPost._id } });
+
+        return res.status(201).json({ message: 'Post created successfully', newPost });
 
 
 
