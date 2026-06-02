@@ -13,6 +13,7 @@ function CreatePostForm({ currentUser, onClose }) {
   const token = currentUser?.token;
   const [content, setContent] = useState("");
   const [media, setMedia] = useState(null);
+  const [hashtags, setHashtags] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -22,8 +23,18 @@ function CreatePostForm({ currentUser, onClose }) {
     try {
 
       const formData = new FormData();
+      // Always append content, an empty string is perfectly fine for the backend
       formData.append('content', content);
-      if (media) formData.append('media', media);
+
+      // FormData only accepts strings or files. We use JSON.stringify to convert 
+      // the hashtags array into a JSON string so it can be sent over the backend.
+      formData.append('hashtags', JSON.stringify(hashtags));
+
+      // We only append media if a file actually exists. Otherwise, FormData would 
+      // convert a missing file (null/undefined) into the literal text string "null", 
+      // which would confuse Multer on the backend.
+      if (media) formData.append('media', media); // 
+
 
       // send post data to backend
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/create`, formData, {
@@ -36,6 +47,7 @@ function CreatePostForm({ currentUser, onClose }) {
       // reset form fields and error message
       setContent("");
       setMedia(null);
+      setHashtags([]);
       setError("");
 
 
@@ -65,7 +77,7 @@ function CreatePostForm({ currentUser, onClose }) {
           <h3 className="text-sm font-bold text-gray-900 mb-3">Create Post</h3>
 
           <form action="POST" method="post" onSubmit={createPost} className="space-y-3">
-            {/* Content textarea */}
+            {/* CONTENT textarea */}
             <div className="relative">
               <textarea
                 name="content"
@@ -76,7 +88,7 @@ function CreatePostForm({ currentUser, onClose }) {
               ></textarea>
             </div>
 
-            {/* Image preview box */}
+            {/* IMAGE preview box */}
             {media && (
               <div className="relative w-full max-h-60 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
                 <img
@@ -101,10 +113,10 @@ function CreatePostForm({ currentUser, onClose }) {
               </div>
             )}
 
-            {/* Footer Row: Media input + Actions buttons */}
+            {/* Footer Row: Media input, Hashtags input + Actions buttons */}
             <div className="flex items-center justify-between pt-2 border-t border-gray-100">
 
-              {/* Media input (picture icon button) */}
+              {/* MEDIA input (picture icon button) */}
               <div className="flex items-center text-gray-500 hover:text-black transition-colors">
                 <label htmlFor="media" className="cursor-pointer p-2 hover:bg-gray-50 rounded-full transition-colors flex items-center justify-center">
                   <SlPicture size={16} />
@@ -123,6 +135,15 @@ function CreatePostForm({ currentUser, onClose }) {
                   }}
                 />
               </div>
+
+              {/* HASHTAGS input */}
+              <input
+                type="text"
+                placeholder="Hashtags (space-separated)"
+                value={hashtags}
+                onChange={(e) => setHashtags(e.target.value)}
+                className="flex-1 mx-3 bg-transparent border border-zinc-200 rounded-lg px-3 py-1.5 text-xs text-zinc-700 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-300 transition-all"
+              />
 
               {/* Buttons (Cancel & Post) */}
               <div className="flex gap-2">
