@@ -285,7 +285,7 @@ Liftly syftar till att lösa detta problem genom att erbjuda en plattform där a
 
 ## AI-användning
 
-Eftersom jag ibland tycker det är utmanande att formulera texter, har jag använt AI som ett stöd och bollplank genom projektet. Det har hjälpt mig att hålla dokumentationen tydlig och strukturerad, samt låtit mig lägga mer fokus på att förstå och utveckla applikationens logik.
+I detta projekt har AI använts i stor utsträckning som ett aktivt hjälpmedel, bollplank och utbildningsstöd. Genom att använda AI har jag kunnat accelerera mitt eget lärande, få djupare förståelse för applikationens logik och hålla dokumentationen tydlig och strukturerad.
 
 **AI har använts som stöd för:**
 * **Formulering:** Utformning av texter, commit-meddelanden och kommentarer i koden.
