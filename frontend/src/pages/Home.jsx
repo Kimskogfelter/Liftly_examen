@@ -2,7 +2,6 @@ import { useState, React, useEffect } from "react";
 import axios from "axios";
 import PostFeed from "../components/posts/PostFeed";
 import { useParams } from "react-router-dom";
-import SearchBar from "../components/layout/SearchBar";
 
 function Home({ currentUser }) {
 
@@ -54,7 +53,6 @@ function Home({ currentUser }) {
 
   return (
     <>
-      <SearchBar/>
       <section className="pt-24 flex-1 p-4">
         {/* render post feed component to display posts */}
         <PostFeed
