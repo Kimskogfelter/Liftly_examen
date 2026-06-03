@@ -1,7 +1,7 @@
 import React from "react";
-import DisplayComment from "./CommentCard";
+import CommentCard from "./CommentCard";
 
-function CommentList({ comments }) {
+function CommentList({ comments, currentUser }) {
 
     return (
 
@@ -12,7 +12,7 @@ function CommentList({ comments }) {
                 <>  
                     {/* maps through comments array */}
                     {comments.map((comment) => (
-                        <DisplayComment key={comment._id} comment={comment} />
+                        <CommentCard key={comment._id} comment={comment} currentUser={currentUser} />
                     ))}
                 </>
             )}
