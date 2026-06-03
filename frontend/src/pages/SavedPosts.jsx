@@ -43,9 +43,11 @@ function SavedPosts({ currentUser }) {
     <>
       <div className="flex">
         <section className="flex-1 p-4">
-          <h1 className="items-center flex justify-center text-center">Your saved posts</h1>
+          <h1 className="items-center flex justify-center text-center mt-8 p-4">Your saved posts</h1>
+             
           {/* display user's saved posts */}
           <div>
+            
             {/* render Post feed component to display posts */}
             <PostFeed
               posts={posts}
