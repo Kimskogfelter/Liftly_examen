@@ -60,7 +60,7 @@ function SinglePost({ currentUser }) {
             {post && (
                 <>
                <div className="mt-8 py-6">
-                    <PostCard post={post} />
+                    <PostCard post={post} currentUser={currentUser} />
 
                     <CreateCommentForm
                         currentUser={currentUser}
@@ -69,7 +69,7 @@ function SinglePost({ currentUser }) {
                         postId={postId}
                     />
 
-                    <CommentList comments={comments} />
+                    <CommentList currentUser={currentUser} comments={comments} />
                 </div>
                 </>
             )}
