@@ -63,7 +63,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                             {/* Hashtags */}
                             <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
                                 {post.hashtags?.map((hashtag, index) => (
-                                    <span key={index} className="bg-gray-100 px-2 py-0.5 rounded-full">
+                                    <span key={index} className=" px-1 py-0.5 rounded-full">
                                         #{hashtag}
                                     </span>
                                 ))}
