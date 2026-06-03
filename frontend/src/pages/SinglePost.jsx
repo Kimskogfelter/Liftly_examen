@@ -59,6 +59,7 @@ function SinglePost({ currentUser }) {
             {/* if post exist execute below code */}
             {post && (
                 <>
+               <div className="mt-8 py-6">
                     <PostCard post={post} />
 
                     <CreateCommentForm
@@ -69,6 +70,7 @@ function SinglePost({ currentUser }) {
                     />
 
                     <CommentList comments={comments} />
+                </div>
                 </>
             )}
         </>
