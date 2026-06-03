@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const HandleLikeToggle = async (isLiked, setIsLiked, post, currentUser) => {
+export const HandleLikeToggle = async (isLiked, setIsLiked, setLikesCount, post, currentUser) => {
 
     const token = currentUser?.token;
 
@@ -18,6 +18,9 @@ export const HandleLikeToggle = async (isLiked, setIsLiked, post, currentUser) =
         console.log("unlike post data:", response.data);
         console.log(`Post with id${post._id} have been unliked`)
 
+        // remove 1 from likes count
+        setLikesCount(prev => prev - 1);
+
     } else {
 
         // like post
@@ -29,6 +32,9 @@ export const HandleLikeToggle = async (isLiked, setIsLiked, post, currentUser) =
 
         console.log("like post data:", response.data);
         console.log(`Post with id${post._id} have been liked`)
+
+        // add 1 to likes count
+        setLikesCount(prev => prev + 1);
 
     }
 
