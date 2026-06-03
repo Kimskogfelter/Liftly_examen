@@ -62,7 +62,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
   };
 
   return (
-    <section className="flex-1 p-6 max-w-5xl mx-auto font-sans text-gray-800">
+    <section className="flex-1 p-6 max-w-5xl mx-auto mt-8 font-sans text-gray-800">
 
       {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">{error}</div>}
       {/* display user information */}
@@ -137,7 +137,6 @@ function ProfilePage({ currentUser, setCurrentUser }) {
         </div>
       </div>
 
-      <hr className="border-gray-100 my-6" />
 
       {/* display user's posts */}
       <div>
