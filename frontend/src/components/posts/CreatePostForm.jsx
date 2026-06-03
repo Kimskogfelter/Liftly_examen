@@ -23,13 +23,24 @@ function CreatePostForm({ currentUser, onClose }) {
     try {
 
       const formData = new FormData();
+
+      // CONTENT
       // Always append content, an empty string is perfectly fine for the backend
       formData.append('content', content);
 
+      // HASHTAGS
+      let hashtagsArray = [];
+      // check if hashtags exists and is not just empty spaces. If valid, split the string into an array of hashtags.
+      if (hashtags && hashtags.trim().length > 0) {
+        // Split the input string by spaces to create an array of hashtags
+        hashtagsArray = hashtags.trim().split(/\s+/);
+      }
+
       // FormData only accepts strings or files. We use JSON.stringify to convert 
       // the hashtags array into a JSON string so it can be sent over the backend.
-      formData.append('hashtags', JSON.stringify(hashtags));
+      formData.append('hashtags', JSON.stringify(hashtagsArray));
 
+      // MEDIA
       // We only append media if a file actually exists. Otherwise, FormData would 
       // convert a missing file (null/undefined) into the literal text string "null", 
       // which would confuse Multer on the backend.
