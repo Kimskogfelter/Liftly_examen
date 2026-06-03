@@ -1,10 +1,15 @@
-import React from "react";
+import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
-import { FaHeart } from "react-icons/fa";
+import { HandleCommentLikeToggle } from "../../functions/HandleCommentLikeToggle";
+import { FiHeart } from "react-icons/fi";
 import TimeAgo from "react-timeago";
 
-function CommentCard({ comment }) {
+function CommentCard({ comment, currentUser }) {
+
+
+    const [isLiked, setIsLiked] = useState(comment.likes?.includes(currentUser?.id) || false);
+    const [likesCount, setLikesCount] = useState(comment.likes?.length || 0);
 
     return (
         <>
@@ -39,11 +44,19 @@ function CommentCard({ comment }) {
 
                 </div>
 
-                {/* Right side: Clean black heart icon  */}
+                {/* Right side: heart icon  */}
                 <div className="flex flex-col items-center justify-center shrink-0 text-black hover:text-red-500 transition-colors cursor-pointer pt-1">
-                    
-                    <FaHeart size={11} />
-                    <span className="text-[9px] font-bold text-black mt-0.5">55</span>
+
+                    {/* like button */}
+                    <button
+                        className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
+                        onClick={() => HandleCommentLikeToggle(isLiked, setIsLiked, setLikesCount, comment, currentUser)}
+                    >
+                        {/* heart icon */}
+                        {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={11} /> : <FiHeart size={11} />}
+                    </button>
+                    {/* display likes count */}
+                    <span className="text-[9px] font-bold text-black mt-0.5">{likesCount}</span>
                 </div>
 
             </section>
