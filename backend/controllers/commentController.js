@@ -163,6 +163,125 @@ export const getComments = async (req, res, next) => {
 
 
 
+// ---------------------------- LIKE COMMENT --------------------------- 
+// POST req: api/posts/comments/:commentId/like
+// PROTECTED
+
+export const likeComment = async (req, res, next) => {
+
+    try {
+
+        // get comment id
+        const { commentId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(commentId)) {
+            return res.status(404).json({ message: 'Comment Id is not valid' });
+        }
+
+        // fetch comment from db
+        const comment = await Comment.findById(commentId);
+        // check if comment exists
+        if (!comment) {
+            return next(new HttpError("Comment not found", 404));
+        }
+
+        // check if comment is liked be the req user
+        const alreadyLikedComment = comment.likes.includes(req.user.id);
+
+        // if LIKED 
+        if (alreadyLikedComment) {
+
+            return next(new HttpError("You already like this comment.", 422));
+
+        }
+
+        // if NOt liked, add to likes list
+        if (!alreadyLikedComment) {
+
+            const likedComment = await Comment.findByIdAndUpdate(commentId, { $push: { likes: req.user.id } }, { new: true })
+
+            return res.status(200).json({
+                message: "Comment liked",
+                likesCount: likedComment.likes.length,
+                comment: likedComment
+            })
+
+
+        }
+
+    } catch (error) {
+        // Om något går fel när vi försöker sluta följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+// ---------------------------- UNLIKE COMMENT --------------------------- 
+// DELETE req: api/posts/comments/:commentId/unlike 
+// PROTECTED
+
+export const unlikeComment = async (req, res, next) => {
+
+    try {
+
+        // get comment id
+        const { commentId } = req.params;
+
+        // check id
+        if (!mongoose.Types.ObjectId.isValid(commentId)) {
+            return res.status(404).json({ message: 'Comment Id is not valid' });
+        }
+
+        // fetch comment from db
+        const comment = await Comment.findById(commentId);
+        // check if comment exists
+        if (!comment) {
+            return next(new HttpError("Comment not found", 404));
+        }
+
+        // check if comment is liked be the req user
+        const alreadyLikedComment = comment.likes.includes(req.user.id);
+
+        // if not LIKED 
+        if (!alreadyLikedComment) {
+
+            return next(new HttpError("You havent liked this comment.", 422));
+
+        }
+
+        // if comment is LIKED remove from liked list
+        if (alreadyLikedComment) {
+
+            const unlikedComment = await Comment.findByIdAndUpdate(commentId, { $pull: { likes: req.user.id } }, { new: true })
+
+            return res.status(200).json({
+                message: "Comment unliked",
+                likesCount: unlikedComment.likes.length,
+                comment: unlikedComment
+            })
+
+
+        }
+
+    } catch (error) {
+        // Om något går fel när vi försöker sluta följa en användaren:
+        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
+        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
+        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
+        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        return next(new HttpError(error))
+    }
+
+}
+
+
+
+
 // ---------------------------- DELETE COMMENT --------------------------- 
 // DELETE req: api/posts/comments/:commentId
 // PROTECTED
