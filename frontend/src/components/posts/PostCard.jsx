@@ -13,7 +13,8 @@ import { FaBookmark } from "react-icons/fa";
 function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
     const [showPostActions, setShowPostActions] = useState(false);
-    const [isLiked, setIsLiked] = useState(false);
+    const [likesCount, setLikesCount] = useState(post.likes?.length || 0);
+    const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUser?.id) || false); // check if post is already liked by logged in user, set to true! or else false
     const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.includes(post._id) || false); // check if post is already saved by logged in user, set to true! or else false
 
 
@@ -104,12 +105,13 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                             <div className="flex items-center gap-1.5">
                                 <button
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
-                                    onClick={() => handleLikeToggle(isLiked, setIsLiked, post, currentUser)}
+                                    onClick={() => HandleLikeToggle(isLiked, setIsLiked, setLikesCount, post, currentUser)}
                                 >
                                     {/* heart icon */}
                                     {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={18} /> : <FiHeart size={18} />}
                                 </button>
-                                <span className="font-medium text-xs text-gray-700">{post.likes.length}</span>
+                                {/* display likes count */}
+                                <span className="font-medium text-xs text-gray-700">{likesCount}</span>
                             </div>
 
                             {/* Display comment count */}
