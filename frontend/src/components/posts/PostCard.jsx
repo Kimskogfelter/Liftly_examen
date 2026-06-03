@@ -60,11 +60,13 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                         {/* Display post content */}
                         <Link to={`/posts/${post._id}`} className="block group mb-2 text-left">
 
-                            {/* Placeholder tags */}
+                            {/* Hashtags */}
                             <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
-                                <span>#training</span>
-                                <span>#fit</span>
-                                <span>#pushup</span>
+                                {post.hashtags?.map((hashtag, index) => (
+                                    <span key={index} className="bg-gray-100 px-2 py-0.5 rounded-full">
+                                        #{hashtag}
+                                    </span>
+                                ))}
                             </div>
 
                             {/* Post media */}
