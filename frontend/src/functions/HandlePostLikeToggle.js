@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const HandleLikeToggle = async (isLiked, setIsLiked, setLikesCount, post, currentUser) => {
+export const HandlePostLikeToggle = async (isLiked, setIsLiked, setLikesCount, post, currentUser) => {
 
     const token = currentUser?.token;
 
@@ -13,7 +13,7 @@ export const HandleLikeToggle = async (isLiked, setIsLiked, setLikesCount, post,
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        }); (post._id);
+        }); 
 
         console.log("unlike post data:", response.data);
         console.log(`Post with id${post._id} have been unliked`)
@@ -28,7 +28,7 @@ export const HandleLikeToggle = async (isLiked, setIsLiked, setLikesCount, post,
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        }); (post._id);
+        });
 
         console.log("like post data:", response.data);
         console.log(`Post with id${post._id} have been liked`)
