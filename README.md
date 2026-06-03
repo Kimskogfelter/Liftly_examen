@@ -22,6 +22,9 @@ Här kommer en demonstration av min hemsida som jag hittills har hunnit bygga in
 9. Ska kunna spara andra användares inlägg för att kolla på senare
 10. Ska kunna besöka en annan användares profil 
 11. Ska ha en egen profil sida
+12. Ska kunna lägga till hashtags på sina egna inlägg
+13. Ska kunna gilla andra användares inlägg
+14. Ska kunna kommentera på andra användares inlägg
 
 
 #### Besökare
@@ -300,17 +303,17 @@ Planerade features för framtida versioner av appen:
 * Visa online-användare
 * Realtidschatt med Socket.IO
 * Förbättrad sessionshantering och säkerhetsfunktioner (t.ex. token-uppdatering och enhetshantering)
+
 * Admin - Ska kunna blockera en användare från appen via en admin panel
 * Admin - Ska kunna radera en användare från appen via en admin panel
+
 * Frontend - Ska kunna använda sökfunktion
-* Frontend - Ska kunna lägga till hashtags på sina egna inlägg
 * Frontend - Ska kunna filtrera inlägg efter kategori
 * Frontend - Ska kunna sortera sparade inlägg efter kategorier
-* Frontend - Ska kunna gilla andra användares inlägg
 * Frontend - Ska kunna följa andra användare
-* Frontend - Ska kunna kommentera på andra användares inlägg
 * Frontend - Ska kunna gilla andra användares kommentarer
 * Frontend - Ska kunna skapa egna inlägg med video
+
 * Funktion - Notiser/feedback: bekräftelse på like, kommentar eller radering
 * Funktion - Sök och filter: sök efter användare eller inlägg
 * Funktion - Lösenordhantering: glömt/ändra lösenord
