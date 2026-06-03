@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
-import { HandleLikeToggle } from "../../functions/HandleLikeToggle";
+import { HandlePostLikeToggle } from "../../functions/HandlePostLikeToggle";
 import { HandleSavePost } from "../../functions/HandleSavePost";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
@@ -105,7 +105,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                             <div className="flex items-center gap-1.5">
                                 <button
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
-                                    onClick={() => HandleLikeToggle(isLiked, setIsLiked, setLikesCount, post, currentUser)}
+                                    onClick={() => HandlePostLikeToggle(isLiked, setIsLiked, setLikesCount, post, currentUser)}
                                 >
                                     {/* heart icon */}
                                     {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={18} /> : <FiHeart size={18} />}
