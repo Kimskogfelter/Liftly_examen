@@ -14,7 +14,9 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
 
     const [showPostActions, setShowPostActions] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.includes(post._id) || false); // check if post is already saved by logged in user, set to true! or else false
+
+
     return (
         <>
             <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-115 flex flex-col justify-between">
