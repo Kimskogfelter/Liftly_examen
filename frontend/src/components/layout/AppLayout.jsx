@@ -27,7 +27,7 @@ function AppLayout({ currentUser, setCurrentUser }) {
                 )
             }
             <main className="flex-1 p-4">
-                <SearchBar />
+                <SearchBar currentUser={currentUser} />
 
                 {/* Outlet helps render the active route component */}
                 <Outlet />
