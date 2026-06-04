@@ -25,6 +25,7 @@ Här kommer en demonstration av min hemsida som jag hittills har hunnit bygga in
 12. Ska kunna lägga till hashtags på sina egna inlägg
 13. Ska kunna gilla andra användares inlägg
 14. Ska kunna kommentera på andra användares inlägg
+15. Ska kunna gilla andra användares kommentarer
 
 
 #### Besökare
@@ -311,7 +312,6 @@ Planerade features för framtida versioner av appen:
 * Frontend - Ska kunna filtrera inlägg efter kategori
 * Frontend - Ska kunna sortera sparade inlägg efter kategorier
 * Frontend - Ska kunna följa andra användare
-* Frontend - Ska kunna gilla andra användares kommentarer
 * Frontend - Ska kunna skapa egna inlägg med video
 
 * Funktion - Notiser/feedback: bekräftelse på like, kommentar eller radering
