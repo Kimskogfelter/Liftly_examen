@@ -5,12 +5,14 @@ import { useSearchParams, Link } from "react-router-dom";
 
 function SearchPage({ currentUser }) {
 
+    const token = currentUser?.token;
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState(null);
-    const token = currentUser?.token;
+    const [activeTab, setActiveTab] = useState("posts");
+    const [error, setError] = useState("");
     const [searchParams] = useSearchParams(); // Hook to access URL search parameters
     const searchQuery = searchParams.get("query") || ""; // Get the search query from URL parameters, default to empty string if not present
-    const [error, setError] = useState("");
+   
 
     // function to fetch search results from backend based on search query
     const getSearchResults = async () => {
@@ -29,6 +31,13 @@ function SearchPage({ currentUser }) {
             // update the posts and user state with the fetched array of posts and user from the backend
             setPosts(response.data.posts);
             setUsers(response.data.users);
+
+            // UX: If there are no post results but there are user results, automatically switch to the "users" tab. Otherwise, default to "posts".
+            if (response.data.posts?.length === 0 && response.data.users?.length > 0) {
+                setActiveTab("users");
+            } else {
+                setActiveTab("posts");
+            }
 
         } catch (err) {
 
@@ -71,57 +80,89 @@ function SearchPage({ currentUser }) {
 
                 {error && <p className="text-red-500 text-xs text-center my-4">{error}</p>}
 
-                {/* USERS */}
-                {users?.length > 0 && (
-                    <div className="mb-10 px-4 font-sans">
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Users</h3>
-                        <div className="flex flex-wrap gap-4">
-                            {users.map((u) => (
-                                <Link to={`/users/${u._id}`}
-                                    key={u._id}
-                                    className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3 shadow-sm min-w-50 cursor-pointer transition-transform"
-                                >
-                                    {/* Profile image */}
-                                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                                        {u.profileImage ? (
-                                            <img src={u.profileImage} alt={u.username} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full bg-gray-300" /> // Standard-avatar image if user doesn't have a profile image
-                                        )}
-                                    </div>
-                                    {/* Username */}
-                                    <div>
-                                        <p className="text-sm font-semibold text-gray-800">@{u.username}</p>
-                                        
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
+                {/* TABS */}
+                <div className="flex border-b border-gray-100 mb-6 px-4">
+                    {/* POSTS BUTTON */}
+                    <button
+                        onClick={() => setActiveTab("posts")}
+                        className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${
+                            activeTab === "posts"
+                                ? "border-gray-800 text-gray-800"
+                                : "border-transparent text-gray-400 hover:text-gray-600"
+                        }`}
+                    >
+                        Posts ({posts.length})
+                    </button>
+                    {/* USERS BUTTON */}
+                    <button
+                        onClick={() => setActiveTab("users")}
+                        className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${
+                            activeTab === "users"
+                                ? "border-gray-800 text-gray-800"
+                                : "border-transparent text-gray-400 hover:text-gray-600"
+                        }`}
+                    >
+                        Users ({users?.length})
+                    </button>
+                </div>
+
+                {/* DISPLAY ACTIVE TAB */}
+                
+                {/* --- POSTS TAB --- */}
+                {activeTab === "posts" && (
+                    <div>
+                        {posts.length > 0 ? (
+                            <PostFeed
+                                posts={posts}
+                                currentUser={currentUser}
+                                handleEditPost={handleEditPost}
+                                handleDeletePost={handleDeletePost}
+                                layout="grid-3x3"
+                            />
+                        ) : (
+                            <p className="text-gray-400 text-xs text-center mt-10">No posts found matching your search.</p>
+                        )}
                     </div>
                 )}
 
-                {/* POSTS */}
-                <div className="mt-4">
-                    {posts.length > 0 && (
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-4 font-sans">Posts</h3>
-                    )}
+                {/* --- USERS TAB --- */}
+                {activeTab === "users" && (
+                    <div className="px-4">
+                        {users.length > 0 ? (
+                            <div className="flex flex-wrap gap-4">
+                                {users.map((u) => (
+                                    <Link
+                                        to={`/users/${u._id}`}
+                                        key={u._id}
+                                        className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3 shadow-sm min-w-50 transition-all"
+                                    >
+                                        <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
+                                            {/* profile image */}
+                                            {u.profileImage ? (
+                                                <img src={u.profileImage} alt={u.username} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-gray-300" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            {/* username */}
+                                            <p className="text-sm font-semibold text-gray-800">@{u.username}</p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-400 text-xs text-center mt-10">No users found matching your search.</p>
+                        )}
+                    </div>
+                )}
 
-                    {posts.length > 0 ? (
-                        <PostFeed
-                            posts={posts}
-                            currentUser={currentUser}
-                            handleEditPost={handleEditPost}
-                            handleDeletePost={handleDeletePost}
-                            layout="grid-3x3"
-                        />
-                    ) : (
-                        posts?.length === 0 && users && users?.length === 0 && (
-                            <p className="text-gray-400 text-xs text-center mt-10 font-sans">
-                                No results found.
-                            </p>
-                        )
-                    )}
-                </div>
+                {/* --- IF EVERYTHIGN IS EMPTY --- */}
+                {posts?.length === 0 && users?.length === 0 && (
+                    <p className="text-gray-400 text-xs text-center mt-10">
+                        No results found.
+                    </p>
+                )}
             </section>
         </>
     );
