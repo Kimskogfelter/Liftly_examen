@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import SavedPosts from './pages/SavedPosts';
 import ProfilePage from './pages/ProfilePage';
 import SinglePost from './pages/SinglePost';
+import SearchPage from './pages/SearchPage';
 import AppLayout from './components/layout/AppLayout';
 
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/savedPosts" element={currentUser ? <SavedPosts currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/users/:userId" element={currentUser ? <ProfilePage currentUser={currentUser} setCurrentUser={setCurrentUser}/> : <Navigate to="/login" />} />
             <Route path="/posts/:postId" element={currentUser ? <SinglePost currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/search" element={currentUser ? <SearchPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           </Route>
 
         </Routes>
