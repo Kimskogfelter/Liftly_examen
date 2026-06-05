@@ -299,10 +299,14 @@ export const savePost = async (req, res, next) => {
 
 export const unsavePost = async (req, res, next) => {
 
+
     try {
 
         // fetch post id from params
         const { postId } = req.params;
+
+        // remake postId string from frontend to objectID
+        const postObjectId = new mongoose.Types.ObjectId(postId);
 
         // check id
         if (!mongoose.Types.ObjectId.isValid(postId)) {
@@ -321,7 +325,7 @@ export const unsavePost = async (req, res, next) => {
         const user = await User.findById(req.user.id);
 
         // check if post is saved be the req user
-        const alreadySavedPost = user.savedPosts.includes(postId);
+        const alreadySavedPost = user.savedPosts.includes(postObjectId);
 
         // if NOT saved 
         if (!alreadySavedPost) {
@@ -344,6 +348,7 @@ export const unsavePost = async (req, res, next) => {
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
+        
     }
 
 }
