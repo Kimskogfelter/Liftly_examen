@@ -1,4 +1,4 @@
-export const Logout = (setCurrentUser, navigate) => {
+export const logout = (setCurrentUser, navigate) => {
 
   localStorage.removeItem("currentUser");
   setCurrentUser(null);

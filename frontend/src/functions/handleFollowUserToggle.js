@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const HandleFollowUserToggle = async (userInfo, setUserInfo, currentUser, isAlreadyFollowing) => {
+export const handleFollowUserToggle = async (userInfo, setUserInfo, currentUser, isAlreadyFollowing) => {
 
     const token = currentUser?.token;
 

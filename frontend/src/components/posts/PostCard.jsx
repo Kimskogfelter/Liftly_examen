@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
-import { HandlePostLikeToggle } from "../../functions/HandlePostLikeToggle";
-import { HandleSavePost } from "../../functions/HandleSavePost";
+import { handlePostLikeToggle } from "../../functions/handlePostLikeToggle";
+import { handleSavePost } from "../../functions/handleSavePost";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle } from "react-icons/fi";
@@ -104,7 +104,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                             <div className="flex items-center gap-1.5">
                                 <button
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
-                                    onClick={() => HandlePostLikeToggle(isLiked, setIsLiked, setLikesCount, post, currentUser)}
+                                    onClick={() => handlePostLikeToggle(isLiked, setIsLiked, setLikesCount, post, currentUser)}
                                 >
                                     {/* heart icon */}
                                     {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={18} /> : <FiHeart size={18} />}
@@ -122,7 +122,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                         </div>
 
                         {/* Save / Bookmark Button */}
-                        <button onClick={() => HandleSavePost(isSaved, setIsSaved, post, currentUser)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
+                        <button onClick={() => handleSavePost(isSaved, setIsSaved, post, currentUser)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
                             {isSaved ? <FaBookmark size={18} /> : <FiBookmark size={18} />}
                         </button>
                     </div>

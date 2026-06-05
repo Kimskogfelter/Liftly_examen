@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const HandleSavePost = async (isSaved, setIsSaved, post, currentUser) => {
+export const handleSavePost = async (isSaved, setIsSaved, post, currentUser) => {
 
     const token = currentUser?.token;
 

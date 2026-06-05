@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
-import { HandleCommentLikeToggle } from "../../functions/HandleCommentLikeToggle";
+import { handleCommentLikeToggle } from "../../functions/handleCommentLikeToggle";
 import { FiHeart } from "react-icons/fi";
 import TimeAgo from "react-timeago";
 
@@ -50,7 +50,7 @@ function CommentCard({ comment, currentUser }) {
                     {/* like button */}
                     <button
                         className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
-                        onClick={() => HandleCommentLikeToggle(isLiked, setIsLiked, setLikesCount, comment, currentUser)}
+                        onClick={() => handleCommentLikeToggle(isLiked, setIsLiked, setLikesCount, comment, currentUser)}
                     >
                         {/* heart icon */}
                         {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={11} /> : <FiHeart size={11} />}

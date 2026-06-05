@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const HandlePostLikeToggle = async (isLiked, setIsLiked, setLikesCount, post, currentUser) => {
+export const handlePostLikeToggle = async (isLiked, setIsLiked, setLikesCount, post, currentUser) => {
 
     const token = currentUser?.token;
 

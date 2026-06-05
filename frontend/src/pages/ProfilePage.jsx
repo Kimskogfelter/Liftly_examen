@@ -5,7 +5,7 @@ import ProfileImage from "../components/users/ProfileImage";
 import EditProfileImage from "../components/users/EditProfileImage";
 import EditProfileBio from "../components/users/EditProfileBio";
 import PostFeed from "../components/posts/PostFeed";
-import { HandleFollowUserToggle } from "../functions/HandleFollowUserToggle";
+import { handleFollowUserToggle } from "../functions/handleFollowUserToggle";
 import { FaRegEdit } from "react-icons/fa";
 import { FaCamera } from "react-icons/fa";
 
@@ -104,7 +104,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
             {/* Follow-button*/}
             {/* display follow button if the user is not the current user */}
             {userInfo?._id !== currentUser?.id && (
-              <button onClick={() => HandleFollowUserToggle(userInfo, setUserInfo, currentUser, isAlreadyFollowing)} className="bg-[#3A3939] hover:bg-zinc-800 text-white text-[10px] font-bold rounded transition-all cursor-pointer w-15.5 h-5.5 flex items-center justify-center shrink-0">
+              <button onClick={() => handleFollowUserToggle(userInfo, setUserInfo, currentUser, isAlreadyFollowing)} className="bg-[#3A3939] hover:bg-zinc-800 text-white text-[10px] font-bold rounded transition-all cursor-pointer w-15.5 h-5.5 flex items-center justify-center shrink-0">
                 {/* check if the current user is following this user */}
                 {isAlreadyFollowing ? "Unfollow" : "Follow"}
               </button>
