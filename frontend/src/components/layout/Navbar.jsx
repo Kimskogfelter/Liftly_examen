@@ -9,7 +9,7 @@ import { FiLogOut } from "react-icons/fi";
 import logo from '../../assets/images/liftly-logo.png';
 import ProfileImage from "../users/ProfileImage";
 import CreatePost from "../posts/CreatePostForm";
-import { Logout } from "../../functions/Logout";
+import { logout } from "../../functions/logout";
 
 function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
 
@@ -91,7 +91,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
       {currentUser ? (
         <div className="hidden md:block w-full border-t border-zinc-900 pt-2">
           <button
-            onClick={() => Logout(setCurrentUser, navigate)}
+            onClick={() => logout(setCurrentUser, navigate)}
             className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-500 hover:text-red-400 transition-colors text-xs font-medium cursor-pointer rounded-lg md:hover:bg-red-950/10"
           >
             <FiLogOut size={14} className="shrink-0" />
