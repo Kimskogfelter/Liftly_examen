@@ -10,12 +10,12 @@ import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa";
 
-function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
+function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDeletePost, getSavedPosts }) {
 
     const [showPostActions, setShowPostActions] = useState(false);
     const [likesCount, setLikesCount] = useState(post.likes?.length || 0);
     const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUser?.id) || false); // check if post is already liked by logged in user, set to true! or else false
-    const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.includes(post._id) || false); // check if post is already saved by logged in user, set to true! or else false
+    const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.map(String).includes(String(post._id)) || false); // maps through saved posts array and remakes objectIds to strings to check if current post is saved
 
 
     return (
@@ -122,7 +122,7 @@ function PostCard({ post, currentUser, handleEditPost, handleDeletePost }) {
                         </div>
 
                         {/* Save / Bookmark Button */}
-                        <button onClick={() => handleSavePost(isSaved, setIsSaved, post, currentUser)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
+                        <button onClick={() => handleSavePost(isSaved, setIsSaved, post, currentUser, setCurrentUser, getSavedPosts)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
                             {isSaved ? <FaBookmark size={18} /> : <FiBookmark size={18} />}
                         </button>
                     </div>

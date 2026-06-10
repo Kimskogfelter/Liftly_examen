@@ -1,7 +1,7 @@
 import React from "react";
 import PostCard from "./PostCard";
 
-function PostFeed({ posts, currentUser, handleDeletePost, handleEditPost, layout }) {
+function PostFeed({ posts, currentUser, setCurrentUser, handleDeletePost, handleEditPost, layout, getSavedPosts }) {
 
 
     // 
@@ -18,7 +18,7 @@ function PostFeed({ posts, currentUser, handleDeletePost, handleEditPost, layout
                     <p className="text-center">No posts available.</p>
                 ) : (
                     posts.map((post) => (
-                        <PostCard key={post._id} post={post} currentUser={currentUser} handleEditPost={handleEditPost} handleDeletePost={handleDeletePost} />
+                        <PostCard key={post._id} post={post} currentUser={currentUser} setCurrentUser={setCurrentUser} handleEditPost={handleEditPost} handleDeletePost={handleDeletePost} getSavedPosts={getSavedPosts} />
                     ))
                 )}
             </div>
