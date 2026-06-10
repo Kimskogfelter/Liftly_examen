@@ -3,7 +3,7 @@ import axios from "axios";
 import PostFeed from "../components/posts/PostFeed";
 import { useSearchParams, Link } from "react-router-dom";
 
-function SearchPage({ currentUser }) {
+function SearchPage({ currentUser, setCurrentUser }) {
 
     const token = currentUser?.token;
     const [posts, setPosts] = useState([]);
@@ -115,6 +115,7 @@ function SearchPage({ currentUser }) {
                             <PostFeed
                                 posts={posts}
                                 currentUser={currentUser}
+                                setCurrentUser={setCurrentUser}
                                 handleEditPost={handleEditPost}
                                 handleDeletePost={handleDeletePost}
                                 layout="grid-3x3"

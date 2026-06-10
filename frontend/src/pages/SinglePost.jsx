@@ -8,7 +8,7 @@ import CreateCommentForm from "../components/comments/CreateCommentForm";
 import CommentList from "../components/comments/CommentList";
 
 
-function SinglePost({ currentUser }) {
+function SinglePost({ currentUser, setCurrentUser }) {
 
     // states and variables
     const token = currentUser?.token;
@@ -60,7 +60,7 @@ function SinglePost({ currentUser }) {
             {post && (
                 <>
                <div className="mt-8 py-6">
-                    <PostCard post={post} currentUser={currentUser} />
+                    <PostCard post={post} currentUser={currentUser} setCurrentUser={setCurrentUser} />
 
                     <CreateCommentForm
                         currentUser={currentUser}

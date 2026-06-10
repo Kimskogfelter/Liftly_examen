@@ -154,6 +154,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
         <PostFeed
           posts={posts}
           currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
           handleEditPost={handleEditPost}
           handleDeletePost={handleDeletePost}
           layout="grid-3x3"
