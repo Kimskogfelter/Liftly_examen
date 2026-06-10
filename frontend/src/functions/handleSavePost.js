@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const handleSavePost = async (isSaved, setIsSaved, post, currentUser) => {
+export const handleSavePost = async (isSaved, setIsSaved, post, currentUser, setCurrentUser, getSavedPosts) => {
 
     const token = currentUser?.token;
 
@@ -14,6 +14,12 @@ export const handleSavePost = async (isSaved, setIsSaved, post, currentUser) => 
                     Authorization: `Bearer ${token}`
                 }
             });
+
+            // update currentUser state with unsaved post
+            setCurrentUser(prev => ({
+                ...prev,
+                savedPosts: prev.savedPosts.filter(id => String(id) !== String(post._id))
+            }));
 
             console.log("unsaved post data:", response.data);
             console.log(`Post with id${post._id} have been unsaved`)
@@ -30,9 +36,19 @@ export const handleSavePost = async (isSaved, setIsSaved, post, currentUser) => 
             console.log("saved post data:", response.data);
             console.log(`Post with id ${post._id} have been saved`)
 
+            // update currentUser state with saved post
+            setCurrentUser(prev => ({
+                ...prev,
+                savedPosts: [...(prev.savedPosts || []), post._id]
+            }));
+
         }
 
         setIsSaved(prev => !prev);
+        // run get saved posts get req to update UI directly
+        if (getSavedPosts) {
+            getSavedPosts();
+        }
 
     } catch (err) {
 
