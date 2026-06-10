@@ -3,7 +3,7 @@ import axios from "axios";
 import PostFeed from "../components/posts/PostFeed";
 import { useParams } from "react-router-dom";
 
-function Home({ currentUser }) {
+function Home({ currentUser, setCurrentUser }) {
 
   const [posts, setPosts] = useState([]);
   const token = currentUser?.token;
@@ -58,6 +58,7 @@ function Home({ currentUser }) {
         <PostFeed
           posts={posts}
           currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
           handleEditPost={handleEditPost}
           handleDeletePost={handleDeletePost}
           layout="list"
