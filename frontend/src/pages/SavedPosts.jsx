@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/layout/Navbar";
 import PostFeed from "../components/posts/PostFeed";
 
-function SavedPosts({ currentUser }) {
+function SavedPosts({ currentUser, setCurrentUser }) {
 
   const [error, setError] = useState("");
   const token = currentUser?.token;
@@ -52,7 +52,9 @@ function SavedPosts({ currentUser }) {
             <PostFeed
               posts={posts}
               currentUser={currentUser}
+              setCurrentUser={setCurrentUser}
               layout="grid-3x3"
+              getSavedPosts={getSavedPosts}
             />
           </div>
         </section>
