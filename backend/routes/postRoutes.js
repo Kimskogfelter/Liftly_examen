@@ -9,7 +9,7 @@ export const postRouter = Router();
 
 
 // ---------------------------- post routes SUBROUTES --------------------------- 
-postRouter.post('/create', authMiddleware, upload.single("media"), createPost)
+postRouter.post('/create', authMiddleware, upload.array("media", 5), createPost)
 postRouter.get('/users/:userId/posts', authMiddleware, getUserPosts)
 postRouter.get('/following',authMiddleware, getFollowingPosts)
 postRouter.get('/', getPosts) // Public route so home page can fetch and display all posts for visitors
