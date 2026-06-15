@@ -10,45 +10,52 @@ const uploadFile = (folderName) => {
     cloudinary: cloudinaryService,
     params: (req, file) => {
       const folderPath = `${folderName.trim()}`;
-      // const fileExtension = path.extname(file.originalname).substring(1);
       const publicId = `${file.fieldname}-${Date.now()}`;
+      
+      // check if uploading file is video
+      const isVideo = file.mimetype.startsWith("video/");
 
       return {
         folder: folderPath,
         public_id: publicId,
-        format: "webp",
-        // added with help from Mattias Lager, teacher at Glimåkra folkhögskola
-        transformation: [
-          {
-            width: 1920, 
-            crop: "limit",
-            quality: "auto:good",
-            fetch_format: "auto"
-        }
-      ]
+        // resource_type: "auto" gör att Cloudinary automatiskt fattar om det är video eller bild
+        resource_type: "auto", 
+        // ONLY optimaze if the file is a image
+        ...(!isVideo && {
+          format: "webp",
+          transformation: [
+            {
+              width: 1920, 
+              crop: "limit",
+              quality: "auto:good",
+              fetch_format: "auto"
+            }
+          ]
+        })
       };
     },
   });
 
   return multer({
     storage: storage,
-    // ------------- written with help of chatGPT ------------------
     fileFilter: (req, file, cb) => {
-
-      const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp", "image/heic", "image/heif"] 
+      
+      const allowedMimeTypes = [
+        "image/jpeg", "image/png", "image/jpg", "image/webp", "image/heic", "image/heif",
+        "video/mp4", "video/mpeg", "video/quicktime", "video/x-matroska" // .mp4, .mpeg, .mov, .mkv
+      ];
 
       if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
       } else {
-        cb(new Error("Only image files are allowed", 400), false);
+        cb(new Error("Only image and video files are allowed", 400), false);
       }
     },
-    // -------------------------------------------------------------
     limits: {
-      fileSize: 10 * 1024 * 1024, // keep images size < 10 MB
+      
+      fileSize: 50 * 1024 * 1024, 
     },
   });
 }
 
-// create uploads folder in cloudinary
 export const upload = uploadFile("uploads");
