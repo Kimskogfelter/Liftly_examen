@@ -12,37 +12,26 @@ import path from "path";
 // ---------------------------- CREATE POST --------------------------- 
 // POST req: api/posts/create
 // PROTECTED
-
 export const createPost = async (req, res, next) => {
-
     try {
-
-
         // --------- check if user exist in database ----------
-        const user = await User.findById(req.user.id)
+        const user = await User.findById(req.user.id);
 
         if (!user) {
             return next(new HttpError("User not found", 404));
         }
 
         // get inputs from frontend
-        // --------- content, hashtags -----------
         const { content, hashtags } = req.body;
 
         // --------- media -----------
-        let mediaFile = req.file;
-
-        // validate required fields
-        // if theres NO text OR empty spaces, 
-        // AND theres NO picture... throw an error!
-        if ((!content || content.trim().length === 0) && !mediaFile) {
+        let mediaFiles = req.files ? req.files.map(file => file.path) : [];
+        
+        if ((!content || content.trim().length === 0) && mediaFiles.length === 0) {
             return next(new HttpError("You can't create an empty post. Add some text or an image!", 422));
         }
 
-        // --------- create new post to database ----------
-
-        // 1. Remake HASHTAGS from JSON-string to real array (becuase its sent via FormData)
-        // If hashtags is missing or empty, set empty arrah [] as fallback
+        // 1. Remake HASHTAGS from JSON-string to real array (because its sent via FormData)
         let parsedHashtags = [];
         if (hashtags) {
             parsedHashtags = JSON.parse(hashtags);
@@ -59,9 +48,9 @@ export const createPost = async (req, res, next) => {
             postObject.content = content;
         }
 
-        // 4. Add MEDIA only if user have choosen a image/video
-        if (mediaFile) {
-            postObject.media = mediaFile.path;
+        // 4. Add MEDIA only if user have chosen an image/video
+        if (mediaFiles.length > 0) {
+            postObject.media = mediaFiles;
         }
 
         // 5. Create post once in database with finished post object
@@ -72,18 +61,10 @@ export const createPost = async (req, res, next) => {
 
         return res.status(201).json({ message: 'Post created successfully', newPost });
 
-
-
     } catch (error) {
-        // Om något går fel när vi försöker registrera användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error));
     }
-
-}
+};
 
 
 // ---------------------------- GET POST --------------------------- 
