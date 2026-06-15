@@ -1,27 +1,28 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { SlPicture } from "react-icons/sl";
 import { IoCloseCircle } from "react-icons/io5";
 
 function CreatePostForm({ currentUser, onClose }) {
-
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
-  // ? is there to prevent errors if currentUser is null or undefined
   const token = currentUser?.token;
   const [content, setContent] = useState("");
-  const [media, setMedia] = useState(null);
+  const [media, setMedia] = useState([]); 
   const [hashtags, setHashtags] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // function to create post
+  // Function to remove a specific file from the preview list before uploading
+  const removeMediaFile = (indexToRemove) => {
+    setMedia(media.filter((_, index) => index !== indexToRemove));
+  };
+
+  // Function to create a post
   const createPost = async (e) => {
     e.preventDefault();
     try {
-
       const formData = new FormData();
 
       // CONTENT
@@ -30,10 +31,11 @@ function CreatePostForm({ currentUser, onClose }) {
 
       // HASHTAGS
       let hashtagsArray = [];
-      // check if hashtags exists and is not just empty spaces. If valid, split the string into an array of hashtags.
-      if (hashtags && hashtags.trim().length > 0) {
-        // Split the input string by spaces to create an array of hashtags
+      // Check if hashtags exists and is a valid string/array before splitting
+      if (hashtags && typeof hashtags === "string" && hashtags.trim().length > 0) {
         hashtagsArray = hashtags.trim().split(/\s+/);
+      } else if (Array.isArray(hashtags)) {
+        hashtagsArray = hashtags;
       }
 
       // FormData only accepts strings or files. We use JSON.stringify to convert 
@@ -41,13 +43,15 @@ function CreatePostForm({ currentUser, onClose }) {
       formData.append('hashtags', JSON.stringify(hashtagsArray));
 
       // MEDIA
-      // We only append media if a file actually exists. Otherwise, FormData would 
-      // convert a missing file (null/undefined) into the literal text string "null", 
-      // which would confuse Multer on the backend.
-      if (media) formData.append('media', media); // 
+      // Loop through all media files and append them to the same 'media' key.
+      // This allows Multer on the backend (upload.array('media')) to capture all of them.
+      if (media.length > 0) {
+        media.forEach((file) => {
+          formData.append('media', file);
+        });
+      }
 
-
-      // send post data to backend
+      // Send post data to backend
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/create`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -55,23 +59,21 @@ function CreatePostForm({ currentUser, onClose }) {
       });
       console.log("Post created successfully:", response.data);
 
-      // reset form fields and error message
+      // Reset form fields and error message
       setContent("");
-      setMedia(null);
+      setMedia([]);
       setHashtags([]);
       setError("");
 
-
-      // redirect to home page after successful creation of post
+      // Redirect to home page after successful creation of post
       if (response.status === 201) {
         navigate('/home');
       }
-      // close the CreatePost component after successful post creation
+      // Close the CreatePost component after successful post creation
       onClose();
 
     } catch (err) {
-
-      // handle errors and display error message to user
+      // Handle errors and display error message to user
       const errorResponse = err.response?.data;
       setError(errorResponse?.message || "Your post could not be created. Please try again.");
     }
@@ -87,7 +89,7 @@ function CreatePostForm({ currentUser, onClose }) {
 
           <h3 className="text-sm font-bold text-gray-900 mb-3">Create Post</h3>
 
-          <form action="POST" method="post" onSubmit={createPost} className="space-y-3">
+          <form onSubmit={createPost} className="space-y-3">
             {/* CONTENT textarea */}
             <div className="relative">
               <textarea
@@ -99,21 +101,32 @@ function CreatePostForm({ currentUser, onClose }) {
               ></textarea>
             </div>
 
-            {/* IMAGE preview box */}
-            {media && (
-              <div className="relative w-full max-h-60 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
-                <img
-                  src={URL.createObjectURL(media)}
-                  alt="Preview"
-                  className="w-full max-h-60 object-contain rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={() => setMedia(null)}
-                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer p-1"
-                >
-                  <IoCloseCircle size={22} />
-                </button>
+            {/* MEDIA preview box (Supports both images and videos) */}
+            {media.length > 0 && (
+              <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto p-1 border border-gray-100 rounded-lg bg-gray-50">
+                {media.map((file, index) => {
+                  const isVideoFile = file.type.startsWith("video/");
+                  const fileUrl = URL.createObjectURL(file);
+
+                  return (
+                    <div key={index} className="relative aspect-video rounded-md overflow-hidden bg-black flex items-center justify-center">
+                      {isVideoFile ? (
+                        <video src={fileUrl} className="w-full h-full object-cover" controls={false} muted />
+                      ) : (
+                        <img src={fileUrl} alt="Preview" className="w-full h-full object-cover" />
+                      )}
+                      
+                      {/* Remove file button */}
+                      <button
+                        type="button"
+                        onClick={() => removeMediaFile(index)}
+                        className="absolute top-1 right-1 text-white/80 hover:text-white drop-shadow-md transition-colors cursor-pointer"
+                      >
+                        <IoCloseCircle size={20} />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             )}
 
@@ -137,10 +150,13 @@ function CreatePostForm({ currentUser, onClose }) {
                   type="file"
                   name="media"
                   id="media"
-                  accept="image/*"
+                  accept="image/*,video/*" // Allows both images and videos in the browser picker
+                  multiple // Allows selecting multiple files at once
                   onChange={(e) => {
-                    if (e.target.files[0]) {
-                      setMedia(e.target.files[0]);
+                    if (e.target.files.length > 0) {
+                      // Convert FileList into a regular array and merge with any existing selected files
+                      const chosenFiles = Array.from(e.target.files);
+                      setMedia([...media, ...chosenFiles]);
                       setError("");
                     }
                   }}
