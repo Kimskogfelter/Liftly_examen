@@ -10,8 +10,6 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
   const postId = post._id;
   const navigate = useNavigate();
   const [content, setContent] = useState(post.content);
-  // Initialize media state with a flat copy of the existing post media array
-  const [media, setMedia] = useState([...post.media]);
   const [error, setError] = useState("");
 
   // function to edit post
@@ -21,11 +19,6 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
       const formData = new FormData();
       formData.append('content', content);
 
-      // Only append media to formData if the first element is a newly selected File
-      if (media.length > 0 && media[0] instanceof File) {
-        formData.append('media', media[0]);
-        console.log("New media file appended to FormData:", media[0]);
-      }
 
       // send updated post data to backend
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${postId}/update`, formData, {
@@ -78,26 +71,6 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
               ></textarea>
             </div>
 
-            {/* Image preview box */}
-            {/* Check if there is an item in the array before rendering the box */}
-            {media.length > 0 && media[0] && (
-              <div className="relative w-full max-h-60 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
-                <img
-                  // FIX 3: Safe check! If media[0] is a File object, create object URL. Otherwise, use the raw text string (Cloudinary URL).
-                  src={media[0] instanceof File ? URL.createObjectURL(media[0]) : media[0]}
-                  alt="Preview"
-                  className="w-full max-h-60 object-contain rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={() => setMedia([])} // Clear array if image is removed
-                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer p-1 bg-white/80 rounded-full backdrop-blur-sm"
-                  title="Remove image"
-                >
-                  <IoCloseCircle size={22} />
-                </button>
-              </div>
-            )}
 
             {/* Error message */}
             {error && (
@@ -109,26 +82,6 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
             {/* Footer Row: Media input + Actions buttons */}
             <div className="flex items-center justify-between pt-2 border-t border-gray-100">
 
-              {/* Media input (picture icon button) */}
-              <div className="flex items-center text-gray-500 hover:text-black transition-colors">
-                <label htmlFor="edit-media" className="cursor-pointer p-2 hover:bg-gray-50 rounded-full transition-colors flex items-center justify-center">
-                  <SlPicture size={16} />
-                </label>
-                <input
-                  className="hidden"
-                  type="file"
-                  name="media"
-                  id="edit-media"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files[0]) {
-                      // Save the file inside an array to preserve the structure
-                      setMedia([e.target.files[0]]);
-                      setError("");
-                    }
-                  }}
-                />
-              </div>
 
               {/* Buttons */}
               <div className="flex gap-2">
