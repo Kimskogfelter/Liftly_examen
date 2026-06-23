@@ -68,46 +68,49 @@ function SearchPage({ currentUser, setCurrentUser }) {
         const updatedPosts = posts.filter((post) => post._id !== postId);
         setPosts(updatedPosts);
     };
-
-
-
     return (
         <>
-            <section className="pt-24 flex-1 p-4 max-w-5xl mx-auto">
-                {/* SEARCHBAR */}
-                <SearchBar currentUser={currentUser} />
+            <section className="pt-24 flex-1 p-4 max-w-5xl mx-auto w-full font-sans">
+
+                <div className="max-w-xl mx-auto w-full mb-6">
+                    
+                    {/* Searchbar */}
+                    <SearchBar currentUser={currentUser} />
+
+                    {/* DISPLAY TITLE AND TABS IF THERE IS A SEARCH QUERY */}
+                    {searchQuery && (
+                        <>
+
+                            {/* results for text */}
+                            <h2 className="text-gray-500 text-xs my-6">
+                                Results for: <span className="font-bold text-gray-800">"{searchQuery}"</span>
+                            </h2>
+
+                            <div className="flex border-b border-gray-100">
+                                <button
+                                    onClick={() => setActiveTab("posts")}
+                                    className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${activeTab === "posts" ? "border-gray-800 text-gray-800" : "border-transparent text-gray-400 hover:text-gray-600"
+                                        }`}
+                                >
+                                    Posts ({posts.length})
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab("users")}
+                                    className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${activeTab === "users" ? "border-gray-800 text-gray-800" : "border-transparent text-gray-400 hover:text-gray-600"
+                                        }`}
+                                >
+                                    Users ({users.length})
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
 
                 {error && <p className="text-red-500 text-xs text-center my-4">{error}</p>}
 
-                {/* 1. DISPLAY TITLE IF THERE IS A SEARCH QUERY */}
+                {/* DISPLAY ACTIVE TAB */}
                 {searchQuery && (
-                    <h2 className="text-gray-500 text-xs mb-6 px-4 font-sans">
-                        Results for: <span className="font-bold text-gray-800">"{searchQuery}"</span>
-                    </h2>
-                )}
-
-                {/* 2. SHOW TABS IF THERE IS A SEARCH QUERY */}
-                {searchQuery && (
-                    <>
-                        {/* TABS */}
-                        <div className="flex border-b border-gray-100 mb-6 px-4">
-                            <button
-                                onClick={() => setActiveTab("posts")}
-                                className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${activeTab === "posts" ? "border-gray-800 text-gray-800" : "border-transparent text-gray-400 hover:text-gray-600"
-                                    }`}
-                            >
-                                Posts ({posts.length})
-                            </button>
-                            <button
-                                onClick={() => setActiveTab("users")}
-                                className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${activeTab === "users" ? "border-gray-800 text-gray-800" : "border-transparent text-gray-400 hover:text-gray-600"
-                                    }`}
-                            >
-                                Users ({users.length})
-                            </button>
-                        </div>
-
-                        {/* DISPLAY ACTIVE TAB */}
+                    <div className="mt-6">
                         {activeTab === "posts" && (
                             <div>
                                 {posts.length > 0 ? (
@@ -119,16 +122,24 @@ function SearchPage({ currentUser, setCurrentUser }) {
                         )}
 
                         {activeTab === "users" && (
-                            <div className="px-4">
+                            <div className="w-full">
                                 {users.length > 0 ? (
-                                    <div className="flex flex-wrap gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
                                         {users.map((u) => (
-                                            <Link to={`/users/${u._id}`} key={u._id} className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3 shadow-sm min-w-50 transition-all">
+                                            <Link
+                                                to={`/users/${u._id}`}
+                                                key={u._id}
+                                                className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3 shadow-sm transition-all hover:border-gray-300 w-full"
+                                            >
                                                 <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
-                                                    {u.profileImage ? <img src={u.profileImage} alt={u.username} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-300" />}
+                                                    {u.profileImage ? (
+                                                        <img src={u.profileImage} alt={u.username} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <div className="w-full h-full bg-gray-300" />
+                                                    )}
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm font-semibold text-gray-800">@{u.username}</p>
+                                                <div className="min-w-0"> 
+                                                    <p className="text-sm font-semibold text-gray-800 truncate">@{u.username}</p>
                                                 </div>
                                             </Link>
                                         ))}
@@ -138,12 +149,12 @@ function SearchPage({ currentUser, setCurrentUser }) {
                                 )}
                             </div>
                         )}
-                    </>
+                    </div>
                 )}
 
-                {/* 3. SHOW TEXT IF SEARCH QUERY IS EMPTY (!searchQuery) */}
+                {/* DISPLAY INFO TEXT IF THERE IS NO SEARCH QUERY */}
                 {!searchQuery && (
-                    <p className="text-gray-400 text-xs text-center mt-20 font-sans">
+                    <p className="text-gray-400 text-xs text-center mt-20">
                         Type something above to search for amazing workouts, tags or friends!
                     </p>
                 )}
