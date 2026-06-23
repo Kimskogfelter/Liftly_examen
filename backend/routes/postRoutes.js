@@ -20,7 +20,7 @@ postRouter.delete('/:postId/unsave', authMiddleware, unsavePost)
 postRouter.post('/:postId/like',authMiddleware, likePost)
 postRouter.delete('/:postId/unlike',authMiddleware, unlikePost)
 
-postRouter.patch('/:postId/update', authMiddleware, upload.single("media"), updatePost) 
+postRouter.patch('/:postId/update', authMiddleware, updatePost) 
 
 
 // ---------------------------- comment routes ---------------------------
