@@ -7,7 +7,7 @@ import { handlePostLikeToggle } from "../../functions/handlePostLikeToggle";
 import { handleSavePost } from "../../functions/handleSavePost";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
-import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa";
 
 function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDeletePost, getSavedPosts }) {
@@ -76,7 +76,11 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                     className={`p-1.5 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 z-10 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
                                     onClick={() => setShowPostActions(!showPostActions)}
                                 >
-                                    <BsThreeDots size={16} />
+                                    {showPostActions ? (
+                                        <FiX size={16} /> /* Displays X icon when edit/delete buttons are showing */
+                                    ) : (
+                                        <BsThreeDots size={16} />
+                                    )}
                                 </button>
                             </div>
                         )}
