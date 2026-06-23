@@ -2,8 +2,6 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { SlPicture } from "react-icons/sl";
-import { IoCloseCircle } from "react-icons/io5";
 
 function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
 
@@ -14,14 +12,13 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
 
   // function to edit post
   const editPost = async (e) => {
+
     e.preventDefault();
+
     try {
-      const formData = new FormData();
-      formData.append('content', content);
-
-
+      
       // send updated post data to backend
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${postId}/update`, formData, {
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${postId}/update`, { content }, {
         headers: {
           Authorization: `Bearer ${currentUser?.token}`
         }
@@ -80,7 +77,7 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
             )}
 
             {/* Footer Row: Media input + Actions buttons */}
-            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-end pt-2 border-t border-gray-100">
 
 
               {/* Buttons */}
