@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FiHome, FiBookmark, FiPlusSquare, FiLogOut } from "react-icons/fi";
@@ -6,31 +5,64 @@ import logo from '../../assets/images/liftly-logo.png';
 import ProfileImage from "../users/ProfileImage";
 import { logout } from "../../functions/logout";
 
-function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
+function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, selectedCategory, setSelectedCategory }) {
   const navigate = useNavigate();
+
+  const categories = [
+    { id: "All", label: "All" },
+    { id: "General", label: "General" },
+    { id: "Food", label: "Food" },
+    { id: "Desserts", label: "Desserts" },
+    { id: "Candy", label: "Candy" },
+    { id: "Snacks", label: "Snacks" },
+    { id: "Training", label: "Training" },
+    { id: "Cardio", label: "Cardio" },
+    { id: "Lifting", label: "Lifting" },
+    { id: "Music", label: "Music" },
+    { id: "Activewear", label: "Activewear" },
+    { id: "Helpme", label: "Helpme" },
+  ];
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+    // Om användaren råkar stå på t.ex. profil-sidan, skickar vi tillbaka dem till flödet när de byter kategori
+    navigate("/home");
+  };
 
   return (
     <>
       {/* =========================================================================
           1. MOBILE VIEW (Top Header + Bottom Menu)
-          Only visible on mobile (block), hidden on desktop (md:hidden)
           ========================================================================= */}
       <div className="block md:hidden">
 
         {/* MOBILE TOP HEADER */}
         <header className="fixed top-0 left-0 w-full h-14 bg-[#0D0D0E] border-b border-zinc-800 flex items-center justify-between px-4 z-50">
-          {/* Logo acts as a home button */}
           <Link to="/home">
             <img className="h-5 w-auto object-contain" src={logo} alt="Liftly logo" />
           </Link>
 
-          {/* search icon */}
-          <Link to="/search" className="text-zinc-400 hover:text-white p-2 transition-colors">
-            <CiSearch size={22} />
-          </Link>
+          {/* category dropdown */}
+          <div className="flex items-center gap-2">
+            <select
+              value={selectedCategory || "All"}
+              onChange={handleCategoryChange}
+              className="text-xs bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-lg p-1.5 focus:outline-none focus:border-zinc-600 max-w-25 font-sans"
+            >
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id} className="bg-[#0D0D0E]">
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+
+            <Link to="/search" className="text-zinc-400 hover:text-white p-2 transition-colors">
+              <CiSearch size={22} />
+            </Link>
+          </div>
         </header>
 
-        {/* MOBILE BOTTOM MENU (Instagram / TikTok style) */}
+        {/* MOBILE BOTTOM MENU */}
         <nav className="fixed bottom-0 left-0 w-full h-16 bg-[#0D0D0E] border-t border-zinc-800 flex items-center justify-around px-2 z-50">
           <Link to="/home" className="text-zinc-400 hover:text-white p-2 transition-colors">
             <FiHome size={22} />
@@ -55,7 +87,6 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
 
       {/* =========================================================================
           2. DESKTOP VIEW (Sidebar on the left side)
-          Hidden on mobile (hidden), visible on desktop (md:flex)
           ========================================================================= */}
       <nav className="hidden md:flex flex-col justify-between items-center w-32 h-screen bg-[#0D0D0E] p-4 border-r border-zinc-800 fixed top-0 left-0 z-50 font-sans">
 
@@ -119,6 +150,24 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
                   <span className="text-xs font-medium tracking-wide">Create</span>
                 </Link>
               )}
+            </li>
+
+            {/* DESKTOP CATEGORY DROPDOWN */}
+            <li className="w-full">
+              <div className="px-2 mb-0.5">
+                <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-600">Category</span>
+              </div>
+              <select
+                value={selectedCategory || "All"}
+                onChange={handleCategoryChange}
+                className="w-full text-xs bg-transparent text-zinc-400 hover:text-white px-2 py-1.5 focus:outline-none cursor-pointer font-medium transition-colors"
+              >
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id} className="bg-[#0D0D0E] text-zinc-300">
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
             </li>
           </ul>
         </div>
