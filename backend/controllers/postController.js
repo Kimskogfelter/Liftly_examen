@@ -22,7 +22,7 @@ export const createPost = async (req, res, next) => {
         }
 
         // get inputs from frontend
-        const { content, hashtags } = req.body;
+        const { content, hashtags, category } = req.body;
 
         // --------- media -----------
         let mediaFiles = req.files ? req.files.map(file => file.path) : [];
@@ -40,7 +40,8 @@ export const createPost = async (req, res, next) => {
         // 2. Build post object with fields that ALWAYS should be there
         const postObject = {
             createdBy: user._id,
-            hashtags: parsedHashtags
+            hashtags: parsedHashtags,
+            category: category || "General"
         };
 
         // 3. Add CONTENT only if user have written text
