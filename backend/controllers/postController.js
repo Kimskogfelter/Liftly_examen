@@ -232,6 +232,41 @@ export const getFollowingPosts = async (req, res, next) => {
 }
 
 
+
+// ---------------------------- GET CATEGORY POSTS --------------------------- 
+// GET req: api/posts/category
+
+export const getCategoryPosts = async (req, res, next) => {
+    try {
+        // 1. Fetch category from url (t.ex. /api/posts?category=Lifting)
+        const { category } = req.query;
+
+        // if no category fetch all {} 
+        const queryFilter = category ? { category: category } : {};
+
+        // 2. Fetch post based on category filter
+        const posts = await Post.find(queryFilter)
+            .populate("createdBy", "username profileImage") 
+            .sort({ createdAt: -1 });
+
+        // 3. If NO posts found
+        if (posts.length === 0) {
+            return next(new HttpError(`No posts found in the category: ${category}`, 404));
+        }
+
+        // 4. Return list with posts
+        return res.status(200).json({ 
+            message: "Posts found successfully", 
+            getAllPosts: posts
+        });
+
+    } catch (error) {
+        return next(new HttpError(error.message || error, 500));
+    }
+};
+
+
+
 // ---------------------------- SAVE POST --------------------------- 
 // POST req: api/posts/:postId/save
 // PROTECTED

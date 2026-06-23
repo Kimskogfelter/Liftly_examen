@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPost, getPost, getPosts, getUserPosts, getFollowingPosts, savePost, unsavePost, likePost, unlikePost, updatePost, deletePost } from '../controllers/postController.js';
+import { createPost, getPost, getPosts, getUserPosts, getFollowingPosts, getCategoryPosts, savePost, unsavePost, likePost, unlikePost, updatePost, deletePost } from '../controllers/postController.js';
 import { createComment, getComment, getComments, likeComment, unlikeComment, deleteComment } from '../controllers/commentController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
@@ -12,6 +12,7 @@ export const postRouter = Router();
 postRouter.post('/create', authMiddleware, upload.array("media", 5), createPost)
 postRouter.get('/users/:userId/posts', authMiddleware, getUserPosts)
 postRouter.get('/following',authMiddleware, getFollowingPosts)
+postRouter.get('/category',authMiddleware, getCategoryPosts)
 postRouter.get('/', getPosts) // Public route so home page can fetch and display all posts for visitors
 
 postRouter.post('/:postId/save', authMiddleware, savePost)

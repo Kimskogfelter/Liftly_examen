@@ -39,27 +39,26 @@ function SavedPosts({ currentUser, setCurrentUser }) {
 
   console.log("posts", posts)
 
-  return (
-    <>
-      <div className="flex">
-        <section className="flex-1 p-4">
-          <h1 className="items-center flex justify-center text-center mt-8 p-4">Your saved posts</h1>
+return (
+    <div className="flex">
+      <section className="flex-1 p-6 max-w-5xl mx-auto mt-8 font-sans">
+        <div className="mb-6 border-b border-zinc-200 pb-4">
+          <h1 className="text-xl font-bold text-zinc-800 tracking-wide">
+           Saved posts
+          </h1>
+        </div>
              
-          {/* display user's saved posts */}
-          <div>
-            
-            {/* render Post feed component to display posts */}
-            <PostFeed
-              posts={posts}
-              currentUser={currentUser}
-              setCurrentUser={setCurrentUser}
-              layout="grid-3x3"
-              getSavedPosts={getSavedPosts}
-            />
-          </div>
-        </section>
-      </div>
-    </>
+        <div>
+          <PostFeed
+            posts={posts}
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
+            layout="grid-3x3"
+            getSavedPosts={getSavedPosts}
+          />
+        </div>
+      </section>
+    </div>
   );
 }
 
