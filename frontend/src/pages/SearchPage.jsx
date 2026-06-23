@@ -158,12 +158,7 @@ function SearchPage({ currentUser, setCurrentUser }) {
                     </div>
                 )}
 
-                {/* --- IF EVERYTHIGN IS EMPTY --- */}
-                {posts?.length === 0 && users?.length === 0 && (
-                    <p className="text-gray-400 text-xs text-center mt-10">
-                        No results found.
-                    </p>
-                )}
+              
             </section>
         </>
     );
