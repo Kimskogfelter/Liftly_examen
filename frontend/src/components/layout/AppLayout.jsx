@@ -32,7 +32,7 @@ function AppLayout({ currentUser, setCurrentUser }) {
             <main className="flex-1 p-4">
 
                 {/* Outlet helps render the active route component */}
-                {/* context helps send selected category to home page to render selected posts */}
+                {/* context helps send selected category to category page to render selected posts */}
                 <Outlet context={{ selectedCategory }} />
             </main>
         </div>
