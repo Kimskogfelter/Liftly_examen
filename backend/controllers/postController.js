@@ -26,7 +26,7 @@ export const createPost = async (req, res, next) => {
 
         // --------- media -----------
         let mediaFiles = req.files ? req.files.map(file => file.path) : [];
-        
+
         if ((!content || content.trim().length === 0) && mediaFiles.length === 0) {
             return next(new HttpError("You can't create an empty post. Add some text or an image!", 422));
         }
@@ -329,7 +329,7 @@ export const unsavePost = async (req, res, next) => {
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
         return next(new HttpError(error))
-        
+
     }
 
 }
@@ -493,15 +493,13 @@ export const updatePost = async (req, res, next) => {
         // fetch content from frontend
         const { content } = req.body;
 
+        // Check if content is empty or only contains spaces
+        if (!content || content.trim() === '') {
+            return res.status(400).json({ message: "Post content cannot be empty" });
+        }
+
         // PREPARE UPDATE OBJECT: Start with updating the text content
         const updateData = { content };
-
-        // Check if Multer received a new file in req.file (uploaded to Cloudinary)
-        if (req.file) {
-            // Put the Cloudinary URL path inside an array to match your schema!
-            updateData.media = [req.file.path];
-            console.log("New file found in backend req.file, updating media array with:", req.file.path);
-        }
 
         // update post and populate user info
         const updatedPost = await Post.findByIdAndUpdate(
@@ -516,11 +514,7 @@ export const updatePost = async (req, res, next) => {
 
 
     } catch (error) {
-        // Om något går fel när vi försöker uppdatera en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
+        
         return next(new HttpError(error))
     }
 
