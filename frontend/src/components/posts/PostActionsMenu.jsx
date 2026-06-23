@@ -5,27 +5,25 @@ import EditPostForm from "./EditPostForm";
 import DeletePostForm from "./DeletePostForm";
 
 function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser }) {
-
     const [showEditPostForm, setShowEditPostForm] = useState(false);
     const [showDeletePostForm, setShowDeletePostForm] = useState(false);
 
-
     return (
-        <div className="flex items-center gap-1.5 rounded-md bg-[#161618] p-1 shadow-sm border border-zinc-800/50">
-            {/* Redigera-knapp */}
+        <div className="flex items-center gap-1">
+            {/* edit button */}
             <button
                 onClick={() => setShowEditPostForm(true)}
                 title="Redigera inlägg"
-                className="flex h-7 w-7 items-center justify-center rounded text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400 cursor-pointer"
             >
                 <FiEdit2 size={14} />
             </button>
 
-            {/* Radera-knapp */}
+            {/* delete button */}
             <button
                 onClick={() => setShowDeletePostForm(true)}
                 title="Radera inlägg"
-                className="flex h-7 w-7 items-center justify-center rounded text-zinc-400 transition-colors hover:bg-red-950/40 hover:text-red-400 focus:outline-none focus:ring-1 focus:ring-red-500"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-300 cursor-pointer"
             >
                 <FiTrash2 size={14} />
             </button>
@@ -34,8 +32,7 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser }
             {showEditPostForm && <EditPostForm currentUser={currentUser} post={post} handleEditPost={handleEditPost} onClose={() => setShowEditPostForm(false)} />}
             {showDeletePostForm && <DeletePostForm currentUser={currentUser} post={post} handleDeletePost={handleDeletePost} onClose={() => setShowDeletePostForm(false)} />}
         </div>
-    )
-
+    );
 }
 
 export default PostActionsMenu;
