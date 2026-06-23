@@ -10,12 +10,16 @@ function AppLayout({ currentUser, setCurrentUser }) {
     // as we want the create post form to render in the overall layout, not in the navbar
     const [showCreatePost, setShowCreatePost] = useState(false);
 
+    // state for selected category, so navbar and outlet can reach it
+    const [selectedCategory, setSelectedCategory] = useState("All");
+
     return (
 
         <div className="flex">
             {/* Navbar */}
             {/* onOpenCreatePost function passed as prop to Navbar */}
-            <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} onOpenCreatePost={() => setShowCreatePost(true)} />
+            <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} onOpenCreatePost={() => setShowCreatePost(true)} selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory} />
             {/* render CreatePost component when showCreatePost is true */}
             {
                 showCreatePost && (
@@ -28,7 +32,8 @@ function AppLayout({ currentUser, setCurrentUser }) {
             <main className="flex-1 p-4">
 
                 {/* Outlet helps render the active route component */}
-                <Outlet />
+                {/* context helps send selected category to home page to render selected posts */}
+                <Outlet context={{ selectedCategory }} />
             </main>
         </div>
     );
