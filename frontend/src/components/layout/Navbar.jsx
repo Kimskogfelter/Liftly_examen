@@ -1,125 +1,150 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-import { FiHome } from "react-icons/fi";
-import { FiBookmark } from "react-icons/fi";
-import { FiPlusSquare } from "react-icons/fi";
-import { FiLogOut } from "react-icons/fi";
+import { FiHome, FiBookmark, FiPlusSquare, FiLogOut } from "react-icons/fi";
 import logo from '../../assets/images/liftly-logo.png';
 import ProfileImage from "../users/ProfileImage";
-import CreatePost from "../posts/CreatePostForm";
 import { logout } from "../../functions/logout";
 
 function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
-
   const navigate = useNavigate();
 
   return (
+    <>
+      {/* =========================================================================
+          1. MOBILE VIEW (Top Header + Bottom Menu)
+          Only visible on mobile (block), hidden on desktop (md:hidden)
+          ========================================================================= */}
+      <div className="block md:hidden">
 
-    <nav className="bg-[#0D0D0E] text-white p-3 md:p-4 flex flex-row md:flex-col justify-between items-center w-full md:w-32 h-auto md:h-screen border-b md:border-b-0 md:border-r border-zinc-800 sticky md:fixed top-0 left-0 z-50 font-sans">
-
-      {/* Container for Logo and Links */}
-      <div className="flex md:flex-col items-center md:items-start w-full gap-4 md:gap-5">
-
-        {/* Logo */}
-        <div className="mb-0 md:mb-1 shrink-0 md:pl-1.5">
+        {/* MOBILE TOP HEADER */}
+        <header className="fixed top-0 left-0 w-full h-14 bg-[#0D0D0E] border-b border-zinc-800 flex items-center justify-between px-4 z-50">
+          {/* Logo acts as a home button */}
           <Link to="/home">
-            <img className="h-6 md:h-7 w-auto object-contain" src={logo} alt="Liftly logo" />
+            <img className="h-5 w-auto object-contain" src={logo} alt="Liftly logo" />
           </Link>
-        </div>
 
-        {/* Navigation links */}
-        <ul className="flex flex-row md:flex-col items-center md:items-start gap-5 md:gap-0.5 ml-auto md:ml-0 w-full justify-end md:justify-start">
+          {/* search icon */}
+          <Link to="/search" className="text-zinc-400 hover:text-white p-2 transition-colors">
+            <CiSearch size={22} />
+          </Link>
+        </header>
 
-          {/* Profile Link */}
-          <li className="w-full order-3 md:order-0">
-            <Link
-              to={`/users/${currentUser?.id}`}
-              className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all"
-            >
-              <div className="w-5 h-5 rounded-full overflow-hidden border border-zinc-800 shrink-0">
-                <ProfileImage currentUser={currentUser} />
-              </div>
-              <span className="hidden md:inline text-xs font-medium tracking-wide">Profile</span>
+        {/* MOBILE BOTTOM MENU (Instagram / TikTok style) */}
+        <nav className="fixed bottom-0 left-0 w-full h-16 bg-[#0D0D0E] border-t border-zinc-800 flex items-center justify-around px-2 z-50">
+          <Link to="/home" className="text-zinc-400 hover:text-white p-2 transition-colors">
+            <FiHome size={22} />
+          </Link>
+
+          <Link to="/savedPosts" className="text-zinc-400 hover:text-white p-2 transition-colors">
+            <FiBookmark size={22} />
+          </Link>
+
+          <button onClick={onOpenCreatePost} className="text-zinc-400 hover:text-white p-2 transition-colors cursor-pointer">
+            <FiPlusSquare size={22} />
+          </button>
+
+          <Link to={`/users/${currentUser?.id}`} className="p-2">
+            <div className="w-6 h-6 rounded-full overflow-hidden border border-zinc-800 shrink-0">
+              <ProfileImage currentUser={currentUser} />
+            </div>
+          </Link>
+        </nav>
+      </div>
+
+
+      {/* =========================================================================
+          2. DESKTOP VIEW (Sidebar on the left side)
+          Hidden on mobile (hidden), visible on desktop (md:flex)
+          ========================================================================= */}
+      <nav className="hidden md:flex flex-col justify-between items-center w-32 h-screen bg-[#0D0D0E] p-4 border-r border-zinc-800 fixed top-0 left-0 z-50 font-sans">
+
+        {/* Logo + Links */}
+        <div className="flex flex-col items-start w-full gap-5">
+          {/* Logo */}
+          <div className="shrink-0 pl-1.5">
+            <Link to="/home">
+              <img className="h-7 w-auto object-contain" src={logo} alt="Liftly logo" />
             </Link>
-          </li>
+          </div>
 
-          {/* Saved Posts */}
-          <li className="w-full">
-            <Link
-              to="/savedPosts"
-              className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all"
-            >
-              <FiBookmark size={16} className="shrink-0" />
-              <span className="hidden md:inline text-xs font-medium tracking-wide">Saved</span>
-            </Link>
-          </li>
+          {/* Search Link */}
+          <Link to="/search" className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-lg transition-all">
+            <CiSearch size={16} className="shrink-0" />
+            <span className="text-xs font-medium tracking-wide">Search</span>
+          </Link>
 
-          {/* Create Post */}
-          {currentUser ? (
-
-            // IF LOGGED IN, open create post form
+          {/* Navigation links */}
+          <ul className="flex flex-col items-start gap-0.5 w-full">
+            {/* Profile */}
             <li className="w-full">
-              <button
-                onClick={onOpenCreatePost}
-                className="flex items-center gap-2.5 w-full text-left py-2 md:px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all cursor-pointer"
+              <Link
+                to={`/users/${currentUser?.id}`}
+                className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all"
               >
-                <FiPlusSquare size={16} className="shrink-0" />
-                <span className="hidden md:inline text-xs font-medium tracking-wide">Create</span>
-              </button>
+                <div className="w-5 h-5 rounded-full overflow-hidden border border-zinc-800 shrink-0">
+                  <ProfileImage currentUser={currentUser} />
+                </div>
+                <span className="text-xs font-medium tracking-wide">Profile</span>
+              </Link>
             </li>
 
+            {/* Saved */}
+            <li className="w-full">
+              <Link
+                to="/savedPosts"
+                className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all"
+              >
+                <FiBookmark size={16} className="shrink-0" />
+                <span className="text-xs font-medium tracking-wide">Saved</span>
+              </Link>
+            </li>
 
+            {/* Create */}
+            <li className="w-full">
+              {currentUser ? (
+                <button
+                  onClick={onOpenCreatePost}
+                  className="flex items-center gap-2.5 w-full text-left py-2 px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all cursor-pointer"
+                >
+                  <FiPlusSquare size={16} className="shrink-0" />
+                  <span className="text-xs font-medium tracking-wide">Create</span>
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  className="flex items-center gap-2.5 w-full text-left py-2 px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all cursor-pointer"
+                >
+                  <FiPlusSquare size={16} className="shrink-0" />
+                  <span className="text-xs font-medium tracking-wide">Create</span>
+                </Link>
+              )}
+            </li>
+          </ul>
+        </div>
+
+        {/* Logout at the bottom on Desktop */}
+        <div className="w-full border-t border-zinc-900 pt-2">
+          {currentUser ? (
+            <button
+              onClick={() => logout(setCurrentUser, navigate)}
+              className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-500 hover:text-red-400 transition-colors text-xs font-medium cursor-pointer rounded-lg hover:bg-red-950/10"
+            >
+              <FiLogOut size={14} className="shrink-0" />
+              <span>Logout</span>
+            </button>
           ) : (
-
-            //  IF LOGGED OUT, link to login page
             <Link
               to="/login"
-              className="flex items-center gap-2.5 w-full text-left py-2 md:px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all cursor-pointer"
+              className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-500 hover:text-white transition-colors text-xs font-medium cursor-pointer rounded-lg hover:bg-zinc-900/50"
             >
-              <FiPlusSquare size={16} className="shrink-0" />
-              <span className="hidden md:inline text-xs font-medium tracking-wide">Create</span>
+              <FiLogOut size={14} className="shrink-0" />
+              <span>Log in</span>
             </Link>
-
-
           )}
-        </ul>
-      </div>
-
-      {/* Logout/log in button (Desktop) */}
-      {currentUser ? (
-        <div className="hidden md:block w-full border-t border-zinc-900 pt-2">
-          <button
-            onClick={() => logout(setCurrentUser, navigate)}
-            className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-500 hover:text-red-400 transition-colors text-xs font-medium cursor-pointer rounded-lg md:hover:bg-red-950/10"
-          >
-            <FiLogOut size={14} className="shrink-0" />
-            <span>Logout</span>
-          </button>
         </div>
-      ) : (
-        <div className="hidden md:block w-full border-t border-zinc-900 pt-2">
-          <Link
-            to="/login"
-            className="flex items-center gap-2.5 w-full py-2 md:px-2 text-zinc-500 hover:text-white transition-colors text-xs font-medium cursor-pointer rounded-lg md:hover:bg-zinc-900/50"
-            style={{ fontSize: '0.75rem', fontWeight: 500 }} // 🌟 En extra säkerhetsåtgärd för att överstyra webbläsarens standardstil för länkar
-          >
-            <FiLogOut size={14} className="shrink-0" />
-            <span>Log in</span>
-          </Link>
-        </div>
-      )}
-      {/* Quick Logout for mobile view */}
-      <div className="block md:hidden">
-        <button
-          onClick={() => Logout(setCurrentUser, navigate)}
-          className="text-[10px] font-bold bg-zinc-900 hover:bg-zinc-800 py-1 px-2.5 rounded border border-zinc-800 transition-colors cursor-pointer"
-        >
-          Logout
-        </button>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 
