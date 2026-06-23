@@ -24,7 +24,7 @@ function SearchBar({ currentUser }) {
   };
 
   return (
-    <form onSubmit={handleSearch} className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center bg-white/40 backdrop-blur-sm border border-gray-100/70 rounded-xl p-2 w-full max-w-md mb-10 transition-all focus-within:bg-white/80 focus-within:border-gray-200 focus-within:shadow-sm">
+    <form onSubmit={handleSearch} className="fixed mt-4 top-4 left-1/2 -translate-x-1/2 z-50 flex items-center bg-white/40 backdrop-blur-sm border border-gray-100/70 rounded-xl p-2 w-full max-w-md mb-10 transition-all focus-within:bg-white/80 focus-within:border-gray-200 focus-within:shadow-sm">
       <input
         className="bg-transparent text-xs w-full focus:outline-none placeholder-gray-400 text-gray-700 block px-1"
         type="search"
