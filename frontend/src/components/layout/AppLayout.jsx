@@ -1,6 +1,5 @@
 import Navbar from "./Navbar";
 import CreatePostForm from "../posts/CreatePostForm";
-import SearchBar from "../../components/layout/SearchBar";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
@@ -27,7 +26,6 @@ function AppLayout({ currentUser, setCurrentUser }) {
                 )
             }
             <main className="flex-1 p-4">
-                <SearchBar currentUser={currentUser} />
 
                 {/* Outlet helps render the active route component */}
                 <Outlet />
