@@ -8,6 +8,10 @@ const postSchema = new mongoose.Schema({
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     hashtags: [{ type: String }],
+    category: { type: String, 
+                enum: ["General", "Food", "Desserts", "Candy", "Snacks", "Training", "Cardio", "Lifting", "Music", "Activewear", "Helpme"],
+                default: "General"
+    }
 
 }, {timestamps: true})
 
