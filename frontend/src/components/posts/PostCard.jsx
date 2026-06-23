@@ -67,6 +67,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                             post={post}
                                             handleEditPost={handleEditPost}
                                             handleDeletePost={handleDeletePost}
+                                            closeMenu={() => setShowPostActions(false)}
                                         />
                                     </div>
                                 )}
