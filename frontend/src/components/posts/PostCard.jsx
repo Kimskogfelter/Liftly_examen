@@ -58,9 +58,10 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
                         {/* Post actions menu */}
                         {post.createdBy?._id === currentUser?.id && (
-                            <div className="flex items-center gap-1 relative">
+                            <div className="relative flex items-center justify-center">
+
                                 {showPostActions && (
-                                    <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 rounded-lg p-0.5 transition-all">
+                                    <div className="absolute right-11 top-1/2 -translate-y-1/2 z-35 flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1 shadow-md transition-all whitespace-nowrap">
                                         <PostActionsMenu
                                             currentUser={currentUser}
                                             post={post}
@@ -72,7 +73,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
                                 {/* "..." menu icon */}
                                 <button
-                                    className={`p-1.5 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
+                                    className={`p-1.5 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 z-10 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
                                     onClick={() => setShowPostActions(!showPostActions)}
                                 >
                                     <BsThreeDots size={16} />
@@ -103,7 +104,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                             controls={true} // Gives users play/pause and timeline controls
                                             loop={true} // Automatically restarts the video when it ends, just like TikTok/Reels
                                             playsInline={true} // Prevents iOS devices from forcing the video into fullscreen mode
-                                            muted={true} 
+                                            muted={true}
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
@@ -158,6 +159,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                 </div>
 
                 <div>
+                    {/* display post information */}
                     <p className="text-[10px] text-gray-400 mb-2"><TimeAgo date={post.createdAt} /></p>
                     <hr className="border-gray-100 my-3" />
 
