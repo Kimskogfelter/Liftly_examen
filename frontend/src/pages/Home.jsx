@@ -24,7 +24,7 @@ function Home({ currentUser, setCurrentUser }) {
         const followingPostsRes = await axios.get(`${import.meta.env.VITE_API_URL}/posts/following`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        
+
         console.log("Following posts fetched successfully:", followingPostsRes.data);
         setFollowingPosts(followingPostsRes.data.followingPosts);
       }
@@ -70,11 +70,11 @@ function Home({ currentUser, setCurrentUser }) {
               activeTab === "posts"
                 ? "border-gray-800 text-gray-800"
                 : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
+              }`}
           >
             All ({posts.length})
           </button>
-          
+
           {/* FOLLOWING BUTTON */}
           <button
             onClick={() => setActiveTab("following")}
@@ -82,7 +82,7 @@ function Home({ currentUser, setCurrentUser }) {
               activeTab === "following"
                 ? "border-gray-800 text-gray-800"
                 : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
+              }`}
           >
             Following ({followingPosts.length})
           </button>

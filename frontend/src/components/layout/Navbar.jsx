@@ -23,10 +23,16 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, selectedCategor
     { id: "Helpme", label: "Helpme" },
   ];
 
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-    // Om användaren råkar stå på t.ex. profil-sidan, skickar vi tillbaka dem till flödet när de byter kategori
-    navigate("/home");
+const handleCategoryChange = (e) => {
+    const selected = e.target.value;
+    setSelectedCategory(selected);
+    
+    if (selected === "All") {
+      navigate("/home");
+    } else {
+      // Sends user to category page with choosen category parameter
+      navigate(`/category/${selected}`);
+    }
   };
 
   return (
@@ -38,7 +44,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, selectedCategor
 
         {/* MOBILE TOP HEADER */}
         <header className="fixed top-0 left-0 w-full h-14 bg-[#0D0D0E] border-b border-zinc-800 flex items-center justify-between px-4 z-50">
-          <Link to="/home">
+          <Link to="/home" onClick={() => setSelectedCategory("All")}>
             <img className="h-5 w-auto object-contain" src={logo} alt="Liftly logo" />
           </Link>
 
@@ -64,7 +70,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, selectedCategor
 
         {/* MOBILE BOTTOM MENU */}
         <nav className="fixed bottom-0 left-0 w-full h-16 bg-[#0D0D0E] border-t border-zinc-800 flex items-center justify-around px-2 z-50">
-          <Link to="/home" className="text-zinc-400 hover:text-white p-2 transition-colors">
+          <Link to="/home" onClick={() => setSelectedCategory("All")} className="text-zinc-400 hover:text-white p-2 transition-colors">
             <FiHome size={22} />
           </Link>
 
@@ -94,7 +100,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, selectedCategor
         <div className="flex flex-col items-start w-full gap-5">
           {/* Logo */}
           <div className="shrink-0 pl-1.5">
-            <Link to="/home">
+            <Link to="/home" onClick={() => setSelectedCategory("All")}>
               <img className="h-7 w-auto object-contain" src={logo} alt="Liftly logo" />
             </Link>
           </div>
