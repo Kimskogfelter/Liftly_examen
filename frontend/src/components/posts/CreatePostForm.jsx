@@ -9,8 +9,9 @@ function CreatePostForm({ currentUser, onClose }) {
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
   const token = currentUser?.token;
   const [content, setContent] = useState("");
-  const [media, setMedia] = useState([]); 
+  const [media, setMedia] = useState([]);
   const [hashtags, setHashtags] = useState([]);
+  const [category, setCategory] = useState("General");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -28,6 +29,10 @@ function CreatePostForm({ currentUser, onClose }) {
       // CONTENT
       // Always append content, an empty string is perfectly fine for the backend
       formData.append('content', content);
+
+      // CATEGORY
+      // Always append category because backend needs it to add post to correct category IF choosen
+      formData.append('category', category);
 
       // HASHTAGS
       let hashtagsArray = [];
@@ -63,6 +68,7 @@ function CreatePostForm({ currentUser, onClose }) {
       setContent("");
       setMedia([]);
       setHashtags([]);
+      setCategory("General");
       setError("");
 
       // Redirect to home page after successful creation of post
@@ -101,6 +107,39 @@ function CreatePostForm({ currentUser, onClose }) {
               ></textarea>
             </div>
 
+            {/* METADATA ROW: Category & Hashtags */}
+            <div className="flex items-center gap-3 pt-1">
+              {/* Category Dropdown */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="text-xs bg-gray-50 border border-gray-200 rounded-lg p-1.5 px-2.5 focus:outline-none focus:border-zinc-400 cursor-pointer text-gray-700 font-medium transition-colors hover:bg-gray-100/70"
+                >
+                  <option value="General">📦 General</option>
+                  <option value="Food">🥑 Food</option>
+                  <option value="Desserts">🍰 Desserts</option>
+                  <option value="Candy">🍬 Candy</option>
+                  <option value="Snacks">🍿 Snacks</option>
+                  <option value="Training">💪 Training</option>
+                  <option value="Cardio">🏃 Cardio</option>
+                  <option value="Lifting">🏋️ Lifting</option>
+                  <option value="Music">🎵 Music</option>
+                  <option value="Activewear">👟 Activewear</option>
+                  <option value="Helpme">🙋 Helpme</option>
+                </select>
+              </div>
+
+              {/* Hashtags Input */}
+              <input
+                type="text"
+                placeholder="#hashtags (space-separated)"
+                value={hashtags}
+                onChange={(e) => setHashtags(e.target.value)}
+                className="flex-1 bg-transparent border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-zinc-300 transition-all"
+              />
+            </div>
+
             {/* MEDIA preview box (Supports both images and videos) */}
             {media.length > 0 && (
               <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto p-1 border border-gray-100 rounded-lg bg-gray-50">
@@ -115,7 +154,7 @@ function CreatePostForm({ currentUser, onClose }) {
                       ) : (
                         <img src={fileUrl} alt="Preview" className="w-full h-full object-cover" />
                       )}
-                      
+
                       {/* Remove file button */}
                       <button
                         type="button"
@@ -162,15 +201,6 @@ function CreatePostForm({ currentUser, onClose }) {
                   }}
                 />
               </div>
-
-              {/* HASHTAGS input */}
-              <input
-                type="text"
-                placeholder="Hashtags (space-separated)"
-                value={hashtags}
-                onChange={(e) => setHashtags(e.target.value)}
-                className="flex-1 mx-3 bg-transparent border border-zinc-200 rounded-lg px-3 py-1.5 text-xs text-zinc-700 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-300 transition-all"
-              />
 
               {/* Buttons (Cancel & Post) */}
               <div className="flex gap-2">
