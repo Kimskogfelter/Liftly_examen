@@ -140,7 +140,7 @@ export const loginUser = async (req, res, next) => {
         }
 
         // generate authentication token for login
-        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "10s" });
         // sends token, user id, profile bio. profile image and saved posts to client
         return res.status(200).json({ token, id: user._id, profileImage: user.profileImage, profileBio: user.profileBio, savedPosts: user.savedPosts, })
 
@@ -503,6 +503,31 @@ export const deleteUser = async (req, res, next) => {
         return next(new HttpError(error))
     }
 
+}
+
+
+// ---------------------------- CHECK AUTH USER --------------------------- 
+export const authUser = async (req, res, next) => {
+    try {
+        // Eftersom req.user sätts av authMiddleware vet vi att tokenen är giltig
+        // Vi kan passa på att hämta användaren från databasen om vi vill skicka med färsk data
+        const user = await User.findById(req.user.id).select("-password");
+
+        if (!user) {
+            return next(new HttpError("User not found", 404));
+        }
+
+        return res.status(200).json({ 
+            message: "Token is valid", 
+            id: user._id, 
+            profileImage: user.profileImage, 
+            profileBio: user.profileBio, 
+            savedPosts: user.savedPosts 
+        });
+
+    } catch (error) {
+        return next(new HttpError(error));
+    }
 }
 
 // ---------------------------- POSTS ---------------------------
