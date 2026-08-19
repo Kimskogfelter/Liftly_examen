@@ -56,6 +56,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             </Link>
                         </div>
 
+
                         {/* Post actions menu */}
                         {post.createdBy?._id === currentUser?.id && (
                             <div className="relative flex items-center justify-center">
@@ -88,6 +89,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     </div>
 
                     <div>
+
                         {/* Hashtags */}
                         <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
                             {post.hashtags?.map((hashtag, index) => (
@@ -166,6 +168,10 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                 <div>
                     {/* display post information */}
                     <p className="text-[10px] text-gray-400 mb-2"><TimeAgo date={post.createdAt} /></p>
+                    {/* category-badge */}
+                    <span className="bg-gray-100 text-gray-500 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        {post.category || "General"}
+                    </span>
                     <hr className="border-gray-100 my-3" />
 
                     {/* Footer Row containing actions and metrics */}
