@@ -11,7 +11,6 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, }) {
   const categories = [
     { id: "All", label: "All" },
     { id: "General", label: "General" },
-    { id: "Food", label: "Food" },
     { id: "Breakfast", label: "Breakfast" },
     { id: "Lunch & Dinner", label: "Lunch & Dinner" },
     { id: "Desserts", label: "Desserts" },
