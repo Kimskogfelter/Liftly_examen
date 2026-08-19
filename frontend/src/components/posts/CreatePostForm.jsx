@@ -117,15 +117,18 @@ function CreatePostForm({ currentUser, onClose }) {
                   className="text-xs bg-gray-50 border border-gray-200 rounded-lg p-1.5 px-2.5 focus:outline-none focus:border-zinc-400 cursor-pointer text-gray-700 font-medium transition-colors hover:bg-gray-100/70"
                 >
                   <option value="General">General</option>
-                  <option value="Food">Food</option>
+                  <option value="Breakfast">Breakfast</option>
+                  <option value="Lunch & Dinner">Lunch & Dinner</option>
                   <option value="Desserts">Desserts</option>
                   <option value="Candy">Candy</option>
                   <option value="Snacks">Snacks</option>
+                  <option value="Supplements">Supplements</option>
                   <option value="Training">Training</option>
                   <option value="Cardio">Cardio</option>
                   <option value="Lifting">Lifting</option>
                   <option value="Music">Music</option>
                   <option value="Activewear">Activewear</option>
+                  <option value="Mindset & Recovery">Mindset & Recovery</option>
                   <option value="Helpme">Helpme</option>
                 </select>
               </div>
