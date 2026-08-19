@@ -12,14 +12,18 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, }) {
     { id: "All", label: "All" },
     { id: "General", label: "General" },
     { id: "Food", label: "Food" },
+    { id: "Breakfast", label: "Breakfast" },
+    { id: "Lunch & Dinner", label: "Lunch & Dinner" },
     { id: "Desserts", label: "Desserts" },
     { id: "Candy", label: "Candy" },
     { id: "Snacks", label: "Snacks" },
+    { id: "Supplements", label: "Supplements" },
     { id: "Training", label: "Training" },
     { id: "Cardio", label: "Cardio" },
     { id: "Lifting", label: "Lifting" },
     { id: "Music", label: "Music" },
     { id: "Activewear", label: "Activewear" },
+    { id: "Mindset & Recovery", label: "Mindset & Recovery" },
     { id: "Helpme", label: "Helpme" },
   ];
 
