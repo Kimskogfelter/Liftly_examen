@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import PostFeed from "../components/posts/PostFeed";
 import axios from "axios";
 
 function Category({ currentUser }) {
@@ -17,6 +18,7 @@ function Category({ currentUser }) {
             try {
                 setLoading(true);
                 setError("");
+                setPosts([]);
 
                 // Här gör vi det skalbara anropet direkt till ditt backend-filter!
                 const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/category?category=${categoryName}`, {
@@ -61,9 +63,8 @@ function Category({ currentUser }) {
                 <p className="text-zinc-500 text-sm">No posts found in this category yet.</p>
             </div>
         ) : (
-            <div className="w-full grid grid-cols-3 gap-1 md:gap-2">
-                {/* ... din map-loop ... */}
-            </div>
+                    <PostFeed posts={posts} layout="grid-3x3" />
+            
         )}
     </section>
   );
