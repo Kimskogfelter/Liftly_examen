@@ -2,6 +2,11 @@
 /* inter google fonts */
 /* @import url("https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap"); */
 
+/* added to increase overall readability because the default styling on 100% is too small */
+html {
+  font-size: 125%;
+}
+
 .body {
   font-family: 'Inter', sans-serif;
   
