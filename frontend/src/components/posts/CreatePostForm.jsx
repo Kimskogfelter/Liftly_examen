@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SlPicture } from "react-icons/sl";
 import { IoCloseCircle } from "react-icons/io5";
+// Import the tag-input component
+import { TagsInput } from "react-tag-input-component";
 
 function CreatePostForm({ currentUser, onClose }) {
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
@@ -31,21 +33,13 @@ function CreatePostForm({ currentUser, onClose }) {
       formData.append('content', content);
 
       // CATEGORY
-      // Always append category because backend needs it to add post to correct category IF choosen
+      // Always append category because backend needs it to add post to correct category IF chosen
       formData.append('category', category);
 
       // HASHTAGS
-      let hashtagsArray = [];
-      // Check if hashtags exists and is a valid string/array before splitting
-      if (hashtags && typeof hashtags === "string" && hashtags.trim().length > 0) {
-        hashtagsArray = hashtags.trim().split(/\s+/);
-      } else if (Array.isArray(hashtags)) {
-        hashtagsArray = hashtags;
-      }
-
       // FormData only accepts strings or files. We use JSON.stringify to convert 
       // the hashtags array into a JSON string so it can be sent over the backend.
-      formData.append('hashtags', JSON.stringify(hashtagsArray));
+      formData.append('hashtags', JSON.stringify(hashtags));
 
       // MEDIA
       // Loop through all media files and append them to the same 'media' key.
@@ -91,7 +85,7 @@ function CreatePostForm({ currentUser, onClose }) {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
 
         {/* Create container - The actual white modal box containing the form */}
-        <div className="w-full max-w-md bg-white rounded-xl p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150 text-left">
+        <div className="w-full max-w-md bg-white rounded-2xl p-5 shadow-2xl border border-gray-100 text-left">
 
           <h3 className="text-sm font-bold text-gray-900 mb-3">Create Post</h3>
 
@@ -103,55 +97,19 @@ function CreatePostForm({ currentUser, onClose }) {
                 placeholder="What's on your mind?"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full min-h-30 p-3 text-gray-800 placeholder-gray-400 border border-gray-200 rounded-lg resize-none focus:outline-none text-xs bg-gray-50/50 transition-all focus:border-zinc-400"
+                className="w-full min-h-27.5 text-xs text-gray-800 placeholder-gray-400 border border-zinc-200 rounded-lg p-3 resize-none focus:outline-none focus:border-zinc-400 bg-gray-50/30 transition-colors"
               ></textarea>
-            </div>
-
-            {/* METADATA ROW: Category & Hashtags */}
-            <div className="flex items-center gap-3 pt-1">
-              {/* Category Dropdown */}
-              <div className="flex items-center gap-1.5 shrink-0">
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="text-xs bg-gray-50 border border-gray-200 rounded-lg p-1.5 px-2.5 focus:outline-none focus:border-zinc-400 cursor-pointer text-gray-700 font-medium transition-colors hover:bg-gray-100/70"
-                >
-                  <option value="General">General</option>
-                  <option value="Breakfast">Breakfast</option>
-                  <option value="Lunch & Dinner">Lunch & Dinner</option>
-                  <option value="Desserts">Desserts</option>
-                  <option value="Candy">Candy</option>
-                  <option value="Snacks">Snacks</option>
-                  <option value="Supplements">Supplements</option>
-                  <option value="Training">Training</option>
-                  <option value="Cardio">Cardio</option>
-                  <option value="Lifting">Lifting</option>
-                  <option value="Music">Music</option>
-                  <option value="Activewear">Activewear</option>
-                  <option value="Mindset & Recovery">Mindset & Recovery</option>
-                  <option value="Helpme">Helpme</option>
-                </select>
-              </div>
-
-              {/* Hashtags Input */}
-              <input
-                type="text"
-                placeholder="#hashtags (space-separated)"
-                value={hashtags}
-                onChange={(e) => setHashtags(e.target.value)}
-                className="flex-1 bg-transparent border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-zinc-300 transition-all"
-              />
             </div>
 
             {/* MEDIA preview box (Supports both images and videos) */}
             {media.length > 0 && (
-              <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto p-1 border border-gray-100 rounded-lg bg-gray-50">
+              <div className="flex gap-2 overflow-x-auto pb-2 pt-1">
                 {media.map((file, index) => {
                   const isVideoFile = file.type.startsWith("video/");
                   const fileUrl = URL.createObjectURL(file);
 
                   return (
-                    <div key={index} className="relative aspect-video rounded-md overflow-hidden bg-black flex items-center justify-center">
+                    <div key={index} className="relative shrink-0 w-24 h-24 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
                       {isVideoFile ? (
                         <video src={fileUrl} className="w-full h-full object-cover" controls={false} muted />
                       ) : (
@@ -162,15 +120,37 @@ function CreatePostForm({ currentUser, onClose }) {
                       <button
                         type="button"
                         onClick={() => removeMediaFile(index)}
-                        className="absolute top-1 right-1 text-white/80 hover:text-white drop-shadow-md transition-colors cursor-pointer"
+                        className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 hover:bg-black transition-colors cursor-pointer"
                       >
-                        <IoCloseCircle size={20} />
+                        <IoCloseCircle size={16} />
                       </button>
                     </div>
                   );
                 })}
               </div>
             )}
+
+            {/* HASHTAGS Input */}
+            <div className="text-xs [&_.rti\--container]:border-zinc-200! [&_.rti\--container]:bg-gray-50/30 [&_.rti\--container]:rounded-lg [&_.rti\--container]:p-2.5 [&_.rti\--container]:transition-colors [&_.rti\--container]:focus-within:border-zinc-400! [&_.rti\--tag]:bg-zinc-200/60 [&_.rti\--tag]:text-zinc-800 [&_.rti\--tag]:text-[11px] [&_.rti\--tag]:font-medium [&_.rti\--tag]:py-0.5 [&_.rti\--tag]:px-2 [&_.rti\--tag]:rounded-md [&_.rti\--input]:bg-transparent [&_.rti\--input]:text-xs [&_.rti\--input]:text-gray-800 [&_.rti\--input]:placeholder-gray-400 [&_.rti\--input]:p-0 [&_.rti\--input]:m-0">
+              <TagsInput
+                value={hashtags}
+                onChange={(newTags) => {
+                  // 1. Format tags to always have a single '#'
+                  const formatted = newTags.map((tag) => {
+                    const cleanTag = tag.trim().replace(/^#+/, "");
+                    return cleanTag ? `#${cleanTag.toLowerCase()}` : ""; // Make lowercase to prevent #Gyn vs #gym duplicates
+                  }).filter(Boolean);
+
+                  // 2. Remove duplicates
+                  const uniqueTags = [...new Set(formatted)];
+
+                  setHashtags(uniqueTags);
+                }}
+                name="hashtags"
+                placeHolder="hashtags (Space/Enter to add)"
+                separators={[" "]}
+              />
+            </div>
 
             {/* Error message */}
             {error && (
@@ -179,30 +159,57 @@ function CreatePostForm({ currentUser, onClose }) {
               </div>
             )}
 
-            {/* Footer Row: Media input, Hashtags input + Actions buttons */}
-            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+            {/* Footer Row: Media input, Category Dropdown + Action buttons */}
+            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
 
-              {/* MEDIA input (picture icon button) */}
-              <div className="flex items-center text-gray-500 hover:text-black transition-colors">
-                <label htmlFor="media" className="cursor-pointer p-2 hover:bg-gray-50 rounded-full transition-colors flex items-center justify-center">
-                  <SlPicture size={16} />
-                </label>
-                <input
-                  className="hidden"
-                  type="file"
-                  name="media"
-                  id="media"
-                  accept="image/*,video/*" // Allows both images and videos in the browser picker
-                  multiple // Allows selecting multiple files at once
-                  onChange={(e) => {
-                    if (e.target.files.length > 0) {
-                      // Convert FileList into a regular array and merge with any existing selected files
-                      const chosenFiles = Array.from(e.target.files);
-                      setMedia([...media, ...chosenFiles]);
-                      setError("");
-                    }
-                  }}
-                />
+              <div className="flex items-center gap-2">
+                {/* MEDIA input (picture icon button) */}
+                <div className="flex items-center text-gray-500 hover:text-black transition-colors">
+                  <label htmlFor="media" className="cursor-pointer p-1.5 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center">
+                    <SlPicture size={17} />
+                  </label>
+                  <input
+                    className="hidden"
+                    type="file"
+                    name="media"
+                    id="media"
+                    accept="image/*,video/*" // Allows both images and videos in the browser picker
+                    multiple // Allows selecting multiple files at once
+                    onChange={(e) => {
+                      if (e.target.files.length > 0) {
+                        // Convert FileList into a regular array and merge with any existing selected files
+                        const chosenFiles = Array.from(e.target.files);
+                        setMedia([...media, ...chosenFiles]);
+                        setError("");
+                      }
+                    }}
+                  />
+                </div>
+
+                {/* Category Dropdown */}
+                <div className="relative shrink-0">
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="appearance-none bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700 text-[11px] font-semibold py-1 pl-2.5 pr-6 rounded-full cursor-pointer focus:outline-none transition-colors"
+                  >
+                    <option value="General">Category: General</option>
+                    <option value="Breakfast">Category: Breakfast</option>
+                    <option value="Lunch & Dinner">Category: Lunch & Dinner</option>
+                    <option value="Desserts">Category: Desserts</option>
+                    <option value="Candy">Category: Candy</option>
+                    <option value="Snacks">Category: Snacks</option>
+                    <option value="Supplements">Category: Supplements</option>
+                    <option value="Training">Category: Training</option>
+                    <option value="Cardio">Category: Cardio</option>
+                    <option value="Lifting">Category: Lifting</option>
+                    <option value="Music">Category: Music</option>
+                    <option value="Activewear">Category: Activewear</option>
+                    <option value="Mindset & Recovery">Category: Mindset & Recovery</option>
+                    <option value="Helpme">Category: Helpme</option>
+                  </select>
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-[8px]">▼</span>
+                </div>
               </div>
 
               {/* Buttons (Cancel & Post) */}
@@ -210,13 +217,13 @@ function CreatePostForm({ currentUser, onClose }) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-1.5 px-3 rounded-md transition-colors cursor-pointer text-xs"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-1.5 px-3 rounded-lg transition-colors cursor-pointer text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-3 rounded-md transition-colors cursor-pointer text-xs shadow-sm"
+                  className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-3 rounded-lg transition-colors cursor-pointer text-xs shadow-sm"
                 >
                   Post
                 </button>
