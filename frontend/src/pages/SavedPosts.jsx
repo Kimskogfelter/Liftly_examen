@@ -40,25 +40,23 @@ function SavedPosts({ currentUser, setCurrentUser }) {
   console.log("posts", posts)
 
 return (
-    <div className="flex">
-      <section className="flex-1 p-6 max-w-5xl mx-auto mt-8 font-sans">
-        <div className="mb-6 border-b border-zinc-200 pb-4">
-          <h1 className="text-xl font-bold text-zinc-800 tracking-wide">
-           Saved posts
-          </h1>
-        </div>
-             
-        <div>
-          <PostFeed
-            posts={posts}
-            currentUser={currentUser}
-            setCurrentUser={setCurrentUser}
-            layout="grid-3x3"
-            getSavedPosts={getSavedPosts}
-          />
-        </div>
-      </section>
-    </div>
+    <section className="flex-1 p-6 max-w-4xl mx-auto pt-6 font-sans text-gray-800">
+      <div className="w-full max-w-md mx-auto mb-6">
+        <h1 className="text-xl font-bold text-zinc-800 tracking-wide border-b border-zinc-200 pb-4">
+          Saved posts
+        </h1>
+      </div>
+          
+      <div>
+        <PostFeed
+          posts={posts}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+          layout="grid-3x3"
+          getSavedPosts={getSavedPosts}
+        />
+      </div>
+    </section>
   );
 }
 

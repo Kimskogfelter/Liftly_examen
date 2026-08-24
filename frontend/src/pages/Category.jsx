@@ -49,10 +49,10 @@ function Category({ currentUser }) {
     }
 
   return (
-    <section className="pt-6 pb-24 max-w-4xl mx-auto px-4 font-sans">
+    <section className="flex-1 p-6 max-w-4xl mx-auto pt-6 font-sans text-gray-800">
       
-        <div className="mb-6 border-b border-zinc-200 pb-4">
-            <h1 className="text-xl font-bold text-zinc-800 tracking-wide">
+        <div className="w-full max-w-md mx-auto mb-6">
+            <h1 className="text-xl font-bold text-zinc-800 tracking-wide border-b border-zinc-200 pb-4">
                 Category: <span className="text-zinc-500 font-medium">{categoryName}</span>
             </h1>
         </div>
@@ -63,8 +63,7 @@ function Category({ currentUser }) {
                 <p className="text-zinc-500 text-sm">No posts found in this category yet.</p>
             </div>
         ) : (
-                    <PostFeed posts={posts} layout="grid-3x3" />
-            
+            <PostFeed posts={posts} layout="grid-3x3" />
         )}
     </section>
   );
