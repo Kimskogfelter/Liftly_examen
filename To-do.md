@@ -22,8 +22,6 @@
 ## UI & Design (Frontend)
 - [ ] **Egen Hashtag-sida**
   - [ ] Skapa en ny, dedikerad sida/vy för hashtags när man klickar på en hashtag i ett inlägg.
-- [ ] **All / Following Tab-meny (`Home.jsx`)**
-  - [ ] Fixa sticky-positionering så att flikarna inte hamnar ovanpå eller täcker inläggen vid scroll.
 - [ ] **Skapa inlägg (`CreatePostForm.jsx`)**
   - [ ] Gör "Add photo/video"-knappen mer framträdande och centrerad överst i rutan med text.
 - [ ] **Bildbeskäring (`PostCard.jsx`)**
@@ -34,3 +32,5 @@
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
 - [x] Standardisera toppmarginaler och layout på Search, Saved, Category och Profile.
+- [x] **All / Following Tab-meny (`Home.jsx`)**
+  Fixa sticky-positionering så att flikarna inte hamnar ovanpå eller täcker inläggen vid scroll.
