@@ -20,7 +20,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
   const [posts, setPosts] = useState([]);
 
   const isAlreadyFollowing = userInfo?.followers?.includes(currentUser?.id) || false;
-  
+
   const [showEditProfileImage, setShowEditProfileImage] = useState(false);
   const [showEditProfileBio, setShowEditProfileBio] = useState(false);
 
@@ -75,7 +75,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
       <div className="w-full max-w-md mx-auto bg-white p-5 mb-6 flex items-start gap-5 font-sans">
 
         {/* Profile image */}
-        <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
+        <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full overflow-hidden border border-gray-100">
           {/* IF logged in user display change image option when hovering */}
           {userInfo?._id === currentUser?.id ? (
             <div className="relative group cursor-pointer w-full h-full" onClick={() => setShowEditProfileImage(true)}>
@@ -85,7 +85,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
               </div>
             </div>) : (
             // if another user or logged out display ONLY image
-            <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full overflow-hidden border border-gray-100">
+            <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full overflow-hidden border border-gray-100">
               <ProfileImage profileImage={userInfo?.profileImage} />
             </div>)}
         </div>
@@ -104,9 +104,14 @@ function ProfilePage({ currentUser, setCurrentUser }) {
             {/* Follow-button*/}
             {/* display follow button if the user is not the current user */}
             {userInfo?._id !== currentUser?.id && (
-              <button onClick={() => handleFollowUserToggle(userInfo, setUserInfo, currentUser, isAlreadyFollowing)} className="bg-[#3A3939] hover:bg-zinc-800 text-white text-[10px] font-bold rounded transition-all cursor-pointer w-15.5 h-5.5 flex items-center justify-center shrink-0">
-                {/* check if the current user is following this user */}
-                {isAlreadyFollowing ? "Unfollow" : "Follow"}
+              <button
+                onClick={() => handleFollowUserToggle(userInfo, setUserInfo, currentUser, isAlreadyFollowing)}
+                className={`px-4 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${isAlreadyFollowing
+                    ? "bg-gray-100 hover:bg-gray-200 text-black border border-gray-300"
+                    : "bg-black hover:bg-zinc-800 text-white"
+                  }`}
+              >
+                {isAlreadyFollowing ? "Following" : "Follow"}
               </button>
             )}
           </div>
