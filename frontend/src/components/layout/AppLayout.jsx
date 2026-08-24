@@ -25,7 +25,7 @@ function AppLayout({ currentUser, setCurrentUser }) {
                     />
                 )
             }
-            <main className="flex-1 p-4">
+            <main className="flex-1">
 
                 {/* Outlet helps render the active route component */}
                 <Outlet />
