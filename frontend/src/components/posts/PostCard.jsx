@@ -43,9 +43,10 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
     return (
         <>
-            <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-115 flex flex-col justify-between">
+            {/* Outer card wrapper with dynamic height (h-auto) for seamless text and media layout */}
+            <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
-                    {/* display user information */}
+                    {/* Display user information */}
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-full overflow-hidden">
@@ -55,7 +56,6 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 {post.createdBy?.username}
                             </Link>
                         </div>
-
 
                         {/* Post actions menu */}
                         {post.createdBy?._id === currentUser?.id && (
@@ -89,7 +89,6 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     </div>
 
                     <div>
-
                         {/* Hashtags */}
                         <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
                             {post.hashtags?.map((hashtag, index) => (
@@ -99,76 +98,85 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             ))}
                         </div>
 
-                        {/* Post content */}
-                        <Link to={`/posts/${post._id}`} className="block group mb-2 text-left">
-
-                            {/* Media slider container with absolute navigation buttons */}
+                        {/* Post content wrapper */}
+                        <Link to={`/posts/${post._id}`} className="block group mb-3 text-left">
                             {hasMedia ? (
-                                <div className="relative w-full h-56 md:h-60 rounded-lg overflow-hidden mb-3 bg-gray-50 flex items-center justify-center group/media">
-                                    {isVideo ? (
-                                        <video
-                                            src={currentMediaUrl}
-                                            controls={true} // Gives users play/pause and timeline controls
-                                            loop={true} // Automatically restarts the video when it ends, just like TikTok/Reels
-                                            playsInline={true} // Prevents iOS devices from forcing the video into fullscreen mode
-                                            muted={true}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                        <img
-                                            src={currentMediaUrl}
-                                            alt="Post media"
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => {
-                                                e.currentTarget.style.display = "none";
-                                            }}
-                                        />
-                                    )}
+                                <>
+                                    {/* Media slider container */}
+                                    <div className="relative w-full h-56 md:h-60 rounded-lg overflow-hidden mb-3 bg-gray-50 flex items-center justify-center group/media">
+                                        {isVideo ? (
+                                            <video
+                                                src={currentMediaUrl}
+                                                controls={true}
+                                                loop={true}
+                                                playsInline={true}
+                                                muted={true}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <img
+                                                src={currentMediaUrl}
+                                                alt="Post media"
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = "none";
+                                                }}
+                                            />
+                                        )}
 
-                                    {/* Left arrow button - Only shows if there is a previous item */}
-                                    {currentMediaIndex > 0 && (
-                                        <button
-                                            onClick={handlePrevMedia}
-                                            className="absolute left-2 p-1 rounded-full bg-black/50 text-white hover:bg-black/75 transition-colors z-10 cursor-pointer"
-                                        >
-                                            <FiChevronLeft size={18} />
-                                        </button>
-                                    )}
+                                        {/* Previous and next navigation buttons */}
+                                        {currentMediaIndex > 0 && (
+                                            <button
+                                                onClick={handlePrevMedia}
+                                                className="absolute left-2 p-1 rounded-full bg-black/50 text-white hover:bg-black/75 transition-colors z-10 cursor-pointer"
+                                            >
+                                                <FiChevronLeft size={18} />
+                                            </button>
+                                        )}
 
-                                    {currentMediaIndex < post.media.length - 1 && (
-                                        <button
-                                            onClick={handleNextMedia}
-                                            className="absolute right-2 p-1 rounded-full bg-black/50 text-white hover:bg-black/75 transition-colors z-10 cursor-pointer"
-                                        >
-                                            <FiChevronRight size={18} />
-                                        </button>
-                                    )}
+                                        {currentMediaIndex < post.media.length - 1 && (
+                                            <button
+                                                onClick={handleNextMedia}
+                                                className="absolute right-2 p-1 rounded-full bg-black/50 text-white hover:bg-black/75 transition-colors z-10 cursor-pointer"
+                                            >
+                                                <FiChevronRight size={18} />
+                                            </button>
+                                        )}
 
-                                    {/* Media dot indicators at the bottom center */}
-                                    {post.media.length > 1 && (
-                                        <div className="absolute bottom-2 flex gap-1 z-10">
-                                            {post.media.map((_, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentMediaIndex ? 'bg-white scale-125' : 'bg-white/50'}`}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
+                                        {/* Media position dot indicators */}
+                                        {post.media.length > 1 && (
+                                            <div className="absolute bottom-2 flex gap-1 z-10">
+                                                {post.media.map((_, idx) => (
+                                                    <div
+                                                        key={idx}
+                                                        className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentMediaIndex ? "bg-white scale-125" : "bg-white/50"}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Post content text for media posts */}
+                                    <p className="line-clamp-3 text-xs text-gray-800 font-normal px-1">
+                                        {post.content}
+                                    </p>
+                                </>
                             ) : (
-                                <div className="w-full h-12"></div>
+                                /* Clean text-only post container without media boxes */
+                                <div className="py-2 px-1">
+                                    <p className="line-clamp-3 text-xs text-gray-800 font-normal px-1">
+                                        {post.content}
+                                    </p>
+                                </div>
                             )}
-
-                            <p className="text-gray-600 leading-snug text-xs mb-1.5 line-clamp-6 overflow-hidden">{post.content}</p>
                         </Link>
                     </div>
                 </div>
 
                 <div>
-                    {/* display post information */}
+                    {/* Display post information */}
                     <p className="text-[10px] text-gray-400 mb-2"><TimeAgo date={post.createdAt} /></p>
-                    {/* category-badge */}
+                    {/* Category badge */}
                     <span className="inline-block bg-zinc-100 text-zinc-600 text-[11px] font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">
                         {post.category || "General"}
                     </span>
@@ -177,7 +185,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     {/* Footer Row containing actions and metrics */}
                     <div className="flex items-center justify-between pt-0.5">
                         <div className="flex items-center gap-5">
-                            {/* display post likes */}
+                            {/* Display post likes */}
                             <div className="flex items-center gap-1.5">
                                 <button
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
