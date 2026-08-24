@@ -58,11 +58,11 @@ function Home({ currentUser, setCurrentUser }) {
 
   return (
     <>
-      <section className="pt-24 flex-1 p-4 max-w-5xl mx-auto">
+      <section className="flex-1 max-w-5xl mx-auto pb-10">
         {/* {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>} */}
 
         {/* TABS */}
-        <div className="sticky top-20 bg-white z-10 flex border-b border-gray-100 mb-6 px-4 py-2">
+        <div className="sticky top-0 bg-white z-30 flex border-b border-gray-100 mb-6 px-4 py-2">
           {/* ALL BUTTON */}
           <button
             onClick={() => setActiveTab("posts")}
