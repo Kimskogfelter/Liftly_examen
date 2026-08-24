@@ -10,7 +10,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa";
 
-function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDeletePost, getSavedPosts }) {
+function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDeletePost, getSavedPosts, isDetailView }) {
     const [showPostActions, setShowPostActions] = useState(false);
     const [likesCount, setLikesCount] = useState(post.likes?.length || 0);
     const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUser?.id) || false);
@@ -157,14 +157,14 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                     </div>
 
                                     {/* Post content text for media posts */}
-                                    <p className="line-clamp-3 text-xs text-gray-800 font-normal px-1">
+                                    <p className={`${isDetailView ? "" : "line-clamp-3"} text-xs text-gray-800 font-normal px-1`}>
                                         {post.content}
                                     </p>
                                 </>
                             ) : (
                                 /* Clean text-only post container without media boxes */
                                 <div className="py-2 px-1">
-                                    <p className="line-clamp-3 text-xs text-gray-800 font-normal px-1">
+                                    <p className={`${isDetailView ? "" : "line-clamp-3"} text-xs text-gray-800 font-normal px-1`}>
                                         {post.content}
                                     </p>
                                 </div>

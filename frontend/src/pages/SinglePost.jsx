@@ -60,7 +60,7 @@ function SinglePost({ currentUser, setCurrentUser }) {
             {post && (
                 <>
                <div className="mt-8 py-6">
-                    <PostCard post={post} currentUser={currentUser} setCurrentUser={setCurrentUser} />
+                    <PostCard post={post} currentUser={currentUser} setCurrentUser={setCurrentUser} isDetailView={true} />
 
                     <CreateCommentForm
                         currentUser={currentUser}
