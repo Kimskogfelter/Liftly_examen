@@ -38,7 +38,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
 
       // update the user info and posts state with the fetched user information
       setUserInfo(response.data.user);
-      setPosts(response.data.user.posts);
+      setPosts([...response.data.user.posts].reverse()); // creates a new array with the posts in reverse order to display the most recent posts first
 
     } catch (err) {
       // handle errors and display error message to user
