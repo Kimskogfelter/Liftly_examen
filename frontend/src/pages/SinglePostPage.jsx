@@ -8,7 +8,7 @@ import CreateCommentForm from "../components/comments/CreateCommentForm";
 import CommentList from "../components/comments/CommentList";
 
 
-function SinglePost({ currentUser, setCurrentUser }) {
+function SinglePostPage({ currentUser, setCurrentUser }) {
 
     // states and variables
     const token = currentUser?.token;
@@ -77,4 +77,4 @@ function SinglePost({ currentUser, setCurrentUser }) {
     );
 }
 
-export default SinglePost;
+export default SinglePostPage;

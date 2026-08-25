@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/layout/Navbar";
 import PostFeed from "../components/posts/PostFeed";
 
-function SavedPosts({ currentUser, setCurrentUser }) {
+function SavedPostsPage({ currentUser, setCurrentUser }) {
 
   const [error, setError] = useState("");
   const token = currentUser?.token;
@@ -60,4 +60,4 @@ return (
   );
 }
 
-export default SavedPosts;
+export default SavedPostsPage;

@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import SavedPosts from './pages/SavedPosts';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import SavedPostsPage from './pages/SavedPostsPage';
 import ProfilePage from './pages/ProfilePage';
-import SinglePost from './pages/SinglePost';
+import SinglePostPage from './pages/SinglePostPage';
 import SearchPage from './pages/SearchPage';
-import Category from './pages/Category';
+import CategoryPage from './pages/Category';
 import HashtagPage from './pages/HashtagPage';
 import AppLayout from './components/layout/AppLayout';
 
@@ -53,17 +53,17 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<LoginPage setCurrentUser={setCurrentUser} />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* Protected Routes */}
           <Route element={<AppLayout currentUser={currentUser} setCurrentUser={setCurrentUser} />}>
-            <Route path="/home" element={<Home currentUser={currentUser} setCurrentUser={setCurrentUser} />} /> {/* NOT protected, uses the AppLayout component to render layout and navbar */}
-            <Route path="/savedPosts" element={currentUser ? <SavedPosts currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
+            <Route path="/home" element={<HomePage currentUser={currentUser} setCurrentUser={setCurrentUser} />} /> {/* NOT protected, uses the AppLayout component to render layout and navbar */}
+            <Route path="/savedPosts" element={currentUser ? <SavedPostsPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
             <Route path="/users/:userId" element={currentUser ? <ProfilePage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
-            <Route path="/posts/:postId" element={currentUser ? <SinglePost currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
+            <Route path="/posts/:postId" element={currentUser ? <SinglePostPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
             <Route path="/search" element={currentUser ? <SearchPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
-            <Route path="/category/:categoryName" element={currentUser ? <Category currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
+            <Route path="/category/:categoryName" element={currentUser ? <CategoryPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
             <Route path="/hashtags/:hashtag" element={currentUser ? <HashtagPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
           </Route>
 

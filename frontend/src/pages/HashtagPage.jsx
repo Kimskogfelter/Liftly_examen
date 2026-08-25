@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import PostFeed from "../components/posts/PostFeed";
 import axios from "axios";
 
-function Hashtags({ currentUser }) {
+function HashtagPage({ currentUser }) {
 
     const token = currentUser?.token;
     const { hashtag } = useParams();
@@ -69,4 +69,4 @@ function Hashtags({ currentUser }) {
   );
 }
 
-export default Hashtags;
+export default HashtagPage;

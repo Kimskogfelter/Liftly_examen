@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from '../assets/images/liftly-logo.png';
 
-function Register() {
+function RegisterPage() {
 
   // states for form inputs from user
   const [username, setUsername] = useState("");
@@ -148,4 +148,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterPage;

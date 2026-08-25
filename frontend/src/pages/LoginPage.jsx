@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/images/liftly-logo.png';
 
-function Login({ setCurrentUser }) {
+function LoginPage({ setCurrentUser }) {
 
   // states for form inputs from user
   const [username, setUsername] = useState("");
@@ -104,4 +104,4 @@ function Login({ setCurrentUser }) {
   );
 }
 
-export default Login;
+export default LoginPage;

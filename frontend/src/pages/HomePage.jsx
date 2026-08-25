@@ -4,7 +4,7 @@ import axios from "axios";
 import PostFeed from "../components/posts/PostFeed";
 
 
-function Home({ currentUser, setCurrentUser }) {
+function HomePage({ currentUser, setCurrentUser }) {
   const [posts, setPosts] = useState([]);
   const [followingPosts, setFollowingPosts] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
@@ -106,4 +106,4 @@ function Home({ currentUser, setCurrentUser }) {
   );
 }
 
-export default Home;
+export default HomePage;
