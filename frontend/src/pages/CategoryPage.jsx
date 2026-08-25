@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import PostFeed from "../components/posts/PostFeed";
 import axios from "axios";
 
-function Category({ currentUser }) {
+function CategoryPage({ currentUser }) {
 
     const token = currentUser?.token;
     const { categoryName } = useParams();
@@ -69,4 +69,4 @@ function Category({ currentUser }) {
   );
 }
 
-export default Category;
+export default CategoryPage;

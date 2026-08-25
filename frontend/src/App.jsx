@@ -7,7 +7,7 @@ import SavedPostsPage from './pages/SavedPostsPage';
 import ProfilePage from './pages/ProfilePage';
 import SinglePostPage from './pages/SinglePostPage';
 import SearchPage from './pages/SearchPage';
-import CategoryPage from './pages/Category';
+import CategoryPage from './pages/CategoryPage';
 import HashtagPage from './pages/HashtagPage';
 import AppLayout from './components/layout/AppLayout';
 
