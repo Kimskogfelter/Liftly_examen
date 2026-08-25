@@ -25,10 +25,8 @@
   - [ ] Bygga funktion för att skapa och spara egna träningspass som enkelt kan plockas fram och loggas under gympasset.
 
 ## UI & Design (Frontend)
-- [ ] **Egen Hashtag-sida**
-  - [ ] Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när man klickar på den.
-- [ ] **Bildbeskäring (`PostCard.jsx`)**
-  - [ ] Justera bild-höjd och `object-cover` så att vertikala bilder/videos inte beskärs för hårt i flödet.
+
+
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
@@ -37,3 +35,7 @@
   Fixa sticky-positionering så att flikarna inte hamnar ovanpå eller täcker inläggen vid scroll.
 - [x] **Skapa inlägg (`CreatePostForm.jsx`)**
 Gör "Add photo/video"-knappen mer framträdande och centrerad överst i rutan med text.
+- [x] **Bildbeskäring (`PostCard.jsx`)**
+Justera bild-höjd och `object-cover` så att vertikala bilder/videos inte beskärs för hårt i flödet.
+- [x] **Egen Hashtag-sida**
+Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när man klickar på den.
