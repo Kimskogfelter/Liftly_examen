@@ -22,7 +22,8 @@
 - [ ] **Tränings- & Matdagbok**
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
 - [ ] **Träningspass & Mallar**
-  - [ ] Bygga funktion för att skapa och spara egna träningspass som enkelt kan plockas fram och loggas under gympasset.
+  - [ ] Bygga funktion för att skapa och spara egna träningspass som enkelt kan plockas fram och loggas under gympasset. Namnge som "Workouts" i navmeny
+- Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
 
 ## UI & Design (Frontend)
 
