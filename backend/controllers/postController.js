@@ -265,6 +265,33 @@ export const getCategoryPosts = async (req, res, next) => {
     }
 };
 
+// ---------------------------- GET HASHTAG POSTS --------------------------- 
+// GET req: api/posts/hashtag?hashtag=träning
+export const getHashtagPosts = async (req, res, next) => {
+    try {
+        const { hashtag } = req.query;
+
+        if (!hashtag) {
+            return next(new HttpError("No hashtag provided", 400));
+        }
+
+        // Hittar alla inlägg där 'hashtags'-arrayen innehåller den valda taggen
+        const posts = await Post.find({ hashtags: hashtag })
+            .populate("createdBy", "username profileImage")
+            .sort({ createdAt: -1 });
+
+        if (posts.length === 0) {
+            return next(new HttpError(`No posts found with hashtag: #${hashtag}`, 404));
+        }
+
+        return res.status(200).json({
+            message: "Posts found successfully",
+            getAllPosts: posts
+        });
+    } catch (error) {
+        return next(new HttpError(error.message || error, 500));
+    }
+};
 
 
 // ---------------------------- SAVE POST --------------------------- 
