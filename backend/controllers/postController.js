@@ -267,32 +267,42 @@ export const getCategoryPosts = async (req, res, next) => {
 
 // ---------------------------- GET HASHTAG POSTS --------------------------- 
 // GET req: api/posts/hashtag?hashtag=träning
+
 export const getHashtagPosts = async (req, res, next) => {
     try {
+        // 1. Fetch hashtag parameter from query string (e.g. /api/posts/hashtag?hashtag=gym)
         const { hashtag } = req.query;
 
+        // 2. Return error if no hashtag parameter was provided
         if (!hashtag) {
             return next(new HttpError("No hashtag provided", 400));
         }
 
-        // Hittar alla inlägg där 'hashtags'-arrayen innehåller den valda taggen
-        const posts = await Post.find({ hashtags: hashtag })
-            .populate("createdBy", "username profileImage")
-            .sort({ createdAt: -1 });
+        // 3. Clean the hashtag string by removing any leading '#' character
+        const cleanTag = hashtag.replace('#', '');
 
+        // 4. Fetch posts matching either clean tag format ("gym") or hashed tag format ("#gym")
+        const posts = await Post.find({
+            hashtags: { $in: [cleanTag, `#${cleanTag}`] }
+        })
+        .populate("createdBy", "username profileImage")
+        .sort({ createdAt: -1 });
+
+         // 5. If NO posts found
         if (posts.length === 0) {
-            return next(new HttpError(`No posts found with hashtag: #${hashtag}`, 404));
+            return next(new HttpError(`No posts found with hashtag: #${cleanTag}`, 404));
         }
 
+        // 6. return list with posts
         return res.status(200).json({
             message: "Posts found successfully",
             getAllPosts: posts
         });
+
     } catch (error) {
         return next(new HttpError(error.message || error, 500));
     }
 };
-
 
 // ---------------------------- SAVE POST --------------------------- 
 // POST req: api/posts/:postId/save
