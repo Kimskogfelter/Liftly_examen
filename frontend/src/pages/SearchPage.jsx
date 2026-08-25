@@ -73,7 +73,7 @@ function SearchPage({ currentUser, setCurrentUser }) {
             <section className="pt-12 flex-1 p-4 max-w-5xl mx-auto w-full font-sans">
 
                 <div className="max-w-xl mx-auto w-full mb-6">
-                    
+
                     {/* Searchbar */}
                     <SearchBar currentUser={currentUser} />
 
@@ -122,24 +122,26 @@ function SearchPage({ currentUser, setCurrentUser }) {
                         )}
 
                         {activeTab === "users" && (
-                            <div className="w-full">
+                            <div className="w-full max-w-xl mx-auto">
                                 {users.length > 0 ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+                                    <div className="flex flex-col gap-2 w-full">
                                         {users.map((u) => (
                                             <Link
                                                 to={`/users/${u._id}`}
                                                 key={u._id}
-                                                className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3 shadow-sm transition-all hover:border-gray-300 w-full"
+                                                className="flex items-center gap-3 bg-white hover:bg-gray-50/80 rounded-xl px-3.5 py-2.5 transition-all w-full border border-gray-200/80 shadow-sm hover:shadow hover:border-gray-300"
                                             >
-                                                <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
+                                                <div className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200/60 overflow-hidden shrink-0">
                                                     {u.profileImage ? (
                                                         <img src={u.profileImage} alt={u.username} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <div className="w-full h-full bg-gray-300" />
+                                                        <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[11px] text-gray-600 font-bold">
+                                                            {u.username?.charAt(0).toUpperCase()}
+                                                        </div>
                                                     )}
                                                 </div>
-                                                <div className="min-w-0"> 
-                                                    <p className="text-sm font-semibold text-gray-800 truncate">@{u.username}</p>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-xs font-bold text-gray-800 truncate">@{u.username}</p>
                                                 </div>
                                             </Link>
                                         ))}
