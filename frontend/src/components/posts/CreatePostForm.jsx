@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { SlPicture } from "react-icons/sl";
+import { FiImage } from "react-icons/fi";
 import { IoCloseCircle } from "react-icons/io5";
 // Import the tag-input component
 import { TagsInput } from "react-tag-input-component";
@@ -138,7 +138,7 @@ function CreatePostForm({ currentUser, onClose }) {
                   // 1. Format tags to always have a single '#'
                   const formatted = newTags.map((tag) => {
                     const cleanTag = tag.trim().replace(/^#+/, "");
-                    return cleanTag ? `#${cleanTag.toLowerCase()}` : ""; // Make lowercase to prevent #Gyn vs #gym duplicates
+                    return cleanTag ? `#${cleanTag.toLowerCase()}` : ""; // Make lowercase to prevent duplicates
                   }).filter(Boolean);
 
                   // 2. Remove duplicates
@@ -159,39 +159,36 @@ function CreatePostForm({ currentUser, onClose }) {
               </div>
             )}
 
-            {/* Footer Row: Media input, Category Dropdown + Action buttons */}
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-
-              <div className="flex items-center gap-2">
-                {/* MEDIA input (picture icon button) */}
-                <div className="flex items-center text-gray-500 hover:text-black transition-colors">
-                  <label htmlFor="media" className="cursor-pointer p-1.5 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center">
-                    <SlPicture size={17} />
-                  </label>
+            {/* Footer Row: Media button, Category dropdown, and Action buttons */}
+              {/* MEDIA & CATEGORY options row */}
+              <div className="flex items-center gap-2 pt-2">
+                {/* Media upload button */}
+                <label htmlFor="media" className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
+                  <FiImage size={15} className="text-zinc-800" />
+                  <span>Media</span>
                   <input
                     className="hidden"
                     type="file"
                     name="media"
                     id="media"
-                    accept="image/*,video/*" // Allows both images and videos in the browser picker
-                    multiple // Allows selecting multiple files at once
+                    accept="image/*,video/*"
+                    multiple
                     onChange={(e) => {
                       if (e.target.files.length > 0) {
-                        // Convert FileList into a regular array and merge with any existing selected files
                         const chosenFiles = Array.from(e.target.files);
                         setMedia([...media, ...chosenFiles]);
                         setError("");
                       }
                     }}
                   />
-                </div>
+                </label>
 
                 {/* Category Dropdown */}
                 <div className="relative shrink-0">
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="appearance-none bg-zinc-100 hover:bg-zinc-200/80 text-zinc-700 text-[11px] font-semibold py-1 pl-2.5 pr-6 rounded-full cursor-pointer focus:outline-none transition-colors"
+                    className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 pr-7 rounded-lg appearance-none cursor-pointer outline-none transition-colors"
                   >
                     <option value="General">Category: General</option>
                     <option value="Breakfast">Category: Breakfast</option>
@@ -208,28 +205,28 @@ function CreatePostForm({ currentUser, onClose }) {
                     <option value="Mindset & Recovery">Category: Mindset & Recovery</option>
                     <option value="Helpme">Category: Helpme</option>
                   </select>
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-[8px]">▼</span>
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500 text-[8px]">▼</span>
                 </div>
               </div>
 
-              {/* Buttons (Cancel & Post) */}
-              <div className="flex gap-2">
+              {/* Action buttons row (CANCEL & POST) */}
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100 mt-3">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-1.5 px-3 rounded-lg transition-colors cursor-pointer text-xs"
+                  className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-1.5 px-3.5 rounded-lg transition-colors cursor-pointer text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-3 rounded-lg transition-colors cursor-pointer text-xs shadow-sm"
+                  className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-4 rounded-lg transition-colors cursor-pointer text-xs shadow-sm"
                 >
                   Post
                 </button>
               </div>
 
-            </div>
+           
           </form>
         </div>
       </div>
