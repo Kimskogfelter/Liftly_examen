@@ -92,9 +92,9 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         {/* Hashtags */}
                         <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
                             {post.hashtags?.map((hashtag, index) => (
-                                <span key={index} className="px-1 py-0.5 rounded cursor-pointer transition-colors hover:underline">
-                                    {hashtag}
-                                </span>
+                                <Link key={index} to={`/hashtags/${hashtag.replace('#', '')}`} className="px-1 py-0.5 rounded cursor-pointer transition-colors hover:underline">
+                                    {hashtag.startsWith('#') ? hashtag : `#${hashtag}`}
+                                </Link>
                             ))}
                         </div>
 
