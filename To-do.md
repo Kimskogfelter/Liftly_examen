@@ -11,23 +11,21 @@
 - [ ] **Glömt Lösenord**
   - [ ] Skapa återställningsflöde med e-post/tillfällig token för lösenordsåterställning.
 
----
-
-## Backend & Databas-logik
-- [ ] **Category "General" Default Fix**
-  - [ ] Undersök varför `category` inte skickas med/sparas vid skapande av inlägg så att default blir "General".
-
----
+## Backend
+- lägg till att skapa egna recept med ingredienser, tillagningssät, tid, makros i tex skapa inlägg? egen del??
+- lägg till så man kan logga egen dagbok för träning / mat / båda i samma..?? 
+- lägg till så man kan skapa egna träningspass man sedan kan gå tillbaka till för att logga under träningspasset?? 
 
 ## UI & Design (Frontend)
 - [ ] **Egen Hashtag-sida**
-  - [ ] Skapa en ny, dedikerad sida/vy för hashtags när man klickar på en hashtag i ett inlägg.
+ Skapa en ny, dedikerad sida/vy för hashtags när man klickar på en hashtag i ett inlägg.
 - [ ] **Skapa inlägg (`CreatePostForm.jsx`)**
-  - [ ] Gör "Add photo/video"-knappen mer framträdande och centrerad överst i rutan med text.
+Gör "Add photo/video"-knappen mer framträdande och centrerad överst i rutan med text.
 - [ ] **Bildbeskäring (`PostCard.jsx`)**
-  - [ ] Justera bild-höjd/`object-cover` så att uppladdade bilder/videos inte beskärs för hårt.
-
----
+Justera bild-höjd/`object-cover` så att uppladdade bilder/videos inte beskärs för hårt.
+- lägg till att skapa egna recept med ingredienser, tillagningssät, tid, makros i tex skapa inlägg? egen del??
+- lägg till så man kan logga egen dagbok för träning / mat / båda i samma..?? 
+- lägg till så man kan skapa egna träningspass man sedan kan gå tillbaka till för att logga under träningspasset?? 
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
