@@ -44,7 +44,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
     return (
         <>
             {/* Outer card wrapper with dynamic height (h-auto) for seamless text and media layout */}
-            <section className="w-full max-w-md mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
+            <section className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
                     {/* Display user information */}
                     <div className="flex items-center justify-between mb-3">
@@ -102,8 +102,8 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         <Link to={`/posts/${post._id}`} className="block group mb-3 text-left">
                             {hasMedia ? (
                                 <>
-                                    {/* Media slider container */}
-                                    <div className="relative w-full h-56 md:h-60 rounded-lg overflow-hidden mb-3 bg-gray-50 flex items-center justify-center group/media">
+                                    {/* Media slider container - Edge-to-edge layout with dynamic height */}
+                                    <div className="relative w-[calc(100%+2rem)] -mx-4 -mt-1 mb-3 bg-black/90 flex items-center justify-center overflow-hidden">
                                         {isVideo ? (
                                             <video
                                                 src={currentMediaUrl}
@@ -111,13 +111,13 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                                 loop={true}
                                                 playsInline={true}
                                                 muted={true}
-                                                className="w-full h-full object-cover"
+                                                className="w-full h-auto max-h-125 object-contain"
                                             />
                                         ) : (
                                             <img
                                                 src={currentMediaUrl}
                                                 alt="Post media"
-                                                className="w-full h-full object-cover"
+                                                className="w-full h-auto max-h-125 object-contain"
                                                 onError={(e) => {
                                                     e.currentTarget.style.display = "none";
                                                 }}
@@ -128,7 +128,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                         {currentMediaIndex > 0 && (
                                             <button
                                                 onClick={handlePrevMedia}
-                                                className="absolute left-2 p-1 rounded-full bg-black/50 text-white hover:bg-black/75 transition-colors z-10 cursor-pointer"
+                                                className="absolute left-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
                                             >
                                                 <FiChevronLeft size={18} />
                                             </button>
@@ -137,7 +137,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                         {currentMediaIndex < post.media.length - 1 && (
                                             <button
                                                 onClick={handleNextMedia}
-                                                className="absolute right-2 p-1 rounded-full bg-black/50 text-white hover:bg-black/75 transition-colors z-10 cursor-pointer"
+                                                className="absolute right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
                                             >
                                                 <FiChevronRight size={18} />
                                             </button>

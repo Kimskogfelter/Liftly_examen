@@ -13,7 +13,7 @@ function CommentCard({ comment, currentUser }) {
 
     return (
         <>
-            <section className="w-full max-w-md mx-auto bg-white p-3 flex items-start gap-3 font-sans">
+            <section className="w-full max-w-lg mx-auto bg-white p-3 flex items-start gap-3 font-sans">
 
                 {/* Profile image */}
                 <div className="w-8 h-8 rounded-full overflow-hidden object-cover shrink-0">

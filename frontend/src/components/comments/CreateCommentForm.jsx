@@ -45,7 +45,7 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
         action="POST"
         method="post"
         onSubmit={createComment}
-        className="w-full max-w-md mx-auto bg-white border border-gray-100 rounded-xl p-2 flex items-center gap-2 shadow-sm font-sans my-3"
+        className="w-full max-w-lg mx-auto bg-white border border-gray-100 rounded-xl p-2 flex items-center gap-2 shadow-sm font-sans my-3"
       >
         {/* Content input */}
         <input
