@@ -8,6 +8,7 @@ import ProfilePage from './pages/ProfilePage';
 import SinglePost from './pages/SinglePost';
 import SearchPage from './pages/SearchPage';
 import Category from './pages/Category';
+import HashtagPage from './pages/HashtagPage';
 import AppLayout from './components/layout/AppLayout';
 
 
@@ -63,6 +64,7 @@ function App() {
             <Route path="/posts/:postId" element={currentUser ? <SinglePost currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
             <Route path="/search" element={currentUser ? <SearchPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
             <Route path="/category/:categoryName" element={currentUser ? <Category currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
+            <Route path="/hashtags/:hashtag" element={currentUser ? <HashtagPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
           </Route>
 
         </Routes>
