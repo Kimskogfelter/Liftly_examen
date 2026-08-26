@@ -1,6 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FiHome, FiBookmark, FiPlusSquare, FiLogOut } from "react-icons/fi";
+import { IoBarbellOutline } from "react-icons/io5";
 import logo from '../../assets/images/liftly-logo.png';
 import ProfileImage from "../users/ProfileImage";
 import { logout } from "../../functions/logout";
@@ -135,6 +136,17 @@ const handleCategoryChange = (e) => {
               >
                 <FiBookmark size={16} className="shrink-0" />
                 <span className="text-xs font-medium tracking-wide">Saved</span>
+              </Link>
+            </li>
+
+             {/* Workouts */}
+            <li className="w-full">
+              <Link
+                to="/workouts"
+                className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all"
+              >
+                <IoBarbellOutline size={16} className="shrink-0" />
+                <span className="text-xs font-medium tracking-wide">Workouts</span>
               </Link>
             </li>
 
