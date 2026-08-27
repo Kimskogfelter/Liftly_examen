@@ -38,23 +38,21 @@ function WorkoutPage({ currentUser }) {
         <section className="flex-1 p-6 max-w-2xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
 
             {/* Premium Dashboard Header (Ikon, Undertext & Profil-badge) */}
-            <div className="w-full mb-8 flex items-center justify-between border-b border-zinc-200 pb-5">
 
-                {/* Vänster: Ikon + Titel + Beskrivning */}
-                <div className="flex items-center gap-3.5">
-                    <div className="p-3 bg-black text-white rounded-2xl shadow-sm shrink-0">
-                        <LuDumbbell size={22} />
+            <div className="w-full text-center mb-8 border-b border-zinc-200 pb-5">
+                <div className="flex items-center justify-center gap-3 mb-1.5">
+                    <div className="p-2 bg-black text-white rounded-xl shadow-xs shrink-0">
+                        <LuDumbbell size={18} />
                     </div>
-                    <div className="text-left">
-                        <h1 className="text-xl font-bold text-black tracking-wide leading-tight">
-                            My Workouts
-                        </h1>
-                        <p className="text-xs text-zinc-500 font-medium mt-0.5">
-                            Log & track your daily routines
-                        </p>
-                    </div>
+                    <h1 className="text-xl font-bold text-gray-900 tracking-wide">
+                        My Workouts
+                    </h1>
                 </div>
+                <p className="text-xs text-zinc-500 font-medium">
+                    Log & track your daily routines
+                </p>
             </div>
+
 
             {error && (
                 <div className="w-full bg-red-50 text-red-600 border border-red-100 p-3 rounded-xl mb-6 text-xs font-medium flex items-center justify-between">
@@ -71,7 +69,7 @@ function WorkoutPage({ currentUser }) {
             {/* Innehåll (Create-knapp & Kort-lista) */}
             <div className="w-full space-y-4">
 
-                <button 
+                <button
                     onClick={() => setShowCreateWorkoutForm(true)}
                     className="w-full py-3.5 px-4 bg-black hover:bg-zinc-800 text-white rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
                 >
@@ -90,9 +88,9 @@ function WorkoutPage({ currentUser }) {
                             <WorkoutGridItem
                                 key={workout._id}
                                 workout={workout}
-                                // onDelete={handleDeleteWorkout}
-                                // onEdit={(w) => console.log("Edit workout:", w)}
-                                // onSelect={(w) => console.log("Select workout:", w)}
+                            // onDelete={handleDeleteWorkout}
+                            // onEdit={(w) => console.log("Edit workout:", w)}
+                            // onSelect={(w) => console.log("Select workout:", w)}
                             />
                         ))}
                     </div>
