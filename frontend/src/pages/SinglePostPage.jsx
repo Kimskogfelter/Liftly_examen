@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import PostCard from "../components/posts/PostCard";
 import CreateCommentForm from "../components/comments/CreateCommentForm";
@@ -17,10 +17,11 @@ function SinglePostPage({ currentUser, setCurrentUser }) {
     const [comments, setComments] = useState([]); // state to hold comments for the post
     const [error, setError] = useState("");
 
+    const navigate = useNavigate();
 
     // function to fetch single post details and comments
     const fetchPostDetails = async (e) => {
-        
+
         try {
 
             // fetch post data from backend
@@ -54,23 +55,34 @@ function SinglePostPage({ currentUser, setCurrentUser }) {
 
     console.log("Post in SinglePost page:", post);
 
+   // function to handle post editing and update the posts state
+    const handleEditPost = (updatedPost) => {
+        setPost(updatedPost);
+    };
+
+    // function to handle post deletion and update UI/redirect
+    const handleDeletePost = (postId) => {
+        navigate("/home");
+    };  
+
     return (
-        <>  
+        <>
             {/* if post exist execute below code */}
             {post && (
                 <>
-               <div className="mt-8 py-6">
-                    <PostCard post={post} currentUser={currentUser} setCurrentUser={setCurrentUser} isDetailView={true} />
+                    <div className="mt-8 py-6">
+                        <PostCard post={post} currentUser={currentUser} setCurrentUser={setCurrentUser} handleEditPost={handleEditPost}
+                            handleDeletePost={handleDeletePost} isDetailView={true} />
 
-                    <CreateCommentForm
-                        currentUser={currentUser}
-                        comments={comments}
-                        setComments={setComments}
-                        postId={postId}
-                    />
+                        <CreateCommentForm
+                            currentUser={currentUser}
+                            comments={comments}
+                            setComments={setComments}
+                            postId={postId}
+                        />
 
-                    <CommentList currentUser={currentUser} comments={comments} />
-                </div>
+                        <CommentList currentUser={currentUser} comments={comments} />
+                    </div>
                 </>
             )}
         </>
