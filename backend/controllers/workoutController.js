@@ -8,17 +8,18 @@ import mongoose from "mongoose";
 // PROTECTED
 export const createWorkout = async (req, res, next) => {
     try {
-        const { day, exercises } = req.body;
+        const { day, title, exercises } = req.body;
 
         // Validation: Check if required fields exist
-        if (!day || !exercises || exercises.length === 0) {
-            return next(new HttpError("Please provide a day and at least one exercise.", 422));
+        if (!day || !title || !exercises || exercises.length === 0) {
+            return next(new HttpError("Please provide a day, title and at least one exercise.", 422));
         }
 
         // Create the workout document
         const newWorkout = await Workout.create({
             createdBy: req.user.id,
             day,
+            title,
             exercises
         });
 
@@ -68,6 +69,11 @@ export const getWorkout = async (req, res, next) => {
             return next(new HttpError("Workout not found", 404));
         }
 
+        // Check ownership
+        if (!workout.createdBy.equals(req.user.id)) {
+            return next(new HttpError("You are not authorized to view this workout", 403));
+        }
+
         return res.status(200).json({
             message: "Workout found",
             workout
@@ -84,7 +90,7 @@ export const getWorkout = async (req, res, next) => {
 export const updateWorkout = async (req, res, next) => {
     try {
         const { workoutId } = req.params;
-        const { day, exercises } = req.body;
+        const { day, title, exercises } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(workoutId)) {
             return next(new HttpError("Invalid workout ID", 400));
@@ -101,9 +107,15 @@ export const updateWorkout = async (req, res, next) => {
             return next(new HttpError("You are not authorized to update this workout", 403));
         }
 
+        // update only updated fields
+        const updateFields = {};
+        if (day) updateFields.day = day;
+        if (title) updateFields.title = title;
+        if (exercises) updateFields.exercises = exercises;
+
         const updatedWorkout = await Workout.findByIdAndUpdate(
             workoutId,
-            { $set: { day, exercises } },
+            { $set: updateFields },
             { new: true, runValidators: true }
         );
 
