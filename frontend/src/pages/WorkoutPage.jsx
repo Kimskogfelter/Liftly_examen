@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileImage from "../components/users/ProfileImage";
+import CreateWorkoutForm from "../components/workouts/CreateWorkoutForm"; // 1. Importera modalen
 import { LuDumbbell } from "react-icons/lu";
 import { FiPlus } from "react-icons/fi";
 
@@ -8,6 +9,7 @@ function WorkoutPage({ currentUser, setCurrentUser }) {
     const [workouts, setWorkouts] = useState([]);
     const [error, setError] = useState("");
     const token = currentUser?.token;
+    const [showCreateWorkoutForm, setShowCreateWorkoutForm] = useState(false);
 
     // Hämta användarens träningspass
     const getWorkouts = async () => {
@@ -27,6 +29,11 @@ function WorkoutPage({ currentUser, setCurrentUser }) {
     useEffect(() => {
         if (token) getWorkouts();
     }, [token]);
+
+    // 2. Funktion som lägger till det nyss skapade passet direkt i state
+    const handleWorkoutCreated = (newWorkout) => {
+        setWorkouts([newWorkout, ...workouts]);
+    };
 
     return (
         <section className="flex-1 p-6 max-w-4xl mx-auto pt-16 md:pt-6 md:ml-32 font-sans text-gray-800">
@@ -76,7 +83,7 @@ function WorkoutPage({ currentUser, setCurrentUser }) {
             <div className="w-full max-w-2xl mx-auto space-y-4">
 
                 {/* Knapp för att skapa nytt pass */}
-                <button
+                <button onClick={() => setShowCreateWorkoutForm(true)}
                     className="w-full py-3 px-4 bg-black hover:bg-zinc-800 text-white rounded-xl font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
                 >
                     <FiPlus size={16} />
@@ -96,6 +103,16 @@ function WorkoutPage({ currentUser, setCurrentUser }) {
                 )}
 
             </div>
+
+            {/* 3. Rendera CreateWorkoutForm som modal när showCreateWorkoutForm är true */}
+            {showCreateWorkoutForm && (
+                <CreateWorkoutForm
+                    currentUser={currentUser}
+                    onClose={() => setShowCreateWorkoutForm(false)}
+                    onWorkoutCreated={handleWorkoutCreated}
+                />
+            )}
+
         </section>
     );
 }
