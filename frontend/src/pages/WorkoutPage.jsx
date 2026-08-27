@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileImage from "../components/users/ProfileImage";
-import CreateWorkoutForm from "../components/workouts/CreateWorkoutForm"; // 1. Importera modalen
+import CreateWorkoutForm from "../components/workouts/CreateWorkoutForm";
+import WorkoutGridItem from "../components/workouts/WorkoutGridItem";
 import { LuDumbbell } from "react-icons/lu";
 import { FiPlus } from "react-icons/fi";
 
@@ -98,7 +99,15 @@ function WorkoutPage({ currentUser, setCurrentUser }) {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                        {/* Här mappar du ut dina WorkoutCard-komponenter sen */}
+                        {workouts.map((workout) => (
+                            <WorkoutGridItem
+                                key={workout._id}
+                                workout={workout}
+                                // onEdit={handleEditWorkout}
+                                // onDelete={handleDeleteWorkout}
+                                // onStart={handleStartWorkout}
+                            />
+                        ))}
                     </div>
                 )}
 
