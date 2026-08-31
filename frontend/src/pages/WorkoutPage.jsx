@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CreateWorkoutForm from "../components/workouts/CreateWorkoutForm";
+import CreateWorkoutModal from "../components/workouts/CreateWorkoutModal";
 import WorkoutGridItem from "../components/workouts/WorkoutGridItem";
 import { LuDumbbell } from "react-icons/lu";
 import { FiPlus } from "react-icons/fi";
@@ -9,7 +9,7 @@ function WorkoutPage({ currentUser }) {
     const [workouts, setWorkouts] = useState([]);
     const [error, setError] = useState("");
     const token = currentUser?.token;
-    const [showCreateWorkoutForm, setShowCreateWorkoutForm] = useState(false);
+    const [showCreateWorkoutModal, setShowCreateWorkoutModal] = useState(false);
 
     const getWorkouts = async () => {
         try {
@@ -69,7 +69,7 @@ function WorkoutPage({ currentUser }) {
             <div className="w-full space-y-4">
 
                 <button
-                    onClick={() => setShowCreateWorkoutForm(true)}
+                    onClick={() => setShowCreateWorkoutModal(true)}
                     className="w-full py-3.5 px-4 bg-black hover:bg-zinc-800 text-white rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
                 >
                     <FiPlus size={16} />
@@ -97,10 +97,10 @@ function WorkoutPage({ currentUser }) {
 
             </div>
 
-            {showCreateWorkoutForm && (
-                <CreateWorkoutForm
+            {showCreateWorkoutModal && (
+                <CreateWorkoutModal
                     currentUser={currentUser}
-                    onClose={() => setShowCreateWorkoutForm(false)}
+                    onClose={() => setShowCreateWorkoutModal(false)}
                     onWorkoutCreated={handleWorkoutCreated}
                 />
             )}
