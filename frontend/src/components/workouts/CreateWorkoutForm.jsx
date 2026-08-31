@@ -9,15 +9,23 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
   const [day, setDay] = useState("Monday");
   const [title, setTitle] = useState("");
   const [exercises, setExercises] = useState([
-    { name: "", sets: 3, reps: 10, kgs: 0 }
-  ]);
+    { name: "", sets: 3, reps: "", kgs: "" }]);
+
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Hantera ändringar i en specifik övning
   const handleExerciseChange = (index, field, value) => {
     const updatedExercises = [...exercises];
-    updatedExercises[index][field] = value;
+
+    // Om fältet är numeriskt, låt det vara tom sträng "" om användaren rensat rutan,
+    // annars gör om till Number.
+    if (field === "sets" || field === "reps" || field === "kgs") {
+      updatedExercises[index][field] = value === "" ? "" : Number(value);
+    } else {
+      updatedExercises[index][field] = value;
+    }
+
     setExercises(updatedExercises);
   };
 
@@ -50,10 +58,28 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
       return;
     }
 
+    // 1. OMVANDLA DATAN TILL BACKEND-FORMATET HÄR:
+    const formattedExercises = exercises.map((ex) => {
+      const numSets = Number(ex.sets) || 1;
+      const numReps = Number(ex.reps) || 10;
+      const numKgs = Number(ex.kgs) || 0;
+
+      // Skapa arrayen av set-objekt utifrån siffran i "Sets"
+      const setsArray = Array.from({ length: numSets }, () => ({
+        reps: numReps,
+        kgs: numKgs
+      }));
+
+      return {
+        name: ex.name,
+        sets: setsArray // <-- Nu blir backend nöjd!
+      };
+    });
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/workouts/create`,
-        { day, title, exercises },
+        { day, title, exercises: formattedExercises }, // Skicka den omvandlade datan!
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -63,7 +89,6 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
 
       console.log("Workout created successfully:", response.data);
 
-      // Om du skickar med en callback för att uppdatera käll-statet i WorkoutPage
       if (onWorkoutCreated) {
         onWorkoutCreated(response.data.workout);
       }
@@ -83,7 +108,7 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
       {/* Container - Samma vita modal-box som CreatePostForm */}
       <div className="w-full max-w-md bg-white rounded-2xl p-5 shadow-2xl border border-gray-100 text-left max-h-[90vh] flex flex-col">
-        
+
         {/* Header */}
         <div className="flex items-center gap-2 mb-4">
           <div className="p-1.5 bg-black text-white rounded-lg">
@@ -93,7 +118,7 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
         </div>
 
         <form onSubmit={createWorkout} className="space-y-4 overflow-y-auto pr-1">
-          
+
           {/* DAY & TITLE Input-rad */}
           <div className="grid grid-cols-3 gap-2">
             <div>
@@ -129,10 +154,10 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
           {/* EXERCISES LIST */}
           <div className="space-y-2 pt-1">
             <label className="block text-[10px] font-bold text-gray-500 uppercase">Exercises</label>
-            
+
             {exercises.map((exercise, index) => (
               <div key={index} className="flex flex-col gap-2 p-2.5 bg-zinc-50/80 rounded-xl border border-zinc-200/60 relative group">
-                
+
                 {/* Övningsnamn + Radera-knapp */}
                 <div className="flex items-center gap-2">
                   <input
@@ -142,7 +167,7 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
                     onChange={(e) => handleExerciseChange(index, "name", e.target.value)}
                     className="flex-1 text-xs font-semibold text-gray-800 placeholder-gray-400 bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-zinc-400"
                   />
-                  
+
                   {exercises.length > 1 && (
                     <button
                       type="button"
@@ -161,9 +186,9 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
                     <span className="text-[9px] font-semibold text-zinc-400 block mb-0.5">Sets</span>
                     <input
                       type="number"
-                      min="1"
                       value={exercise.sets}
-                      onChange={(e) => handleExerciseChange(index, "sets", Number(e.target.value))}
+                      placeholder="3"
+                      onChange={(e) => handleExerciseChange(index, "sets", e.target.value)}
                       className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1 text-gray-800 font-medium outline-none focus:border-zinc-400"
                     />
                   </div>
@@ -171,9 +196,9 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
                     <span className="text-[9px] font-semibold text-zinc-400 block mb-0.5">Reps</span>
                     <input
                       type="number"
-                      min="1"
                       value={exercise.reps}
-                      onChange={(e) => handleExerciseChange(index, "reps", Number(e.target.value))}
+                      placeholder="10"
+                      onChange={(e) => handleExerciseChange(index, "reps", e.target.value)}
                       className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1 text-gray-800 font-medium outline-none focus:border-zinc-400"
                     />
                   </div>
@@ -181,10 +206,9 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
                     <span className="text-[9px] font-semibold text-zinc-400 block mb-0.5">Kg</span>
                     <input
                       type="number"
-                      min="0"
-                      step="0.5"
                       value={exercise.kgs}
-                      onChange={(e) => handleExerciseChange(index, "kgs", Number(e.target.value))}
+                      placeholder="0"
+                      onChange={(e) => handleExerciseChange(index, "kgs", e.target.value)}
                       className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1 text-gray-800 font-medium outline-none focus:border-zinc-400"
                     />
                   </div>
