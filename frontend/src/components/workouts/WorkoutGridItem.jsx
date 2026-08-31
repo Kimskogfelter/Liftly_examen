@@ -1,8 +1,9 @@
 import React from "react";
+import Link from "react-router-dom";
 import { LuDumbbell } from "react-icons/lu";
 import { FiEdit2, FiTrash2, FiPlay } from "react-icons/fi";
 
-function WorkoutGridItem({ workout, onEdit, onDelete, onStart }) {
+function WorkoutGridItem({ workout, onEdit, onDelete, }) {
   return (
     <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between text-left group">
       <div>
@@ -41,13 +42,14 @@ function WorkoutGridItem({ workout, onEdit, onDelete, onStart }) {
       </div>
 
       {/* Starta pass-knapp */}
+      <Link to ={`/workouts/${workout._id}`} className="w-full">
       <button
-        onClick={() => onStart(workout)}
         className="w-full py-2.5 bg-zinc-900 hover:bg-black text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
       >
         <FiPlay size={13} className="fill-white" />
         <span>Start Workout</span>
       </button>
+      </Link>
     </div>
   );
 }
