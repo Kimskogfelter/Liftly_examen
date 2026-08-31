@@ -1,10 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
+const setSchema = new Schema({
+    reps: { type: Number, required: true, default: 10 },
+    kgs: { type: Number, required: true, default: 0 }
+});
+
 const exerciseSchema = new Schema({
     name: { type: String, required: true },
-    sets: { type: Number, required: true, default: 3 },
-    reps: { type: Number, required: true, default: 10 },
-    kgs: { type: Number, required: true, default: 0 } // Ändrade default till 0 kg
+    sets: [setSchema]
 });
 
 const workoutSchema = new Schema({
@@ -12,9 +15,9 @@ const workoutSchema = new Schema({
     day: { 
         type: String, 
         required: true,
-        enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] // Låser till giltiga dagar
+        enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     },
-    title: { type: String, required: true }, // ex: "Legs & Glutes", "Push Day", "Rest & Recovery"
+    title: { type: String, required: true },
     exercises: [exerciseSchema]
 }, { timestamps: true });
 
