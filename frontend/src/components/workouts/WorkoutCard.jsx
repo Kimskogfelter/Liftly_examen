@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import ProfileImage from "../users/ProfileImage";
 
-function WorkoutCard({ workout, handleEditWorkout, handleDeleteWorkout }) {
+function WorkoutCard({ workout, currentUser,handleEditWorkout, handleDeleteWorkout }) {
 
+    const token = currentUser?.token;
 
     // Initiera statet med övningarna som kom från backend
     const [exercises, setExercises] = useState(workout?.exercises || []);
