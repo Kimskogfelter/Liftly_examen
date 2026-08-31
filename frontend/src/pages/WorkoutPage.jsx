@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ProfileImage from "../components/users/ProfileImage";
 import CreateWorkoutForm from "../components/workouts/CreateWorkoutForm";
 import WorkoutGridItem from "../components/workouts/WorkoutGridItem";
 import { LuDumbbell } from "react-icons/lu";
