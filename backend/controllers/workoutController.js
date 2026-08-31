@@ -63,7 +63,7 @@ export const getWorkout = async (req, res, next) => {
             return next(new HttpError("Invalid workout ID", 400));
         }
 
-        const workout = await Workout.findById(workoutId);
+        const workout = await Workout.findById(workoutId).populate("createdBy", "username profileImage");
 
         if (!workout) {
             return next(new HttpError("Workout not found", 404));
