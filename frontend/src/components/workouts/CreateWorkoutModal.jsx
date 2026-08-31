@@ -3,7 +3,7 @@ import axios from "axios";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { LuDumbbell } from "react-icons/lu";
 
-function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
+function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
   const token = currentUser?.token;
 
   const [day, setDay] = useState("Monday");
@@ -259,4 +259,4 @@ function CreateWorkoutForm({ currentUser, onClose, onWorkoutCreated }) {
   );
 }
 
-export default CreateWorkoutForm;
+export default CreateWorkoutModal;

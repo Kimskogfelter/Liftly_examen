@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ProfileImage from "../users/ProfileImage";
 
-function WorkoutCard({ workout, currentUser,handleEditWorkout, handleDeleteWorkout }) {
+function WorkoutCard({ workout, currentUser, handleDeleteWorkout, handleEditWorkout }) {
 
     const token = currentUser?.token;
 
