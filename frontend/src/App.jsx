@@ -10,6 +10,7 @@ import SearchPage from './pages/SearchPage';
 import CategoryPage from './pages/CategoryPage';
 import HashtagPage from './pages/HashtagPage';
 import WorkoutPage from './pages/WorkoutPage';
+import SingleWorkoutPage from './pages/SingleWorkoutPage';
 import AppLayout from './components/layout/AppLayout';
 
 
@@ -63,10 +64,11 @@ function App() {
             <Route path="/savedPosts" element={currentUser ? <SavedPostsPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
             <Route path="/users/:userId" element={currentUser ? <ProfilePage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
             <Route path="/posts/:postId" element={currentUser ? <SinglePostPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
-            <Route path="/search" element={currentUser ? <SearchPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
-            <Route path="/category/:categoryName" element={currentUser ? <CategoryPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
-            <Route path="/hashtag/:hashtag" element={currentUser ? <HashtagPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
-            <Route path="/workouts" element={currentUser ? <WorkoutPage currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />} />
+            <Route path="/search" element={currentUser ? <SearchPage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/category/:categoryName" element={currentUser ? <CategoryPage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/hashtag/:hashtag" element={currentUser ? <HashtagPage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/workouts" element={currentUser ? <WorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/workouts/:workoutId" element={currentUser ? <SingleWorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           </Route>
 
         </Routes>
