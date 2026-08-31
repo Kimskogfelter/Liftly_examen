@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LuDumbbell } from "react-icons/lu";
 import { FiEdit2, FiTrash2, FiPlay } from "react-icons/fi";
 
