@@ -10,6 +10,7 @@ function WorkoutPage({ currentUser }) {
     const [error, setError] = useState("");
     const token = currentUser?.token;
     const [showCreateWorkoutModal, setShowCreateWorkoutModal] = useState(false);
+  
 
     const getWorkouts = async () => {
         try {
@@ -21,7 +22,7 @@ function WorkoutPage({ currentUser }) {
             );
             setWorkouts(response.data.workouts);
         } catch (err) {
-            setError("Kunde inte hämta dina träningspass.");
+            setError("Couldnt fetch workouts.");
         }
     };
 
@@ -29,9 +30,15 @@ function WorkoutPage({ currentUser }) {
         if (token) getWorkouts();
     }, [token]);
 
+    // Hantera skapande av nytt träningspass och uppdatera listan
     const handleWorkoutCreated = (newWorkout) => {
         setWorkouts([newWorkout, ...workouts]);
     };
+
+    // Hantera radering av träningspass och uppdatera listan
+    const handleDeleteWorkout = (workoutId) => {
+        setWorkouts(workouts.filter((workout) => workout._id !== workoutId));
+    }
 
     return (
         <section className="flex-1 p-6 max-w-2xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
@@ -87,7 +94,8 @@ function WorkoutPage({ currentUser }) {
                             <WorkoutGridItem
                                 key={workout._id}
                                 workout={workout}
-                            // onDelete={handleDeleteWorkout}
+                                handleDeleteWorkout={handleDeleteWorkout}
+                                currentUser={currentUser}
                             // onEdit={(w) => console.log("Edit workout:", w)}
                             // onSelect={(w) => console.log("Select workout:", w)}
                             />
