@@ -58,39 +58,42 @@ function HomePage({ currentUser, setCurrentUser }) {
 
   return (
     <>
-      <section className="flex-1 max-w-5xl mx-auto pb-10">
+      <section className="flex-1 max-w-xl mx-auto pb-10">
         {/* {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>} */}
 
         {/* TABS */}
-        <div className="sticky top-0 bg-white z-30 flex border-b border-gray-100 mb-6 px-4 py-2">
-          {/* ALL BUTTON */}
-          <button
-            onClick={() => setActiveTab("posts")}
-            className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${
-              activeTab === "posts"
-                ? "border-gray-800 text-gray-800"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-              }`}
-          >
-            All
-          </button>
+        <div className="sticky top-0 bg-white/80 backdrop-blur-md z-30 mb-6">
+          <div className="max-w-xl mx-auto flex border-b border-gray-100">
 
-          {/* FOLLOWING BUTTON */}
-          <button
-            onClick={() => setActiveTab("following")}
-            className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${
-              activeTab === "following"
-                ? "border-gray-800 text-gray-800"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-              }`}
-          >
-            Following
-          </button>
+            {/* ALL BUTTON */}
+            <button
+              onClick={() => setActiveTab("posts")}
+              className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${activeTab === "posts"
+                  ? "border-gray-800 text-gray-800"
+                  : "border-transparent text-gray-400 hover:text-gray-600"
+                }`}
+            >
+              All
+            </button>
+
+            {/* FOLLOWING BUTTON */}
+            <button
+              onClick={() => setActiveTab("following")}
+              className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${activeTab === "following"
+                  ? "border-gray-800 text-gray-800"
+                  : "border-transparent text-gray-400 hover:text-gray-600"
+                }`}
+            >
+              Following
+            </button>
+          </div>
         </div>
 
         {/* render post feed component to display posts */}
         {activeTab === "following" && followingPosts.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center mt-10">No posts from users you follow yet.</p>
+          <p className="text-gray-400 text-sm text-center mt-10">
+            No posts from users you follow yet.
+          </p>
         ) : (
           <PostFeed
             posts={activeTab === "posts" ? posts : followingPosts}
