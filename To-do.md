@@ -25,8 +25,8 @@
   - [ ] Bygga funktion för att skapa och spara egna träningspass som enkelt kan plockas fram och loggas under gympasset. Namnge som "Workouts" i navmeny
 - Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
 
-## UI & Design (Frontend)
-
+## UI & Design (Frontend/Backend)
+- [ ] skapa reply schema, controller etc för kommentarer så användare kan svara på varandras kommentarer på inlägg
 
 
 ## ✅ Redan Klart
