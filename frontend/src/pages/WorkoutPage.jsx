@@ -10,7 +10,16 @@ function WorkoutPage({ currentUser }) {
     const [error, setError] = useState("");
     const token = currentUser?.token;
     const [showCreateWorkoutModal, setShowCreateWorkoutModal] = useState(false);
-  
+    const DAYS_ORDER = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ];
+
 
     const getWorkouts = async () => {
         try {
@@ -44,6 +53,11 @@ function WorkoutPage({ currentUser }) {
     const handleDeleteWorkout = (workoutId) => {
         setWorkouts(workouts.filter((workout) => workout._id !== workoutId));
     }
+
+    // Hjälpfunktion för att sortera träningspass efter veckodag
+    const sortedWorkouts = [...workouts].sort((a, b) => {
+        return DAYS_ORDER.indexOf(a.day) - DAYS_ORDER.indexOf(b.day);
+    });
 
     return (
         <section className="flex-1 p-6 max-w-2xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
@@ -95,7 +109,7 @@ function WorkoutPage({ currentUser }) {
                     </div>
                 ) : (
                     <div className="flex flex-col gap-3 pt-2">
-                        {workouts.map((workout) => (
+                        {sortedWorkouts.map((workout) => (
                             <WorkoutGridItem
                                 key={workout._id}
                                 workout={workout}
