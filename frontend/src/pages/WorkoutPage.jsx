@@ -35,6 +35,11 @@ function WorkoutPage({ currentUser }) {
         setWorkouts([newWorkout, ...workouts]);
     };
 
+    // Hantera redigering av träningspass och uppdatera listan
+    const handleEditWorkout = (updatedWorkout) => {
+        setWorkouts(workouts.map((workout) => workout._id === updatedWorkout._id ? updatedWorkout : workout));
+    };
+
     // Hantera radering av träningspass och uppdatera listan
     const handleDeleteWorkout = (workoutId) => {
         setWorkouts(workouts.filter((workout) => workout._id !== workoutId));
@@ -94,10 +99,10 @@ function WorkoutPage({ currentUser }) {
                             <WorkoutGridItem
                                 key={workout._id}
                                 workout={workout}
+                                handleEditWorkout={handleEditWorkout}
                                 handleDeleteWorkout={handleDeleteWorkout}
                                 currentUser={currentUser}
-                            // onEdit={(w) => console.log("Edit workout:", w)}
-                            // onSelect={(w) => console.log("Select workout:", w)}
+
                             />
                         ))}
                     </div>
