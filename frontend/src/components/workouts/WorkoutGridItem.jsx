@@ -5,9 +5,9 @@ import { LuDumbbell } from "react-icons/lu";
 import { FiEdit2, FiTrash2, FiPlay } from "react-icons/fi";
 
 import DeleteWorkoutModal from "./DeleteWorkoutModal";
-// import EditWorkoutForm from "./EditWorkoutForm"; 
+import EditWorkoutModal from "./EditWorkoutModal";
 
-function WorkoutGridItem({ workout, handleDeleteWorkout, currentUser }) {
+function WorkoutGridItem({ workout, handleDeleteWorkout, handleEditWorkout, currentUser }) {
   const [showEditWorkoutModal, setShowEditWorkoutModal] = useState(false);
   const [showDeleteWorkoutModal, setShowDeleteWorkoutModal] = useState(false);
 
@@ -60,18 +60,18 @@ function WorkoutGridItem({ workout, handleDeleteWorkout, currentUser }) {
       </div>
 
       {/* --- EDIT WORKOUT MODAL PORTAL --- */}
-      {/* {showEditWorkoutModal &&
+      {showEditWorkoutModal &&
         createPortal(
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
-            <EditWorkoutForm
+            <EditWorkoutModal
               currentUser={currentUser}
               workout={workout}
-              onWorkoutUpdated={onWorkoutUpdated}
+              handleEditWorkout={handleEditWorkout}
               onClose={() => setShowEditWorkoutModal(false)}
             />
           </div>,
           document.body
-        )} */}
+        )}
 
       {/* --- DELETE WORKOUT MODAL PORTAL --- */}
       {showDeleteWorkoutModal &&
