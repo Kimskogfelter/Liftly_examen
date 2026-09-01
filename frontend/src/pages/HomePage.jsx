@@ -72,7 +72,7 @@ function HomePage({ currentUser, setCurrentUser }) {
                 : "border-transparent text-gray-400 hover:text-gray-600"
               }`}
           >
-            All ({posts.length})
+            All
           </button>
 
           {/* FOLLOWING BUTTON */}
@@ -84,7 +84,7 @@ function HomePage({ currentUser, setCurrentUser }) {
                 : "border-transparent text-gray-400 hover:text-gray-600"
               }`}
           >
-            Following ({followingPosts.length})
+            Following
           </button>
         </div>
 
