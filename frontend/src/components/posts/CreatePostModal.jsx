@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiImage } from "react-icons/fi";
 import { IoCloseCircle } from "react-icons/io5";
+import { BsSpotify } from "react-icons/bs";
 // Import the tag-input component
 import { TagsInput } from "react-tag-input-component";
 
@@ -13,6 +14,8 @@ function CreatePostModal({ currentUser, onClose }) {
   const [content, setContent] = useState("");
   const [media, setMedia] = useState([]);
   const [hashtags, setHashtags] = useState([]);
+  const [spotifyUrl, setSpotifyUrl] = useState(null);
+  const [showSpotifyInput, setShowSpotifyInput] = useState(false);
   const [category, setCategory] = useState("General");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -35,6 +38,10 @@ function CreatePostModal({ currentUser, onClose }) {
       // CATEGORY
       // Always append category because backend needs it to add post to correct category IF chosen
       formData.append('category', category);
+
+      // SPOTIFY URL
+      // Append spotifyUrl if it exists, otherwise append an empty string
+      formData.append('spotifyUrl', spotifyUrl || "");
 
       // HASHTAGS
       // FormData only accepts strings or files. We use JSON.stringify to convert 
@@ -60,6 +67,7 @@ function CreatePostModal({ currentUser, onClose }) {
 
       // Reset form fields and error message
       setContent("");
+      setSpotifyUrl(null);
       setMedia([]);
       setHashtags([]);
       setCategory("General");
@@ -159,74 +167,114 @@ function CreatePostModal({ currentUser, onClose }) {
               </div>
             )}
 
-            {/* Footer Row: Media button, Category dropdown, and Action buttons */}
-              {/* MEDIA & CATEGORY options row */}
-              <div className="flex items-center gap-2 pt-2">
-                {/* Media upload button */}
-                <label htmlFor="media" className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
-                  <FiImage size={15} className="text-zinc-800" />
-                  <span>Media</span>
+            {/* SPOTIFY INPUT FIELD (Visas när man klickat på Spotify-knappen) */}
+            {showSpotifyInput && (
+              <div className="relative flex items-center gap-2">
+                <div className="relative flex-1">
+                  <BsSpotify size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" />
                   <input
-                    className="hidden"
-                    type="file"
-                    name="media"
-                    id="media"
-                    accept="image/*,video/*"
-                    multiple
-                    onChange={(e) => {
-                      if (e.target.files.length > 0) {
-                        const chosenFiles = Array.from(e.target.files);
-                        setMedia([...media, ...chosenFiles]);
-                        setError("");
-                      }
-                    }}
+                    type="text"
+                    placeholder="Paste Spotify track, playlist or album URL..."
+                    value={spotifyUrl || ""}
+                    onChange={(e) => setSpotifyUrl(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 text-xs border border-zinc-200 rounded-lg bg-gray-50/30 focus:outline-none focus:border-emerald-500 transition-colors"
                   />
-                </label>
-
-                {/* Category Dropdown */}
-                <div className="relative shrink-0">
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 pr-7 rounded-lg appearance-none cursor-pointer outline-none transition-colors"
-                  >
-                    <option value="General">Category: General</option>
-                    <option value="Breakfast">Category: Breakfast</option>
-                    <option value="Lunch & Dinner">Category: Lunch & Dinner</option>
-                    <option value="Desserts">Category: Desserts</option>
-                    <option value="Candy">Category: Candy</option>
-                    <option value="Snacks">Category: Snacks</option>
-                    <option value="Supplements">Category: Supplements</option>
-                    <option value="Training">Category: Training</option>
-                    <option value="Cardio">Category: Cardio</option>
-                    <option value="Lifting">Category: Lifting</option>
-                    <option value="Music">Category: Music</option>
-                    <option value="Activewear">Category: Activewear</option>
-                    <option value="Mindset & Recovery">Category: Mindset & Recovery</option>
-                    <option value="Helpme">Category: Helpme</option>
-                  </select>
-                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500 text-[8px]">▼</span>
                 </div>
-              </div>
-
-              {/* Action buttons row (CANCEL & POST) */}
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100 mt-3">
+                {/* Rensa / Stäng knapp */}
                 <button
                   type="button"
-                  onClick={onClose}
-                  className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-1.5 px-3.5 rounded-lg transition-colors cursor-pointer text-xs"
+                  onClick={() => {
+                    setSpotifyUrl(null);
+                    setShowSpotifyInput(false);
+                  }}
+                  className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-4 rounded-lg transition-colors cursor-pointer text-xs shadow-sm"
-                >
-                  Post
+                  <IoCloseCircle size={18} />
                 </button>
               </div>
+            )}
 
-           
+            {/* Footer Row: Media button, Category dropdown and Action buttons */}
+            {/* MEDIA & CATEGORY options row */}
+            <div className="flex items-center gap-2 pt-2">
+              {/* Media upload button */}
+              <label htmlFor="media" className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
+                <FiImage size={15} className="text-zinc-800" />
+                <span>Media</span>
+                <input
+                  className="hidden"
+                  type="file"
+                  name="media"
+                  id="media"
+                  accept="image/*,video/*"
+                  multiple
+                  onChange={(e) => {
+                    if (e.target.files.length > 0) {
+                      const chosenFiles = Array.from(e.target.files);
+                      setMedia([...media, ...chosenFiles]);
+                      setError("");
+                    }
+                  }}
+                />
+              </label>
+
+              {/* Spotify Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setShowSpotifyInput((prev) => !prev)}
+                className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${spotifyUrl || showSpotifyInput
+                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                    : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
+                  }`}
+              >
+                <BsSpotify size={15} className={spotifyUrl || showSpotifyInput ? "text-emerald-500" : "text-zinc-800"} />
+                <span>Spotify</span>
+              </button>
+              
+              {/* Category Dropdown */}
+              <div className="relative shrink-0">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 pr-7 rounded-lg appearance-none cursor-pointer outline-none transition-colors"
+                >
+                  <option value="General">Category: General</option>
+                  <option value="Breakfast">Category: Breakfast</option>
+                  <option value="Lunch & Dinner">Category: Lunch & Dinner</option>
+                  <option value="Desserts">Category: Desserts</option>
+                  <option value="Candy">Category: Candy</option>
+                  <option value="Snacks">Category: Snacks</option>
+                  <option value="Supplements">Category: Supplements</option>
+                  <option value="Training">Category: Training</option>
+                  <option value="Cardio">Category: Cardio</option>
+                  <option value="Lifting">Category: Lifting</option>
+                  <option value="Music">Category: Music</option>
+                  <option value="Activewear">Category: Activewear</option>
+                  <option value="Mindset & Recovery">Category: Mindset & Recovery</option>
+                  <option value="Helpme">Category: Helpme</option>
+                </select>
+                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500 text-[8px]">▼</span>
+              </div>
+            </div>
+
+            {/* Action buttons row (CANCEL & POST) */}
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100 mt-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-1.5 px-3.5 rounded-lg transition-colors cursor-pointer text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-4 rounded-lg transition-colors cursor-pointer text-xs shadow-sm"
+              >
+                Post
+              </button>
+            </div>
+
+
           </form>
         </div>
       </div>
