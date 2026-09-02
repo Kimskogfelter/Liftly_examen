@@ -10,11 +10,22 @@ import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa";
 
+// Function to convert Spotify URL to embeddable format
+const createSpotifyEmbedUrl = (url) => {
+    if (!url) return null;
+    const match = url.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+    return match ? `https://open.spotify.com/embed/${match[1]}/${match[2]}` : null;
+};
+
 function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDeletePost, getSavedPosts, isDetailView }) {
+
     const [showPostActions, setShowPostActions] = useState(false);
     const [likesCount, setLikesCount] = useState(post.likes?.length || 0);
     const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUser?.id) || false);
     const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.map(String).includes(String(post._id)) || false);
+
+    // spotify embed URL for the post if it exists
+    const spotifyEmbedUrl = post.spotifyUrl ? createSpotifyEmbedUrl(post.spotifyUrl) : null;
 
     // State to keep track of the currently active media index
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
@@ -111,13 +122,13 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                                 loop={true}
                                                 playsInline={true}
                                                 muted={true}
-                                                className="w-full h-auto max-h-125 object-contain"
+                                                className="w-full h-auto max-h-80 object-contain"
                                             />
                                         ) : (
                                             <img
                                                 src={currentMediaUrl}
                                                 alt="Post media"
-                                                className="w-full h-auto max-h-125 object-contain"
+                                                className="w-full h-auto max-h-80 object-contain"
                                                 onError={(e) => {
                                                     e.currentTarget.style.display = "none";
                                                 }}
@@ -170,6 +181,19 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 </div>
                             )}
                         </Link>
+                        {/* 🎵 SPOTIFY EMBED PLAYER */}
+                        {spotifyEmbedUrl && (
+                            <div className="mt-2 mb-1 overflow-hidden rounded-lg border border-gray-100 shadow-2xs">
+                                <iframe
+                                    src={spotifyEmbedUrl}
+                                    width="100%"
+                                    height="80"
+                                    frameBorder="0"
+                                    allow="encrypted-media"
+                                    className="w-full block"
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 
