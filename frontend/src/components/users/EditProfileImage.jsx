@@ -1,13 +1,12 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { SlPicture } from "react-icons/sl";
 
 function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo }) {
 
-    const navigate = useNavigate();
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState(currentUser?.profileImage || null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
 
     // function to edit profile image
@@ -19,6 +18,7 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
             setError("Please select an image first.");
             return;
         }
+        setIsSubmitting(true); // show "Uploading..." on button while Axios is working
 
         try {
 
@@ -46,19 +46,23 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
                 setCurrentUser(updatedUser);
                 localStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
-                // run getUserInfo function from profile page to make a new get request to backend to update profile image directly
-                await getUserInfo();
+                // close the EditProfileImage component after successful update
+                onClose();
 
+                // run getUserInfo function from profile page to make a new get request to backend to update profile image directly
+                if (getUserInfo) getUserInfo();
+               
             }
 
-            // close the EditProfileImage component after successful update
-            onClose();
+
 
         } catch (err) {
 
             // handle errors and display error message to user
             const errorResponse = err.response?.data;
             setError(errorResponse?.message || "Your post could not be updated. Please try again.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -79,7 +83,11 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
                                 {/* IF profile image is choosen, display choosen image in preview */}
                                 {profileImage ? (
                                     <img
-                                        src={URL.createObjectURL(profileImage)}
+                                        src={
+                                            profileImage instanceof File
+                                                ? URL.createObjectURL(profileImage) // When a new image is selected, show the preview of the selected file
+                                                : profileImage                       // When the profileImage is a URL (from currentUser), display the existing image
+                                        }
                                         alt="Preview"
                                         className="w-full h-full rounded-full object-cover border border-gray-200 shadow-sm"
                                     />
@@ -125,16 +133,19 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
                             <button
                                 type="button"
                                 onClick={onClose}
+                                disabled={isSubmitting}
                                 className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-1.5 px-3 rounded-md transition-colors cursor-pointer text-xs"
                             >
                                 Cancel
                             </button>
-                            <button
-                                type="submit"
-                                className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-3 rounded-md transition-colors cursor-pointer text-xs shadow-sm"
-                            >
-                                Update Profile Image
-                            </button>
+                           {/* Button that shows "Uploading..." when submitting */}
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-3 rounded-md transition-colors cursor-pointer text-xs shadow-sm disabled:opacity-50 flex items-center gap-2"
+                        >
+                            {isSubmitting ? "Uploading..." : "Update Profile Image"}
+                        </button>
                         </div>
                     </form>
                 </div>
