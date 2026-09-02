@@ -22,7 +22,7 @@ export const createPost = async (req, res, next) => {
         }
 
         // get inputs from frontend
-        const { content, hashtags, category } = req.body;
+        const { content, hashtags, category, spotifyUrl } = req.body;
 
         // --------- media -----------
         let mediaFiles = req.files ? req.files.map(file => file.path) : [];
@@ -41,7 +41,8 @@ export const createPost = async (req, res, next) => {
         const postObject = {
             createdBy: user._id,
             hashtags: parsedHashtags,
-            category: category || "General"
+            category: category || "General",
+            spotifyUrl: spotifyUrl || ""
         };
 
         // 3. Add CONTENT only if user have written text
