@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import CreatePostForm from "../posts/CreatePostForm";
+import CreatePostModal from "../posts/CreatePostModal";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
@@ -19,7 +19,7 @@ function AppLayout({ currentUser, setCurrentUser }) {
             {/* render CreatePost component when showCreatePost is true */}
             {
                 showCreatePost && (
-                    <CreatePostForm
+                    <CreatePostModal
                         currentUser={currentUser}
                         onClose={() => setShowCreatePost(false)}
                     />

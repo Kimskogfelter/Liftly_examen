@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
+function EditPostModal({ onClose, handleEditPost, post, currentUser }) {
 
   const postId = post._id;
   const navigate = useNavigate();
@@ -103,4 +103,4 @@ function EditPostForm({ onClose, handleEditPost, post, currentUser }) {
   );
 }
 
-export default EditPostForm;
+export default EditPostModal;

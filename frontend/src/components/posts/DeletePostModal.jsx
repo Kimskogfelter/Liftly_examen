@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-function DeletePostForm({ post, onClose, currentUser, handleDeletePost }) {
+function DeletePostModal({ post, onClose, currentUser, handleDeletePost }) {
 
   const token = currentUser.token;
   const [error, setError] = useState("");
@@ -77,4 +77,4 @@ function DeletePostForm({ post, onClose, currentUser, handleDeletePost }) {
   )
 }
 
-export default DeletePostForm;
+export default DeletePostModal;

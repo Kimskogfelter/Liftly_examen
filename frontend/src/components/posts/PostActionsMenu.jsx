@@ -2,12 +2,12 @@ import React from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom"; // Import createPortal to break out of the DOM hierarchy
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
-import EditPostForm from "./EditPostForm";
-import DeletePostForm from "./DeletePostForm";
+import EditPostModal from "./EditPostModal";
+import DeletePostModal from "./DeletePostModal";
 
 function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, closeMenu }) {
-    const [showEditPostForm, setShowEditPostForm] = useState(false);
-    const [showDeletePostForm, setShowDeletePostForm] = useState(false);
+    const [showEditPostModal, setShowEditPostModal] = useState(false);
+    const [showDeletePostModal, setShowDeletePostModal] = useState(false);
 
     return (
         <>
@@ -16,7 +16,7 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
                 <button
                     onClick={(e) => {
                         e.preventDefault();
-                        setShowEditPostForm(true);
+                        setShowEditPostModal(true);
                     }}
                     title="Edit post"
                     className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400 cursor-pointer"
@@ -28,7 +28,7 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
                 <button
                     onClick={(e) => {
                         e.preventDefault();
-                        setShowDeletePostForm(true);
+                        setShowDeletePostModal(true);
                     }}
                     title="Delete post"
                     className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-300 cursor-pointer"
@@ -38,15 +38,15 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
             </div>
 
             {/* Using React Portals to render the overlays directly into document.body */}
-            {showEditPostForm && createPortal(
+            {showEditPostModal && createPortal(
                 <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 p-4 whitespace-normal">
                     <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
-                        <EditPostForm 
+                        <EditPostModal 
                             currentUser={currentUser} 
                             post={post} 
                             handleEditPost={handleEditPost} 
                             onClose={() => {
-                                setShowEditPostForm(false);
+                                setShowEditPostModal(false);
                                 closeMenu();
                             }} 
                         />
@@ -55,15 +55,15 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
                 document.body
             )}
 
-            {showDeletePostForm && createPortal(
+            {showDeletePostModal && createPortal(
                 <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 p-4 whitespace-normal">
                     <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
-                        <DeletePostForm 
+                        <DeletePostModal 
                             currentUser={currentUser} 
                             post={post} 
                             handleDeletePost={handleDeletePost} 
                             onClose={() => {
-                                setShowDeletePostForm(false);
+                                setShowDeletePostModal(false);
                                 closeMenu();
                             }} 
                         />

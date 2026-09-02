@@ -7,7 +7,7 @@ import { IoCloseCircle } from "react-icons/io5";
 // Import the tag-input component
 import { TagsInput } from "react-tag-input-component";
 
-function CreatePostForm({ currentUser, onClose }) {
+function CreatePostModal({ currentUser, onClose }) {
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
   const token = currentUser?.token;
   const [content, setContent] = useState("");
@@ -234,4 +234,4 @@ function CreatePostForm({ currentUser, onClose }) {
   );
 }
 
-export default CreatePostForm;
+export default CreatePostModal;
