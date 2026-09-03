@@ -27,7 +27,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
     // 2. Ändra reps eller kgs för ett enskilt set
     const handleSetChange = (exIndex, setIndex, field, value) => {
         const updated = [...exercises];
-        updated[exIndex].sets[setIndex][field] = Number(value);
+        updated[exIndex].sets[setIndex][field] = value;
         setExercises(updated);
     };
 
@@ -56,6 +56,16 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
         setExercises(updated);
     };
 
+    // 7. Sanera övningarna så reps och kgs blir rena siffror innan de skickas
+    const sanitizedExercises = exercises.map((ex) => ({
+        ...ex,
+        sets: ex.sets.map((s) => ({
+            ...s,
+            reps: Number(s.reps) || 0,
+            kgs: Number(s.kgs) || 0,
+        })),
+    }));
+
     // --- SUBMIT ---
     // 1. Skickar ändringarna till backend
     const editWorkout = async (e) => {
@@ -66,7 +76,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
         try {
             const response = await axios.patch(
                 `${import.meta.env.VITE_API_URL}/workouts/${workoutId}/update`,
-                { title, day, exercises },
+                { title, day, exercises: sanitizedExercises },
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }
@@ -152,8 +162,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                                             {/* Reps */}
                                             <input
                                                 type="number"
-                                                min="1"
-                                                value={set.reps}
+                                                value={set.reps ?? ""}
                                                 onChange={(e) => handleSetChange(exIndex, setIndex, "reps", e.target.value)}
                                                 className="w-16 bg-white border border-zinc-200 rounded p-1 text-center"
                                             />
@@ -162,9 +171,8 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                                             {/* Weight (kgs) */}
                                             <input
                                                 type="number"
-                                                min="0"
                                                 step="0.5"
-                                                value={set.kgs}
+                                                value={set.kgs ?? ""}
                                                 onChange={(e) => handleSetChange(exIndex, setIndex, "kgs", e.target.value)}
                                                 className="w-16 bg-white border border-zinc-200 rounded p-1 text-center"
                                             />
