@@ -24,6 +24,9 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
     const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUser?.id) || false);
     const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.map(String).includes(String(post._id)) || false);
 
+    // State to manage the selected image for the fullsize modal
+    const [fullsizeImage, setFullsizeImage] = useState(null);
+
     // spotify embed URL for the post if it exists
     const spotifyEmbedUrl = post.spotifyUrl ? createSpotifyEmbedUrl(post.spotifyUrl) : null;
 
@@ -128,7 +131,14 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                             <img
                                                 src={currentMediaUrl}
                                                 alt="Post media"
-                                                className="w-full h-auto max-h-80 object-contain"
+                                                className={`w-full h-auto max-h-80 object-contain ${isDetailView ? "cursor-zoom-in" : ""
+                                                    }`}
+                                                onClick={(e) => {
+                                                    if (isDetailView) {
+                                                        e.preventDefault(); // Stoppa Link-navigering om den ligger inom en Link
+                                                        setFullsizeImage(currentMediaUrl);
+                                                    }
+                                                }}
                                                 onError={(e) => {
                                                     e.currentTarget.style.display = "none";
                                                 }}
@@ -233,6 +243,32 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         </button>
                     </div>
                 </div>
+
+                {/* FULLSIZE IMAGE MODAL */}
+                {fullsizeImage && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-150"
+                        onClick={() => setFullsizeImage(null)}
+                    >
+                        <div className="relative max-w-5xl max-h-[90vh] flex items-center justify-center">
+                            {/* Stäng-knapp */}
+                            <button
+                                onClick={() => setFullsizeImage(null)}
+                                className="absolute -top-10 right-0 text-white/80 hover:text-white p-2 rounded-full cursor-pointer"
+                            >
+                                <FiX size={24} />
+                            </button>
+
+                            {/* Förstorad bild */}
+                            <img
+                                src={fullsizeImage}
+                                alt="Fullsize preview"
+                                className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                                onClick={(e) => e.stopPropagation()} // Förhindrar stängning vid klick på själva bilden
+                            />
+                        </div>
+                    </div>
+                )}
             </section>
         </>
     );
