@@ -5,17 +5,11 @@ import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
 import { handlePostLikeToggle } from "../../functions/handlePostLikeToggle";
 import { handleSavePost } from "../../functions/handleSavePost";
+import { createSpotifyEmbedUrl } from "../../functions/spotify";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa";
-
-// Function to convert Spotify URL to embeddable format
-const createSpotifyEmbedUrl = (url) => {
-    if (!url) return null;
-    const match = url.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
-    return match ? `https://open.spotify.com/embed/${match[1]}/${match[2]}` : null;
-};
 
 function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDeletePost, getSavedPosts, isDetailView }) {
 
@@ -60,7 +54,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
             {/* Outer card wrapper with dynamic height (h-auto) for seamless text and media layout */}
             <section className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
-                    {/* Display user information */}
+                    {/* DISPLAY USER INFORMATION */}
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-full overflow-hidden">
@@ -71,7 +65,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             </Link>
                         </div>
 
-                        {/* Post actions menu */}
+                        {/* POST ACTIONS MENU */}
                         {post.createdBy?._id === currentUser?.id && (
                             <div className="relative flex items-center justify-center">
 
@@ -103,7 +97,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     </div>
 
                     <div>
-                        {/* Hashtags */}
+                        {/* HASHTAGS */}
                         <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
                             {post.hashtags?.map((hashtag, index) => (
                                 <Link key={index} to={`/hashtag/${hashtag.replace('#', '')}`} className="px-1 py-0.5 rounded cursor-pointer transition-colors hover:underline">
@@ -112,10 +106,11 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             ))}
                         </div>
 
-                        {/* Post content wrapper */}
+                        {/* POST CONTENT WRAPPER */}
                         <Link to={`/posts/${post._id}`} className="block group mb-3 text-left">
                             {hasMedia ? (
                                 <>
+                                    {/* MEDIA */}
                                     {/* Media slider container - Edge-to-edge layout with dynamic height */}
                                     <div className="relative w-[calc(100%+2rem)] -mx-4 -mt-1 mb-3 bg-black/90 flex items-center justify-center overflow-hidden">
                                         {isVideo ? (
@@ -177,6 +172,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                         )}
                                     </div>
 
+                                    {/* POST CONTENT TEXT */}
                                     {/* Post content text for media posts */}
                                     <p className={`${isDetailView ? "" : "line-clamp-3"} text-xs text-gray-800 font-normal px-1`}>
                                         {post.content}
@@ -208,7 +204,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                 </div>
 
                 <div>
-                    {/* Display post information */}
+                    {/* DISPLAY INFORMATION */}
                     <p className="text-[10px] text-gray-400 mb-2"><TimeAgo date={post.createdAt} /></p>
                     {/* Category badge */}
                     <span className="inline-block bg-zinc-100 text-zinc-600 text-[11px] font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">
@@ -219,7 +215,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     {/* Footer Row containing actions and metrics */}
                     <div className="flex items-center justify-between pt-0.5">
                         <div className="flex items-center gap-5">
-                            {/* Display post likes */}
+                            {/* DISPLAY LIKES */}
                             <div className="flex items-center gap-1.5">
                                 <button
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
@@ -230,14 +226,14 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 <span className="font-medium text-xs text-gray-700">{likesCount}</span>
                             </div>
 
-                            {/* Display comment count */}
+                            {/* DISPLAY COMMENT COUNT */}
                             <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-lg">
                                 <FiMessageCircle size={18} />
                                 <span className="font-medium text-xs text-gray-700">{post.comments?.length || 0}</span>
                             </Link>
                         </div>
 
-                        {/* Save / Bookmark Button */}
+                        {/* SAVE / BOOKMARK BUTTON */}
                         <button onClick={() => handleSavePost(isSaved, setIsSaved, post, currentUser, setCurrentUser, getSavedPosts)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
                             {isSaved ? <FaBookmark size={18} /> : <FiBookmark size={18} />}
                         </button>
@@ -246,28 +242,8 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
                 {/* FULLSIZE IMAGE MODAL */}
                 {fullsizeImage && (
-                    <div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-150"
-                        onClick={() => setFullsizeImage(null)}
-                    >
-                        <div className="relative max-w-5xl max-h-[90vh] flex items-center justify-center">
-                            {/* Stäng-knapp */}
-                            <button
-                                onClick={() => setFullsizeImage(null)}
-                                className="absolute -top-10 right-0 text-white/80 hover:text-white p-2 rounded-full cursor-pointer"
-                            >
-                                <FiX size={24} />
-                            </button>
 
-                            {/* Förstorad bild */}
-                            <img
-                                src={fullsizeImage}
-                                alt="Fullsize preview"
-                                className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
-                                onClick={(e) => e.stopPropagation()} // Förhindrar stängning vid klick på själva bilden
-                            />
-                        </div>
-                    </div>
+                    <FullsizeImageModal imageUrl={fullsizeImage} onClose={() => setFullsizeImage(null)} />
                 )}
             </section>
         </>
