@@ -92,8 +92,12 @@ export const getPost = async (req, res, next) => {
             // path is needed because we use the sorting option, if not path would not be required
             // second nested populate replaces the createdBy ObjectId with username and profile image
             .populate({
-                path: "comments", options: { sort: { createdAt: -1 } },
-                populate: { path: "createdBy", select: "username profileImage" }
+                path: "comments",
+                options: { sort: { createdAt: -1 } },
+                populate: [
+                    { path: "createdBy", select: "username profileImage" },
+                    { path: "replies.createdBy", select: "username profileImage" }
+                ]
             });
 
         // check if post doesnt exists
@@ -247,7 +251,7 @@ export const getCategoryPosts = async (req, res, next) => {
 
         // 2. Fetch post based on category filter
         const posts = await Post.find(queryFilter)
-            .populate("createdBy", "username profileImage") 
+            .populate("createdBy", "username profileImage")
             .sort({ createdAt: -1 });
 
         // 3. If NO posts found
@@ -256,8 +260,8 @@ export const getCategoryPosts = async (req, res, next) => {
         }
 
         // 4. Return list with posts
-        return res.status(200).json({ 
-            message: "Posts found successfully", 
+        return res.status(200).json({
+            message: "Posts found successfully",
             getAllPosts: posts
         });
 
@@ -286,10 +290,10 @@ export const getHashtagPosts = async (req, res, next) => {
         const posts = await Post.find({
             hashtags: { $in: [cleanTag, `#${cleanTag}`] }
         })
-        .populate("createdBy", "username profileImage")
-        .sort({ createdAt: -1 });
+            .populate("createdBy", "username profileImage")
+            .sort({ createdAt: -1 });
 
-         // 5. If NO posts found
+        // 5. If NO posts found
         if (posts.length === 0) {
             return next(new HttpError(`No posts found with hashtag: #${cleanTag}`, 404));
         }
@@ -588,7 +592,7 @@ export const updatePost = async (req, res, next) => {
 
 
     } catch (error) {
-        
+
         return next(new HttpError(error))
     }
 
