@@ -92,7 +92,12 @@ export const getComment = async (req, res, next) => {
 
         // use populate to display data from another model "User"
         // only shows username and profile image in "createdBy" insted of objectId
-        const comment = await Comment.findById(commentId).populate("createdBy", "username profileImage");
+        const comment = await Comment.findById(commentId)
+            .populate("createdBy", "username profileImage")
+            .populate({
+                path: "replies.createdBy",
+                select: "username profileImage"
+            });
 
         // check if comment doesnt exists
         if (!comment) {
@@ -143,6 +148,10 @@ export const getComments = async (req, res, next) => {
         // fetch all comments from current postId
         const getAllComments = await Comment.find({ post: postId })
             .populate("createdBy", "username profileImage")
+            .populate({
+                path: "replies.createdBy",
+                select: "username profileImage"
+            })
             .limit(20)
             .sort({ createdAt: -1 })
 
@@ -161,6 +170,60 @@ export const getComments = async (req, res, next) => {
 
 }
 
+// ---------------------------- REPLY TO COMMENT --------------------------- 
+// POST req: api/posts/comments/:commentId/reply
+// PROTECTED
+
+export const replyComment = async (req, res, next) => {
+    try {
+        const { commentId } = req.params;
+        const { content } = req.body;
+
+        // Validera input
+        if (!content) {
+            return next(new HttpError("Fill in content", 422));
+        }
+
+        // Check comment id
+        if (!mongoose.Types.ObjectId.isValid(commentId)) {
+            return res.status(404).json({ message: 'Comment Id is not valid' });
+        }
+
+        // Check if comment exists
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+            return next(new HttpError("Comment not found", 404));
+        }
+
+        // Skapa nytt reply-objekt
+        const newReply = {
+            createdBy: req.user.id,
+            content: content
+        };
+
+        // Pusha svaret till kommentarens replies-array och spara
+        comment.replies.push(newReply);
+        await comment.save();
+
+        // Populate replies.createdBy så frontend får med skaparens bild & namn direkt i responset
+        await comment.populate({
+            path: "replies.createdBy",
+            select: "username profileImage"
+        });
+
+        // Hämta det nyss skapade svaret (det sista i arrayen)
+        const addedReply = comment.replies[comment.replies.length - 1];
+
+        return res.status(201).json({ 
+            message: "Reply added successfully", 
+            reply: addedReply,
+            comment 
+        });
+
+    } catch (error) {
+        return next(new HttpError(error));
+    }
+};
 
 
 // ---------------------------- LIKE COMMENT --------------------------- 
