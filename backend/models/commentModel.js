@@ -13,7 +13,7 @@ const commentSchema = new Schema({
     content: { type: String, required: true },
     post: { type: Schema.Types.ObjectId, ref: "Post", required: true },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    replies: [replySchema] // Bäddar in svar-schemat här
+    replies: [replySchema]
 }, { timestamps: true });
 
 export const Comment = mongoose.model('Comment', commentSchema);
