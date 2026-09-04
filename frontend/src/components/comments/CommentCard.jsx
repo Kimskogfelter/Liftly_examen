@@ -17,7 +17,7 @@ function CommentCard({ comment, currentUser }) {
 
                 {/* Profile image */}
                 <div className="w-8 h-8 rounded-full overflow-hidden object-cover shrink-0">
-                    <ProfileImage image={comment.createdBy?.profileImage} />
+                    <ProfileImage profileImage={comment.createdBy?.profileImage} />
                 </div>
 
                 {/* Comment content container */}
