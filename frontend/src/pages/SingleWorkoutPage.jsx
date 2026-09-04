@@ -59,8 +59,6 @@ function SingleWorkoutPage({ currentUser }) {
                     <WorkoutCard
                         workout={workout}
                         currentUser={currentUser}
-                        handleEditWorkout={handleEditWorkout}
-                        handleDeleteWorkout={handleDeleteWorkout}
                     />
                 </div>
             )}
