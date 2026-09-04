@@ -1,13 +1,19 @@
 import mongoose, { Schema } from "mongoose";
 
-// schema for comment
-const commentSchema = new mongoose.Schema({
+// Schema for reply on comment
+const replySchema = new Schema({
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    content: {type: String, required: true},
+    content: { type: String, required: true },
+    likes: [{ type: Schema.Types.ObjectId, ref: "User" }]
+}, { timestamps: true });
+
+// Schema for main comment
+const commentSchema = new Schema({
+    createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    content: { type: String, required: true },
     post: { type: Schema.Types.ObjectId, ref: "Post", required: true },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-   
-}, {timestamps: true})
+    replies: [replySchema] // Bäddar in svar-schemat här
+}, { timestamps: true });
 
-// post model
-export const Comment = mongoose.model('Comment', commentSchema)
+export const Comment = mongoose.model('Comment', commentSchema);
