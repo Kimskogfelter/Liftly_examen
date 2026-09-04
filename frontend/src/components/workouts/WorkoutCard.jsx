@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios";
 import ProfileImage from "../users/ProfileImage";
 
-function WorkoutCard({ workout, currentUser, handleDeleteWorkout, handleEditWorkout }) {
+function WorkoutCard({ workout, currentUser }) {
 
     const token = currentUser?.token;
 
@@ -11,8 +12,24 @@ function WorkoutCard({ workout, currentUser, handleDeleteWorkout, handleEditWork
     // Funktion för att uppdatera ett specifikt set (reps/vikt/completed)
     const handleSetChange = (exerciseIndex, setIndex, field, value) => {
         const updatedExercises = [...exercises];
-        updatedExercises[exerciseIndex].sets[setIndex][field] = value;
+        // Om värdet inte är tomt, gör om till Number, annars behåll tom sträng medan användaren skriver
+        // detta för att backend ska få rätt typ (Number) när vi skickar uppdateringen, men vi vill inte tvinga användaren att skriva in något direkt
+        const parsedValue = value === "" ? "" : Number(value);
+        updatedExercises[exerciseIndex].sets[setIndex][field] = parsedValue;
         setExercises(updatedExercises);
+    };
+
+    const autoSaveWorkout = async (exercises) => {
+        try {
+            await axios.patch(
+                `${import.meta.env.VITE_API_URL}/workouts/${workout._id}/update`,
+                { exercises: exercises },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            console.log("Auto-saved successfully!", exercises);
+        } catch (err) {
+            console.error("Auto-save failed:", err);
+        }
     };
 
     // Funktion för att bocka för ett set
@@ -51,6 +68,7 @@ function WorkoutCard({ workout, currentUser, handleDeleteWorkout, handleEditWork
                                             type="number"
                                             value={set.kgs || ""}
                                             onChange={(e) => handleSetChange(exIdx, setIdx, "kgs", e.target.value)}
+                                            onBlur={() => autoSaveWorkout(exercises)} // Sparar direkt när rutan lämnas!
                                             placeholder="0"
                                             className="w-14 p-1.5 bg-white border border-zinc-200 rounded-lg text-center font-medium"
                                         />
@@ -63,6 +81,7 @@ function WorkoutCard({ workout, currentUser, handleDeleteWorkout, handleEditWork
                                             type="number"
                                             value={set.reps || ""}
                                             onChange={(e) => handleSetChange(exIdx, setIdx, "reps", e.target.value)}
+                                            onBlur={() => autoSaveWorkout(exercises)} // Sparar direkt när rutan lämnas!
                                             placeholder="0"
                                             className="w-14 p-1.5 bg-white border border-zinc-200 rounded-lg text-center font-medium"
                                         />
