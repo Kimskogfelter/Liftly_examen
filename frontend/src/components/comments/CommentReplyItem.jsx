@@ -6,7 +6,7 @@ import ProfileImage from "../users/ProfileImage";
 import { handleCommentReplyLikeToggle } from "../../functions/comments/handleCommentReplyLikeToggle";
 
 function CommentReplyItem({ reply, comment, currentUser, handleReplyToReply }) {
-    
+
     // 1. Lokalt state för detta specifika svar
     const [isReplyLiked, setIsReplyLiked] = useState(
         reply.likes?.includes(currentUser?.id) || false
@@ -59,11 +59,14 @@ function CommentReplyItem({ reply, comment, currentUser, handleReplyToReply }) {
             </div>
 
             {/* Like-knapp för svaret */}
-            <div className="flex flex-col items-center justify-center shrink-0 text-black hover:text-red-500 transition-colors cursor-pointer pt-0.5">
+            <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                {/* Siffran visas alltid i mörkgrått/rött */}
+                <span className={`text-[9px] font-semibold ${isReplyLiked ? "text-red-500" : "text-gray-500"}`}>
+                    {replyLikesCount}
+                </span>
+
                 <button
-                    className={`cursor-pointer transition-transform active:scale-90 ${
-                        isReplyLiked ? "text-red-500" : "text-black hover:text-gray-600"
-                    }`}
+                    className="cursor-pointer transition-transform active:scale-90"
                     onClick={() =>
                         handleCommentReplyLikeToggle(
                             isReplyLiked,
@@ -76,13 +79,14 @@ function CommentReplyItem({ reply, comment, currentUser, handleReplyToReply }) {
                     }
                 >
                     <FiHeart
-                        className={isReplyLiked ? "fill-red-500 text-red-500" : ""}
-                        size={10}
+                        size={11}
+                        className={
+                            isReplyLiked
+                                ? "fill-red-500 text-red-500"
+                                : "text-gray-500 stroke-[2.2] hover:text-black transition-colors"
+                        }
                     />
                 </button>
-                <span className="text-[8px] font-bold text-black mt-0.5">
-                    {replyLikesCount}
-                </span>
             </div>
         </div>
     );

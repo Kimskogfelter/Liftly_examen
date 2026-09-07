@@ -98,14 +98,26 @@ function CommentCard({ comment, currentUser }) {
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center justify-center shrink-0 text-black hover:text-red-500 transition-colors cursor-pointer pt-1">
+                {/* LIKE-KNAPP FÖR HUVUDKOMMENTAR */}
+                <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                    {/* Siffran visas alltid i mörkgrått/rött */}
+                    <span className={`text-[10px] font-semibold ${isLiked ? "text-red-500" : "text-gray-500"}`}>
+                        {likesCount}
+                    </span>
+
                     <button
-                        className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
+                        className="cursor-pointer transition-transform active:scale-90"
                         onClick={() => handleCommentLikeToggle(isLiked, setIsLiked, setLikesCount, comment, currentUser)}
                     >
-                        {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={11} /> : <FiHeart size={11} />}
+                        <FiHeart
+                            size={13}
+                            className={
+                                isLiked
+                                    ? "fill-red-500 text-red-500"
+                                    : "text-gray-500 stroke-[2.2] hover:text-black transition-colors"
+                            }
+                        />
                     </button>
-                    <span className="text-[9px] font-bold text-black mt-0.5">{likesCount}</span>
                 </div>
             </div>
 
