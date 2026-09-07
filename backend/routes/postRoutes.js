@@ -28,13 +28,14 @@ postRouter.patch('/:postId/update', authMiddleware, updatePost)
 // ---------------------------- comment routes ---------------------------
 
 postRouter.post('/:postId/comments/create', authMiddleware, createComment)
-postRouter.post("/comments/:commentId/reply", authMiddleware, replyComment);
 postRouter.get('/:postId/comments',authMiddleware, getComments)
 postRouter.get('/comments/:commentId',authMiddleware, getComment)
 postRouter.delete('/comments/:commentId',authMiddleware, deleteComment)
 
 postRouter.post('/comments/:commentId/like', authMiddleware, likeComment) 
 postRouter.delete('/comments/:commentId/unlike', authMiddleware, unlikeComment)
+
+postRouter.post("/comments/:commentId/reply", authMiddleware, replyComment);
 
 postRouter.post('/comments/:commentId/replies/:replyId/like', authMiddleware, likeCommentReply) 
 postRouter.delete('/comments/:commentId/replies/:replyId/unlike', authMiddleware, unlikeCommentReply)
