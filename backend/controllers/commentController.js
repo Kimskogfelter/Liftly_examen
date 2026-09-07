@@ -344,6 +344,98 @@ export const unlikeComment = async (req, res, next) => {
 
 
 
+// ---------------------------- LIKE COMMENT REPLY --------------------------- 
+// POST req: api/posts/comments/:commentId/replies/:replyId/like
+// PROTECTED
+
+export const likeCommentReply = async (req, res, next) => {
+    try {
+        const { commentId, replyId } = req.params;
+        const userId = req.user.id;
+
+        // Validera ObjectId
+        if (!mongoose.Types.ObjectId.isValid(commentId) || !mongoose.Types.ObjectId.isValid(replyId)) {
+            return res.status(404).json({ message: "Invalid ID format" });
+        }
+
+        // Hitta kommentaren
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+            return next(new HttpError("Comment not found", 404));
+        }
+
+        // Hitta rätt reply i replies-arrayen via Mongoose .id()
+        const reply = comment.replies.id(replyId);
+        if (!reply) {
+            return next(new HttpError("Reply not found", 404));
+        }
+
+        // Kolla om användaren redan gillat
+        if (reply.likes.includes(userId)) {
+            return next(new HttpError("You already like this reply.", 422));
+        }
+
+        // Lägg till like och spara dokumentet
+        reply.likes.push(userId);
+        await comment.save();
+
+        return res.status(200).json({
+            message: "Reply liked",
+            likesCount: reply.likes.length,
+            reply
+        });
+
+    } catch (error) {
+        return next(new HttpError(error));
+    }
+};
+
+
+// ---------------------------- UNLIKE COMMENT REPLY --------------------------- 
+// DELETE req: api/posts/comments/:commentId/replies/:replyId/unlike
+// PROTECTED
+
+export const unlikeCommentReply = async (req, res, next) => {
+    try {
+        const { commentId, replyId } = req.params;
+        const userId = req.user.id;
+
+        // Validera ObjectId
+        if (!mongoose.Types.ObjectId.isValid(commentId) || !mongoose.Types.ObjectId.isValid(replyId)) {
+            return res.status(404).json({ message: "Invalid ID format" });
+        }
+
+        // Hitta kommentaren
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+            return next(new HttpError("Comment not found", 404));
+        }
+
+        // Hitta rätt reply
+        const reply = comment.replies.id(replyId);
+        if (!reply) {
+            return next(new HttpError("Reply not found", 404));
+        }
+
+        // Kolla om användaren har gillat
+        if (!reply.likes.includes(userId)) {
+            return next(new HttpError("You haven't liked this reply.", 422));
+        }
+
+        // Ta bort like och spara
+        reply.likes.pull(userId);
+        await comment.save();
+
+        return res.status(200).json({
+            message: "Reply unliked",
+            likesCount: reply.likes.length,
+            reply
+        });
+
+    } catch (error) {
+        return next(new HttpError(error));
+    }
+};
 
 // ---------------------------- DELETE COMMENT --------------------------- 
 // DELETE req: api/posts/comments/:commentId
