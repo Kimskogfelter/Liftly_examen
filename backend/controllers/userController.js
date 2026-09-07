@@ -173,31 +173,35 @@ export const getUser = async (req, res, next) => {
             return res.status(404).json({ message: 'User Id is not valid' });
         }
 
-        // fetch user from database
+        // fetch user and populate posts, comments, and replies
         const user = await User.findById(userId).populate({
             path: "posts",
-            populate: { path: "createdBy" }
+            options: { sort: { createdAt: -1 } },
+            populate: [
+                { path: "createdBy", select: "username profileImage" },
+                {
+                    path: "comments",
+                    populate: [
+                        { path: "createdBy", select: "username profileImage" },
+                        { path: "replies.createdBy", select: "username profileImage" }
+                    ]
+                }
+            ]
         });
 
-        // check if user doesnt exists
+        // check if user doesnt exist
         if (!user) {
-
-            return next(new HttpError("No user could be found with that id", 404))
+            return next(new HttpError("No user could be found with that id", 404));
         }
 
         // return user data
         return res.status(200).json({ message: 'User found: ', user });
 
     } catch (error) {
-        // Om något går fel när vi försöker hämta en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error));
     }
 
-}
+};
 
 
 // ---------------------------- GET USERS --------------------------- 
@@ -535,7 +539,6 @@ export const authUser = async (req, res, next) => {
 // ---------------------------- GET SAVED POSTS --------------------------- 
 // GET req: api/users/savedposts
 // PROTECTED
-
 export const getSavedPosts = async (req, res, next) => {
 
     try {
@@ -548,32 +551,32 @@ export const getSavedPosts = async (req, res, next) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // populate savedPosts so we get full post objects instead of just IDs
-        // same with createdBy to be able to display username and profile image at saved posts page
+        // populate savedPosts with creator, comments, and nested replies
         await user.populate({
             path: "savedPosts",
             options: { sort: { createdAt: -1 } },
-            populate: {
-                path: "createdBy",          // Field inside post model with only object id
-                select: "username profileImage"
-            }
+            populate: [
+                {
+                    path: "createdBy",
+                    select: "username profileImage"
+                },
+                {
+                    path: "comments",
+                    populate: [
+                        { path: "createdBy", select: "username profileImage" },
+                        { path: "replies.createdBy", select: "username profileImage" }
+                    ]
+                }
+            ]
         });
 
         // fetch only saved posts
         const savedPosts = user.savedPosts;
 
-        return res.status(200).json({ message: "Saved posts: ", savedPosts })
-
-
-
+        return res.status(200).json({ message: "Saved posts: ", savedPosts });
 
     } catch (error) {
-        // Om något går fel när vi försöker sluta följa en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error));
     }
 
-}
+};
