@@ -4,7 +4,7 @@ import { FiHome, FiBookmark, FiPlusSquare, FiLogOut } from "react-icons/fi";
 import { IoBarbellOutline } from "react-icons/io5";
 import logo from '../../assets/images/liftly-logo.png';
 import ProfileImage from "../users/ProfileImage";
-import { logout } from "../../functions/logout";
+import { logout } from "../../functions/user/logout";
 
 function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, }) {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import ProfileImage from "../components/users/ProfileImage";
 import EditProfileImage from "../components/users/EditProfileImage";
 import EditProfileBio from "../components/users/EditProfileBio";
 import PostFeed from "../components/posts/PostFeed";
-import { handleFollowUserToggle } from "../functions/handleFollowUserToggle";
+import { handleFollowUserToggle } from "../functions/user/handleFollowUserToggle";
 import { FaRegEdit } from "react-icons/fa";
 import { FaCamera } from "react-icons/fa";
 
