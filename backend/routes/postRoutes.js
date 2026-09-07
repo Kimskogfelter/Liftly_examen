@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { createPost, getPost, getPosts, getUserPosts, getFollowingPosts, getCategoryPosts, getHashtagPosts, savePost, unsavePost, likePost, unlikePost, updatePost, deletePost } from '../controllers/postController.js';
-import { createComment, getComment, getComments, replyComment,  likeComment, unlikeComment, deleteComment } from '../controllers/commentController.js';
+import { createComment, getComment, getComments, replyComment,  likeComment, unlikeComment, likeCommentReply, unlikeCommentReply, deleteComment } from '../controllers/commentController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
 
@@ -35,6 +35,9 @@ postRouter.delete('/comments/:commentId',authMiddleware, deleteComment)
 
 postRouter.post('/comments/:commentId/like', authMiddleware, likeComment) 
 postRouter.delete('/comments/:commentId/unlike', authMiddleware, unlikeComment)
+
+postRouter.post('/comments/:commentId/replies/:replyId/like', authMiddleware, likeCommentReply) 
+postRouter.delete('/comments/:commentId/replies/:replyId/unlike', authMiddleware, unlikeCommentReply)
 
 // ---------------------------- post routes GENERIC ---------------------------
 
