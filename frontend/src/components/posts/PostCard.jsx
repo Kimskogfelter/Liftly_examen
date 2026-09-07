@@ -229,7 +229,12 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             {/* DISPLAY COMMENT COUNT */}
                             <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-lg">
                                 <FiMessageCircle size={18} />
-                                <span className="font-medium text-xs text-gray-700">{post.comments?.length || 0}</span>
+                                <span className="font-medium text-xs text-gray-700">
+                                    {post.comments?.reduce(
+                                        (total, comment) => total + 1 + (comment.replies?.length || 0),
+                                        0
+                                    ) || 0}
+                                </span>
                             </Link>
                         </div>
 
