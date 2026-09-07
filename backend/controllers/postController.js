@@ -133,7 +133,14 @@ export const getPosts = async (req, res, next) => {
         // fetch all posts from database
         const getAllPosts = await Post.find()
             .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
-            .sort({ createdAt: -1 }) // sort by newest first
+            .populate({
+                path: "comments",
+                populate: [
+                    { path: "createdBy", select: "username profileImage" },
+                    { path: "replies.createdBy", select: "username profileImage" } // Populerar svar och deras skapare
+                ]
+            })
+            .sort({ createdAt: -1 }); // sort by newest first
 
         // check if posts doesnt exists
         if (getAllPosts.length === 0) {
@@ -252,6 +259,13 @@ export const getCategoryPosts = async (req, res, next) => {
         // 2. Fetch post based on category filter
         const posts = await Post.find(queryFilter)
             .populate("createdBy", "username profileImage")
+            .populate({
+                path: "comments",
+                populate: [
+                    { path: "createdBy", select: "username profileImage" },
+                    { path: "replies.createdBy", select: "username profileImage" }
+                ]
+            })
             .sort({ createdAt: -1 });
 
         // 3. If NO posts found
@@ -291,6 +305,13 @@ export const getHashtagPosts = async (req, res, next) => {
             hashtags: { $in: [cleanTag, `#${cleanTag}`] }
         })
             .populate("createdBy", "username profileImage")
+            .populate({
+                path: "comments",
+                populate: [
+                    { path: "createdBy", select: "username profileImage" },
+                    { path: "replies.createdBy", select: "username profileImage" }
+                ]
+            })
             .sort({ createdAt: -1 });
 
         // 5. If NO posts found
