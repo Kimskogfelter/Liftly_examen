@@ -1,9 +1,7 @@
 import { Post } from "../models/postModel.js";
 import { User } from "../models/userModel.js";
-import { HttpError } from "../models/errorModel.js"
+import { HttpError } from "../models/errorModel.js";
 import mongoose from "mongoose";
-
-
 
 // ---------------------------- SEARCH --------------------------- 
 // GET req: /api/search?query=gym
@@ -16,15 +14,13 @@ export const searchEverything = async (req, res, next) => {
         const { query } = req.query; // takes query from frontend
 
         if (!query) {
-
             return res.status(400).json({ message: "search query missing" });
         }
 
-
         const cleanQuery = query.replace("#", ""); // removes # if user searched for ex. #gym
-        const regex = new RegExp(cleanQuery, "i"); // The "i" flag makes the search case-insensitive (e.g., "gym", "Gym", and "GYM" will all match).
+        const regex = new RegExp(cleanQuery, "i"); // Case-insensitive matching
 
-        // Run search for user and posts at the same time for better prestanda
+        // Run search for user and posts at the same time for better performance
         const [matchedUsers, matchedPosts] = await Promise.all([
             // 1. Search for user based on username
             User.find({ username: regex }),
@@ -35,23 +31,25 @@ export const searchEverything = async (req, res, next) => {
                     { content: regex },
                     { hashtags: regex }
                 ]
-            }).populate("createdBy", "username profileImage")
+            })
+            .populate("createdBy", "username profileImage")
+            .populate({
+                path: "comments",
+                options: { sort: { createdAt: -1 } },
+                populate: [
+                    { path: "createdBy", select: "username profileImage" },
+                    { path: "replies.createdBy", select: "username profileImage" }
+                ]
+            })
         ]);
 
-        res.status(200).json({
+        return res.status(200).json({
             users: matchedUsers,
             posts: matchedPosts
         });
 
-
-
     } catch (error) {
-        // Om något går fel när vi försöker registrera användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error));
     }
 
-}
+};
