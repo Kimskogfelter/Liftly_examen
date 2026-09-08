@@ -5,6 +5,7 @@ import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
 import { handlePostLikeToggle } from "../../functions/posts/handlePostLikeToggle";
 import { handleSavePost } from "../../functions/posts/handleSavePost";
+import FullsizeImageModal from "./FullsizeImageModal";
 import { createSpotifyEmbedUrl } from "../../functions/spotify/spotify";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
