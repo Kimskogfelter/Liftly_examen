@@ -106,7 +106,7 @@ function SearchPage({ currentUser, setCurrentUser }) {
                     )}
                 </div>
 
-                {error && <p className="text-red-500 text-xs text-center my-4">{error}</p>}
+                {/* {error && <p className="text-red-500 text-xs text-center my-4">{error}</p>} */}
 
                 {/* DISPLAY ACTIVE TAB */}
                 {searchQuery && (
