@@ -50,7 +50,7 @@ function CategoryPage({ currentUser }) {
     }
 
     return (
-        <section className="flex-1 p-6 max-w-2xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
+        <section className="flex-1 p-6 max-w-4xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
 
             {/* Centrerad Header – Exakt samma layout som Saved Posts */}
             <div className="w-full text-center mb-8 border-b border-zinc-200 pb-5">
@@ -65,14 +65,14 @@ function CategoryPage({ currentUser }) {
                 </p>
             </div>
 
-            {error && (
+            {/* {error && (
                 <div className="w-full bg-red-50 text-red-600 border border-red-100 p-3 rounded-xl mb-6 text-xs font-medium flex items-center justify-between">
                     <span>{error}</span>
                     <button onClick={() => setError("")} className="text-red-400 hover:text-red-700 font-bold ml-2">
                         ✕
                     </button>
                 </div>
-            )}
+            )} */}
 
             {/* 3x3 GRID LAYOUT */}
             {posts.length === 0 ? (
