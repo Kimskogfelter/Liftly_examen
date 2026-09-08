@@ -80,6 +80,10 @@ const handleCategoryChange = (e) => {
             <FiBookmark size={22} />
           </Link>
 
+          <Link to="/workouts" className="text-zinc-400 hover:text-white p-2 transition-colors">
+            <IoBarbellOutline size={22} />
+          </Link>
+
           <button onClick={onOpenCreatePost} className="text-zinc-400 hover:text-white p-2 transition-colors cursor-pointer">
             <FiPlusSquare size={22} />
           </button>
