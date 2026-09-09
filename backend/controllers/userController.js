@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { Resend } from "resend";
 import { v4 as uuidv4 } from "uuid";
 import { cloudinaryService } from "../config/cloudinaryConfig.js";
 
@@ -538,6 +539,9 @@ export const authUser = async (req, res, next) => {
 
 // ---------------------------- FORGOT PASSWORD --------------------------- 
 
+// Initiera Resend med API-nyckeln från .env
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export const forgotPassword = async (req, res, next) => {
 
     const { email } = req.body;
@@ -570,8 +574,20 @@ export const forgotPassword = async (req, res, next) => {
         // 4. Skapa återställningslänken som skickas i mailet
         const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-        // TODO: Skicka mailet här (vi lägger till mailtjänst i nästa steg)
-        console.log("Reset URL:", resetUrl); // Tillfällig logg så att du kan testa flödet i Postman!
+        // SKICKA E-POST MED RESEND
+        await resend.emails.send({
+            from: "Liftly <onboarding@resend.dev>", // Standard avsändare under testfasen
+            to: user.email,
+            subject: "Reset your Liftly Password",
+            html: `
+        <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #e4e4e7; rounded: 12px;">
+          <h2 style="color: #09090b;">Reset your password</h2>
+          <p style="color: #52525b; font-size: 14px;">You requested a password reset for your Liftly account. Click the button below to set a new password:</p>
+          <a href="${resetUrl}" style="display: inline-block; background-color: #000; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; margin: 15px 0;">Reset Password</a>
+          <p style="color: #a1a1aa; font-size: 12px; margin-top: 20px;">This link will expire in 1 hour. If you didn't request this, you can safely ignore this email.</p>
+        </div>
+      `,
+        });
 
         res.status(200).json({
             message: "A password reset link has been sent.",
@@ -585,38 +601,38 @@ export const forgotPassword = async (req, res, next) => {
 
 // ---------------------------- RESET PASSWORD --------------------------- 
 export const resetPassword = async (req, res, next) => {
-  const { token } = req.params;
-  const { password } = req.body;
+    const { token } = req.params;
+    const { password } = req.body;
 
-  if (!password || password.length < 10) {
-    return next(new HttpError("Password must be at least 10 characters long.", 422));
-  }
-
-  try {
-    // 1. Hitta användaren med token OCH kontrollera att den inte gått ut ($gt = greater than)
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() },
-    });
-
-    if (!user) {
-      return next(new HttpError("Invalid or expired password reset token.", 400));
+    if (!password || password.length < 10) {
+        return next(new HttpError("Password must be at least 10 characters long.", 422));
     }
 
-    // 2. Hasha det nya lösenordet (använd din befintliga bcrypt-lösning)
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
+    try {
+        // 1. Hitta användaren med token OCH kontrollera att den inte gått ut ($gt = greater than)
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() },
+        });
 
-    // 3. Nollställ token-fälten så att den inte kan återanvändas
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
+        if (!user) {
+            return next(new HttpError("Invalid or expired password reset token.", 400));
+        }
 
-    await user.save();
+        // 2. Hasha det nya lösenordet (använd din befintliga bcrypt-lösning)
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
 
-    res.status(200).json({ message: "Password reset successful! You can now log in." });
-  } catch (error) {
-    return next(new HttpError("Could not reset password. Please try again.", 500));
-  }
+        // 3. Nollställ token-fälten så att den inte kan återanvändas
+        user.resetPasswordToken = null;
+        user.resetPasswordExpires = null;
+
+        await user.save();
+
+        res.status(200).json({ message: "Password reset successful! You can now log in." });
+    } catch (error) {
+        return next(new HttpError("Could not reset password. Please try again.", 500));
+    }
 };
 
 // ---------------------------- POSTS ---------------------------
