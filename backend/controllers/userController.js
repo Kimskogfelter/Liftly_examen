@@ -584,16 +584,40 @@ export const forgotPassword = async (req, res, next) => {
 }
 
 // ---------------------------- RESET PASSWORD --------------------------- 
-
 export const resetPassword = async (req, res, next) => {
+  const { token } = req.params;
+  const { password } = req.body;
 
-    try {
+  if (!password || password.length < 10) {
+    return next(new HttpError("Password must be at least 10 characters long.", 422));
+  }
 
+  try {
+    // 1. Hitta användaren med token OCH kontrollera att den inte gått ut ($gt = greater than)
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
 
-    } catch (error) {
-        return next(new HttpError(error));
+    if (!user) {
+      return next(new HttpError("Invalid or expired password reset token.", 400));
     }
-}
+
+    // 2. Hasha det nya lösenordet (använd din befintliga bcrypt-lösning)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+
+    // 3. Nollställ token-fälten så att den inte kan återanvändas
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful! You can now log in." });
+  } catch (error) {
+    return next(new HttpError("Could not reset password. Please try again.", 500));
+  }
+};
 
 // ---------------------------- POSTS ---------------------------
 
