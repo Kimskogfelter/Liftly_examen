@@ -556,10 +556,7 @@ export const forgotPassword = async (req, res, next) => {
         const user = await User.findOne({ email: email.toLowerCase() });
 
         if (!user) {
-            // Säkerhetsåtgärd: Avslöja inte om e-posten finns eller inte för att förhindra e-postfiske
-            return res.status(200).json({
-                message: "No account found with that email address.",
-            });
+            return next(new HttpError("No account found with that email address.", 404));
         }
 
         // 2. Skapa en slumpmässig och unik reset-token
