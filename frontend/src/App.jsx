@@ -11,6 +11,8 @@ import CategoryPage from './pages/CategoryPage';
 import HashtagPage from './pages/HashtagPage';
 import WorkoutPage from './pages/WorkoutPage';
 import SingleWorkoutPage from './pages/SingleWorkoutPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import AppLayout from './components/layout/AppLayout';
 
 
@@ -57,6 +59,9 @@ function App() {
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<LoginPage setCurrentUser={setCurrentUser} />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+
 
           {/* Protected Routes */}
           <Route element={<AppLayout currentUser={currentUser} setCurrentUser={setCurrentUser} />}>
