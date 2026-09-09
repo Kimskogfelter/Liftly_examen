@@ -3,6 +3,7 @@ import { User } from "../models/userModel.js"
 import { Post } from "../models/postModel.js"
 import validator from "validator";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
@@ -252,7 +253,7 @@ export const updateUser = async (req, res, next) => {
         // check that the correct user are doing the changes via req.user.id and auth middleware
         const updatedUser = await User.findByIdAndUpdate(
             req.user.id,
-            { $set: { username, email, profileBio }}, // $set ONLY updates the data that is sent from frontend, ex if only profile bio is edited only that is changed in the database
+            { $set: { username, email, profileBio } }, // $set ONLY updates the data that is sent from frontend, ex if only profile bio is edited only that is changed in the database
             { new: true, runValidators: true } // runValidators make sure that the backend rules (such as unique email, minLenght etc that is set in the user model) still follows 
         ).select("-password"); // removes the hashed password so it doenst get sent to frontend
 
@@ -521,13 +522,73 @@ export const authUser = async (req, res, next) => {
             return next(new HttpError("User not found", 404));
         }
 
-        return res.status(200).json({ 
-            message: "Token is valid", 
-            id: user._id, 
-            profileImage: user.profileImage, 
-            profileBio: user.profileBio, 
-            savedPosts: user.savedPosts 
+        return res.status(200).json({
+            message: "Token is valid",
+            id: user._id,
+            profileImage: user.profileImage,
+            profileBio: user.profileBio,
+            savedPosts: user.savedPosts
         });
+
+    } catch (error) {
+        return next(new HttpError(error));
+    }
+}
+
+
+// ---------------------------- FORGOT PASSWORD --------------------------- 
+
+export const forgotPassword = async (req, res, next) => {
+
+    const { email } = req.body;
+
+    if (!email) {
+        return next(new HttpError("Please provide an email address.", 400));
+    }
+
+    try {
+
+        // 1. Hitta användaren i databasen
+        const user = await User.findOne({ email: email.toLowerCase() });
+
+        if (!user) {
+            // Säkerhetsåtgärd: Avslöja inte om e-posten finns eller inte för att förhindra e-postfiske
+            return res.status(200).json({
+                message: "If an account with that email exists, a password reset link has been sent.",
+            });
+        }
+
+        // 2. Skapa en slumpmässig och unik reset-token
+        const resetToken = crypto.randomBytes(32).toString("hex");
+
+        // 3. Spara token och utgångstid (t.ex. 1 timme = 3600000 ms) i användarens dokument
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpires = Date.now() + 3600000;
+
+        await user.save();
+
+        // 4. Skapa återställningslänken som skickas i mailet
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+        // TODO: Skicka mailet här (vi lägger till mailtjänst i nästa steg)
+        console.log("Reset URL:", resetUrl); // Tillfällig logg så att du kan testa flödet i Postman!
+
+        res.status(200).json({
+            message: "A password reset link has been sent.",
+        });
+
+
+    } catch (error) {
+        return next(new HttpError(error));
+    }
+}
+
+// ---------------------------- RESET PASSWORD --------------------------- 
+
+export const resetPassword = async (req, res, next) => {
+
+    try {
+
 
     } catch (error) {
         return next(new HttpError(error));
