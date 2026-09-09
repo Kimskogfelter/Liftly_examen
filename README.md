@@ -49,7 +49,7 @@ Här kommer en demonstration av min hemsida som jag hittills har hunnit bygga in
 ## Teknik & programmeringsspråk
 
 * **Frontend:** React, HTML, CSS, Tailwind, React Router DOM, Axios, React Icons, React Timeago
-* **Backend:** Node.js, Express.js, Mongoose
+* **Backend:** Node.js, Express.js, Mongoose, Resend
 * **Databas:** MongoDB
 * **Säkerhet:** JWT, bcrypt
 * **Verktyg:** Nodemon, Dotenv, CORS, uuid, Postman (API testing), Validator
