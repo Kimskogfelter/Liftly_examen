@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import logo from '../assets/images/liftly-logo.png';
 
 function LoginPage({ setCurrentUser }) {
@@ -97,6 +97,16 @@ function LoginPage({ setCurrentUser }) {
             Don’t have an account?{" "}  {/* {" "} renders space between the paragraph and link */}
             <a href="/register" className="font-semibold text-white hover:underline"> Sign up </a>
           </p>
+        </div>
+
+        {/* Forgot password link */}
+        <div className="flex justify-end mt-1">
+          <Link
+            to="/forgot-password"
+            className="text-xs text-zinc-500 hover:text-white font-medium transition-colors"
+          >
+            Forgot password?
+          </Link>
         </div>
 
       </div>
