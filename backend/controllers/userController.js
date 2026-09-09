@@ -558,7 +558,7 @@ export const forgotPassword = async (req, res, next) => {
         if (!user) {
             // Säkerhetsåtgärd: Avslöja inte om e-posten finns eller inte för att förhindra e-postfiske
             return res.status(200).json({
-                message: "If an account with that email exists, a password reset link has been sent.",
+                message: "No account found with that email address.",
             });
         }
 
@@ -590,12 +590,12 @@ export const forgotPassword = async (req, res, next) => {
         });
 
         res.status(200).json({
-            message: "A password reset link has been sent.",
+            message: "Password reset link sent! Please check your email inbox.",
         });
 
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError("Could not send reset email. Please try again later.", error));
     }
 }
 
