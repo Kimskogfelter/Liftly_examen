@@ -1,95 +1,101 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import logo from "../assets/images/liftly-logo.png";
 
 function ForgotPasswordPage() {
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
-        setMessage("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setMessage("");
 
-        try {
-            const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}/users/forgot-password`,
-                { email }
-            );
-            console.log("Forgot password response:", res.data);
-            setMessage(res.data.message);
-            setEmail(""); // Rensa fältet när det lyckats
-        } catch (err) {
-            setError(
-                err.response?.data?.message || "Something went wrong. Please try again."
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/forgot-password`,
+        { email }
+      );
+      setMessage(res.data.message);
+      setEmail("");
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            );
-            console.error("Forgot password error:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+  return (
+    <section className="flex min-h-screen flex-col items-center justify-center bg-[#0D0D0E] px-4 font-sans text-white">
+      {/* Centrerad box med exakt samma max-w-xs som LoginPage */}
+      <div className="w-full max-w-xs flex flex-col items-center">
 
-    return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-white font-sans text-gray-800">
-            <div className="w-full max-w-sm border border-zinc-200 p-6 rounded-2xl shadow-sm">
-                <h1 className="text-xl font-bold text-center mb-2">Forgot Password</h1>
-                <p className="text-xs text-zinc-500 text-center mb-6">
-                    Enter your email address and we'll send you a link to reset your password.
-                </p>
-
-                {/* Success Message */}
-                {message && (
-                    <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 p-3 rounded-xl text-xs mb-4 font-medium">
-                        {message}
-                    </div>
-                )}
-                {/* Error Message */}
-                {error && (
-                    <div className="bg-red-50 text-red-600 border border-red-100 p-3 rounded-xl text-xs mb-4 font-medium">
-                        {error}
-                    </div>
-                )}
-
-
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    <div>
-                        <label className="block text-xs font-semibold mb-1 text-zinc-700">
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="your@email.com"
-                            className="w-full px-3 py-2 border border-zinc-300 rounded-xl text-sm focus:outline-none focus:border-black transition-colors"
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-black text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition-colors cursor-pointer disabled:opacity-50"
-                    >
-                        {loading ? "Sending link..." : "Send Reset Link"}
-                    </button>
-                </form>
-
-                <div className="mt-6 text-center">
-                    <Link
-                        to="/login"
-                        className="text-xs text-zinc-500 hover:text-black font-semibold transition-colors"
-                    >
-                        ← Back to Login
-                    </Link>
-                </div>
-            </div>
+        {/* Logo & Rubrik Container */}
+        <div className="mb-10 flex flex-col items-center text-center">
+          <img src={logo} alt="Liftly logo" className="h-9 w-auto mb-3 object-contain" />
+          <h1 className="text-base font-semibold text-white tracking-wide mb-1">
+            Reset Password
+          </h1>
+          <p className="text-xs font-normal text-gray-400">
+            Enter your email address and we'll send you a link to reset your password.
+          </p>
         </div>
-    );
+
+        {/* Form Container */}
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3">
+          <div className="flex flex-col">
+            <input
+              type="email"
+              placeholder="Email address:"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full rounded bg-white px-3 py-2 text-xs text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-1 w-full rounded bg-[#4A4545] py-2 text-xs font-medium text-white transition-colors hover:bg-[#575151] focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:opacity-50 cursor-pointer"
+          >
+            {loading ? "Sending link..." : "Send Reset Link"}
+          </button>
+        </form>
+
+        {/* Success Message */}
+        {message && (
+          <p className="mt-3 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-2 rounded border border-emerald-500/20 w-full text-center">
+            {message}
+          </p>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <p className="mt-3 text-xs font-semibold text-red-500 bg-red-500/10 px-3 py-2 rounded border border-red-500/20 w-full text-center">
+            {error}
+          </p>
+        )}
+
+        {/* Back to Login */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/login"
+            className="text-xs text-gray-400 hover:text-white font-medium transition-colors"
+          >
+            ← Back to Login
+          </Link>
+        </div>
+
+      </div>
+    </section>
+  );
 }
 
 export default ForgotPasswordPage;
