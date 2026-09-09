@@ -13,8 +13,7 @@
 - [ ] **Frontend: Silent Token Refresh**
   - [ ] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
   - [ ] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
-- [ ] **Glömt Lösenord**
-  - [ ] Skapa återställningsflöde med e-post/tillfällig token för lösenordsåterställning.
+
 
 ## Nya Funktioner (Träning & Hälsa)
 - [ ] **Recept & Mat**
@@ -23,8 +22,6 @@
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
 - Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
 
-## UI & Design (Frontend/Backend)
-- [ ] skapa reply schema, controller etc för kommentarer så användare kan svara på varandras kommentarer på inlägg
 
 
 ## ✅ Redan Klart
@@ -40,3 +37,6 @@ Justera bild-höjd och `object-cover` så att vertikala bilder/videos inte besk�
 Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när man klickar på den.
 - [x] **Träningspass & Mallar**
   - [x] Bygga funktion för att skapa och spara egna träningspass som enkelt kan plockas fram och loggas under gympasset. Namnge som "Workouts" i navmeny
+- [x] **Glömt Lösenord**
+  - [x] Skapa återställningsflöde med e-post/tillfällig token för lösenordsåterställning.
+- [x] skapa reply schema, controller etc för kommentarer så användare kan svara på varandras kommentarer på inlägg
