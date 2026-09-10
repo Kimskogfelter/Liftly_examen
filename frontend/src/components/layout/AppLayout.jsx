@@ -12,7 +12,7 @@ function AppLayout({ currentUser, setCurrentUser }) {
 
     return (
 
-        <div className="flex">
+        <div className="flex min-h-screen flex-col">
             {/* Navbar */}
             {/* onOpenCreatePost function passed as prop to Navbar */}
             <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} onOpenCreatePost={() => setShowCreatePost(true)} />
