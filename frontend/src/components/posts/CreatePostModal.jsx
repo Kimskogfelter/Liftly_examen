@@ -196,7 +196,7 @@ function CreatePostModal({ currentUser, onClose }) {
 
             {/* Footer Row: Media button, Category dropdown and Action buttons */}
             {/* MEDIA & CATEGORY options row */}
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex flex-wrap items-center gap-2 pt-2">
               {/* Media upload button */}
               <label htmlFor="media" className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
                 <FiImage size={15} className="text-zinc-800" />
