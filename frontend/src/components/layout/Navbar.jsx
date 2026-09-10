@@ -27,9 +27,9 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost, }) {
     { id: "Helpme", label: "Helpme" },
   ];
 
-const handleCategoryChange = (e) => {
+  const handleCategoryChange = (e) => {
     const selected = e.target.value;
-    
+
     if (selected === "All") {
       navigate("/home");
     } else {
@@ -64,9 +64,27 @@ const handleCategoryChange = (e) => {
               ))}
             </select>
 
+            {/* Search Icon */}
             <Link to="/search" className="text-zinc-400 hover:text-white p-2 transition-colors">
               <CiSearch size={22} />
             </Link>
+            {/* Log out / Log in icon */}
+            {currentUser ? (
+              <button
+                onClick={() => logout(setCurrentUser, navigate)}
+                className="text-zinc-400 hover:text-red-400 p-1.5 transition-colors cursor-pointer"
+                title="Log out"
+              >
+                <FiLogOut size={18} />
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="text-xs font-semibold bg-zinc-800 text-zinc-200 px-2.5 py-1 rounded-lg hover:bg-zinc-700 transition-colors"
+              >
+                Log in
+              </Link>
+            )}
           </div>
         </header>
 
@@ -143,7 +161,7 @@ const handleCategoryChange = (e) => {
               </Link>
             </li>
 
-             {/* Workouts */}
+            {/* Workouts */}
             <li className="w-full">
               <Link
                 to="/workouts"
