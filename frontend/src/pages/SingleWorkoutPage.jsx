@@ -46,7 +46,7 @@ function SingleWorkoutPage({ currentUser }) {
     };
 
     return (
-        <section className="flex-1 p-6 max-w-2xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
+        <section className="flex-1 p-6 max-w-2xl mx-auto pt-16 md:pt-6 font-sans text-gray-800 xl:pt-6 pb-24">
             {error && (
                 <div className="w-full bg-red-50 text-red-600 border border-red-100 p-3 rounded-xl mb-6 text-xs font-medium">
                     {error}
