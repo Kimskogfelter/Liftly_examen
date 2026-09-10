@@ -60,7 +60,7 @@ function WorkoutPage({ currentUser }) {
     });
 
     return (
-        <section className="flex-1 p-6 max-w-2xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
+        <section className="flex-1 p-6 max-w-2xl mx-auto pt-20 xl:pt-6 font-sans text-gray-800">
 
             {/* Premium Dashboard Header (Ikon, Undertext & Profil-badge) */}
 

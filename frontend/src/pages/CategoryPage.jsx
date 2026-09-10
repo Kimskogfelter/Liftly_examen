@@ -50,7 +50,7 @@ function CategoryPage({ currentUser }) {
     }
 
     return (
-        <section className="flex-1 p-6 max-w-4xl mx-auto pt-16 md:pt-6 font-sans text-gray-800">
+        <section className="flex-1 px-2 md:px-6 max-w-4xl mx-auto pt-20 xl:pt-6 font-sans text-gray-800">
 
             {/* Centrerad Header – Exakt samma layout som Saved Posts */}
             <div className="w-full text-center mb-8 border-b border-zinc-200 pb-5">

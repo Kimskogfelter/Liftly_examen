@@ -48,7 +48,8 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
     : posts.filter(post => post.category?.toLowerCase() === selectedCategory.toLowerCase());
 
   return (
-    <section className="flex-1 w-full max-w-4xl mx-auto p-6 pt-16 md:pt-6 font-sans text-gray-800 relative">
+    /* 🔴 KORRIGERAT: Separerad sido-padding (px) och topp-padding (pt) så att titeln alltid knuffas ner under headern på iPad */
+    <section className="flex-1 w-full max-w-4xl mx-auto px-2 md:px-6 pb-10 pt-20 xl:pt-6 font-sans text-gray-800 relative">
 
       {/* Header */}
       <div className="w-full text-center mb-4 border-b border-zinc-200 pb-4">
@@ -59,18 +60,19 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
           </h1>
         </div>
 
-        {/* MOBIL: Kategori-scroll (strikt avskärmad) */}
+        {/* MOBIL & IPAD: Kategori-scroll (visas under xl) */}
         {posts.length > 0 && (
-          <div className="md:hidden w-full max-w-[calc(100vw-3rem)] mx-auto overflow-x-auto no-scrollbar py-2 mt-3">
+          <div className="xl:hidden w-full max-w-[calc(100vw-2rem)] mx-auto overflow-x-auto no-scrollbar py-2 mt-3">
             <div className="flex items-center gap-2 w-max px-1">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat.id
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 whitespace-nowrap transition-all cursor-pointer ${
+                    selectedCategory === cat.id
                       ? "bg-black text-white"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
+                  }`}
                 >
                   {cat.label}
                 </button>
@@ -87,7 +89,7 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
         </div>
       )}
 
-      {/* INNEHÅLL: Inläggsrutnät – tar nu 100% av max-w-2xl precis som Profile/Category */}
+      {/* INNEHÅLL */}
       <div className="w-full">
         {posts.length === 0 ? (
           <div className="text-center py-16 bg-zinc-50/50 rounded-2xl border border-dashed border-zinc-200">
@@ -114,7 +116,7 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
         )}
       </div>
 
-      {/* DESKTOP-MENY: Placerad utanför max-w-2xl till höger */}
+      {/* DESKTOP-MENY: Placerad till höger (endast på XL-skärmar) */}
       {posts.length > 0 && (
         <aside className="hidden xl:block absolute left-[102%] top-6 w-44">
           <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-3">
@@ -127,10 +129,11 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${isActive
+                  className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                    isActive
                       ? "font-bold text-black bg-zinc-100"
                       : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
-                    }`}
+                  }`}
                 >
                   {cat.label}
                 </button>
