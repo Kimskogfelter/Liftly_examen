@@ -43,7 +43,7 @@ const handleCategoryChange = (e) => {
       {/* =========================================================================
           1. MOBILE VIEW (Top Header + Bottom Menu)
           ========================================================================= */}
-      <div className="block md:hidden">
+      <div className="block xl:hidden">
 
         {/* MOBILE TOP HEADER */}
         <header className="fixed top-0 left-0 w-full h-14 bg-[#0D0D0E] border-b border-zinc-800 flex items-center justify-between px-4 z-50">
@@ -100,7 +100,7 @@ const handleCategoryChange = (e) => {
       {/* =========================================================================
           2. DESKTOP VIEW (Sidebar on the left side)
           ========================================================================= */}
-      <nav className="hidden md:flex flex-col justify-between items-center w-32 h-screen bg-[#0D0D0E] p-4 border-r border-zinc-800 fixed top-0 left-0 z-50 font-sans">
+      <nav className="hidden xl:flex flex-col justify-between items-center w-32 h-screen bg-[#0D0D0E] p-4 border-r border-zinc-800 fixed top-0 left-0 z-50 font-sans">
 
         {/* Logo + Links */}
         <div className="flex flex-col items-start w-full gap-5">
