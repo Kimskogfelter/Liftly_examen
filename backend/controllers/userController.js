@@ -141,10 +141,22 @@ export const loginUser = async (req, res, next) => {
 
         }
 
-        // generate authentication token for login
-        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "10min" });
-        // sends token, user id, username, profile bio. profile image and saved posts to client
-        return res.status(200).json({ token, id: user._id, username: user.username, profileImage: user.profileImage, profileBio: user.profileBio, savedPosts: user.savedPosts, })
+        // 1. generate authentication "access" token for login
+        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        // 2. Refresh token (60 days)
+        const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "60d" });
+        // 3. Spara refresh token på användaren i databasen
+        user.refreshTokens.push({ token: refreshToken });
+        await user.save();
+        // sends token, refreshToken, user id, username, profile bio. profile image and saved posts to client
+        return res.status(200).json({ 
+            token, 
+            refreshToken, 
+            id: user._id, 
+            username: user.username, 
+            profileImage: user.profileImage, 
+            profileBio: user.profileBio, 
+            savedPosts: user.savedPosts, })
 
 
     } catch (error) {
