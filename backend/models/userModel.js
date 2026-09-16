@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     resetPasswordToken: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null },
+    refreshTokens: [{
+        token: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now }
+    }],
 
 }, { timestamps: true })
 
