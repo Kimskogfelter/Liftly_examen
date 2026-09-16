@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import PostCard from "../components/posts/PostCard";
 import CreateCommentForm from "../components/comments/CreateCommentForm";
 import CommentList from "../components/comments/CommentList";
 
 function SinglePostPage({ currentUser, setCurrentUser }) {
     // states and variables
-    const token = currentUser?.token;
     const { postId } = useParams(); // get post ID from URL parameters
     const [post, setPost] = useState(null); // state to hold post details
     const [comments, setComments] = useState([]); // state to hold comments for the post
@@ -19,11 +18,7 @@ function SinglePostPage({ currentUser, setCurrentUser }) {
     const fetchPostDetails = async () => {
         try {
             // fetch post data from backend
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${postId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await api.get(`/posts/${postId}`);
             console.log("Post details fetched successfully:", response.data);
             // update the post and comments state with the fetched data from the backend
             setPost(response.data.post);

@@ -1,12 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 
 function CreateCommentForm({ currentUser, comments, setComments, postId }) {
 
   // states and variables
-  const token = currentUser?.token;
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
 
@@ -16,11 +15,7 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
     try {
 
       // send comment data to backend
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/${postId}/comments/create`, { content, postId }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.post(`/posts/${postId}/comments/create`, { content, postId });
       console.log("Comment created successfully:", response.data);
 
       // add the new comment to the comments state to update the UI

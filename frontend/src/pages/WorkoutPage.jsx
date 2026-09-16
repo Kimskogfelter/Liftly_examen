@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import CreateWorkoutModal from "../components/workouts/CreateWorkoutModal";
 import WorkoutGridItem from "../components/workouts/WorkoutGridItem";
 import { LuDumbbell } from "react-icons/lu";
@@ -23,12 +23,8 @@ function WorkoutPage({ currentUser }) {
 
     const getWorkouts = async () => {
         try {
-            const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/workouts/user`,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            const response = await api.get(
+                `${import.meta.env.VITE_API_URL}/workouts/user`);
             setWorkouts(response.data.workouts);
         } catch (err) {
             setError("Couldnt fetch workouts.");

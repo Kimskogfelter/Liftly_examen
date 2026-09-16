@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 
 function WorkoutCard({ workout, currentUser }) {
-
-    const token = currentUser?.token;
 
     // Initiera statet med övningarna som kom från backend
     const [exercises, setExercises] = useState(workout?.exercises || []);
@@ -18,11 +16,8 @@ function WorkoutCard({ workout, currentUser }) {
 
     const autoSaveWorkout = async (exercises) => {
         try {
-            await axios.patch(
-                `${import.meta.env.VITE_API_URL}/workouts/${workout._id}/update`,
-                { exercises: exercises },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            await api.patch(`/workouts/${workout._id}/update`,
+                { exercises: exercises });
             console.log("Auto-saved successfully!", exercises);
         } catch (err) {
             console.error("Auto-save failed:", err);

@@ -1,9 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 
 function DeletePostModal({ post, onClose, currentUser, handleDeletePost }) {
 
-  const token = currentUser.token;
   const [error, setError] = useState("");
 
 
@@ -12,11 +11,7 @@ function DeletePostModal({ post, onClose, currentUser, handleDeletePost }) {
     try {
 
       // delete post data from backend
-      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/posts/${post._id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.delete(`/posts/${post._id}`);
       console.log("Post deleted successfully from backend with id:", post._id);
 
 

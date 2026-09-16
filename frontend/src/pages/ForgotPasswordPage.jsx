@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import logo from "../assets/images/liftly-logo.png";
 
 function ForgotPasswordPage() {
@@ -16,7 +16,7 @@ function ForgotPasswordPage() {
     setMessage("");
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         `${import.meta.env.VITE_API_URL}/users/forgot-password`,
         { email }
       );

@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PostFeed from "../components/posts/PostFeed";
-import axios from "axios";
+import api from "../api/axios";
 import { FiHash, FiGrid } from "react-icons/fi";
 
 function HashtagPage({ currentUser }) {
-  const token = currentUser?.token;
   const { hashtag } = useParams();
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
@@ -18,14 +17,7 @@ function HashtagPage({ currentUser }) {
         setError("");
         setPosts([]);
 
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/posts/hashtag?hashtag=${hashtag}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await api.get(`/posts/hashtag?hashtag=${hashtag}`);
         setPosts(res.data.getAllPosts || res.data);
       } catch (err) {
         if (err.response?.status === 404) {

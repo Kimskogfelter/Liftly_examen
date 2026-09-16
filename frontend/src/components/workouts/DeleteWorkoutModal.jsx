@@ -1,17 +1,14 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 
 function DeleteWorkoutModal({ workout, currentUser, onClose, handleDeleteWorkout }) {
 
-    const token = currentUser?.token;
     const [isDeleting, setIsDeleting] = useState(false);
 
     const removeWorkout = async () => {
         setIsDeleting(true);
         try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/workouts/${workout._id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/workouts/${workout._id}`);
 
             handleDeleteWorkout(workout._id);
             onClose();

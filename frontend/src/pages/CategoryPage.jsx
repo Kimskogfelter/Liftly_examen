@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import PostFeed from "../components/posts/PostFeed";
-import axios from "axios";
+import api from "../api/axios";
 import { FiFolder, FiGrid } from "react-icons/fi";
 
 function CategoryPage({ currentUser }) {
 
-    const token = currentUser?.token;
     const { categoryName } = useParams();
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState("");
@@ -22,11 +21,7 @@ function CategoryPage({ currentUser }) {
                 setPosts([]);
 
                 // Här gör vi det skalbara anropet direkt till ditt backend-filter!
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/category?category=${categoryName}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+                const res = await api.get(`/posts/category?category=${categoryName}`);
                 setPosts(res.data.getAllPosts || res.data);
 
 

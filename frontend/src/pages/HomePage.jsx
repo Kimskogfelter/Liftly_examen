@@ -1,30 +1,33 @@
 import { useState, React, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import PostFeed from "../components/posts/PostFeed";
 
 function HomePage({ currentUser, setCurrentUser }) {
   const [posts, setPosts] = useState([]);
   const [followingPosts, setFollowingPosts] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
-  const token = currentUser?.token;
   const [error, setError] = useState("");
 
   const getPosts = async () => {
+    // 1. Hämta alla public posts
     try {
-      const allPostsRes = await axios.get(`${import.meta.env.VITE_API_URL}/posts`);
+      const allPostsRes = await api.get(`/posts`);
       setPosts(allPostsRes.data.getAllPosts);
-
-      if (token) {
-        const followingPostsRes = await axios.get(`${import.meta.env.VITE_API_URL}/posts/following`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setFollowingPosts(followingPostsRes.data.followingPosts);
-      }
     } catch (err) {
       if (err.response?.status !== 404) {
-        const errorResponse = err.response?.data;
-        setError(errorResponse?.message || "Posts could not be fetched. Please try again.");
+        setError("Public posts could not be fetched.");
+      }
+    }
+
+    // 2. Hämta skyddade following posts separat
+    if (currentUser) {
+      try {
+        const followingPostsRes = await api.get(`/posts/following`);
+        setFollowingPosts(followingPostsRes.data.followingPosts);
+      } catch (err) {
+        // Hit kommer koden om token gått ut, interceptorn körs och förnyar!
+        console.error("Error fetching following posts:", err);
       }
     }
   };
@@ -51,11 +54,10 @@ function HomePage({ currentUser, setCurrentUser }) {
           {/* ALL BUTTON */}
           <button
             onClick={() => setActiveTab("posts")}
-            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${
-              activeTab === "posts"
+            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${activeTab === "posts"
                 ? "border-gray-800 text-gray-800"
                 : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
+              }`}
           >
             All
           </button>
@@ -63,11 +65,10 @@ function HomePage({ currentUser, setCurrentUser }) {
           {/* FOLLOWING BUTTON */}
           <button
             onClick={() => setActiveTab("following")}
-            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${
-              activeTab === "following"
+            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${activeTab === "following"
                 ? "border-gray-800 text-gray-800"
                 : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
+              }`}
           >
             Following
           </button>

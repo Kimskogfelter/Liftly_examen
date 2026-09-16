@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { useNavigate, Link } from 'react-router-dom';
 import logo from '../assets/images/liftly-logo.png';
 
@@ -17,7 +17,7 @@ function LoginPage({ setCurrentUser }) {
     try {
 
       // send login data to backend
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, { username, password });
+      const response = await api.post(`/users/login`, { username, password });
       console.log("Login successful:", response.data);
       // redirect to dashboard page after successful login
       if (response.status === 200) {

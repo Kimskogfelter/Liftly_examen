@@ -1,6 +1,6 @@
 import { useState, useEffect, React } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import ProfileImage from "../components/users/ProfileImage";
 import EditProfileImage from "../components/users/EditProfileImage";
 import EditProfileBio from "../components/users/EditProfileBio";
@@ -12,7 +12,6 @@ import { FaCamera } from "react-icons/fa";
 function ProfilePage({ currentUser, setCurrentUser }) {
 
   const [error, setError] = useState("");
-  const token = currentUser?.token;
 
   const { userId } = useParams();
   const [userInfo, setUserInfo] = useState(null);
@@ -28,11 +27,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
   const getUserInfo = async () => {
     try {
       // fetched user information from backend
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.get(`/users/${userId}`);
 
       console.log("User info fetched successfully:", response.data.user);
 

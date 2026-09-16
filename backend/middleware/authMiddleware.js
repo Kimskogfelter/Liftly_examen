@@ -12,7 +12,7 @@ export const authMiddleware = async (req, res, next) => {
 
             if(err) {
 
-                return next(new HttpError("Unauthorized. Invalid token", 403))
+                return next(new HttpError("Unauthorized. Invalid token", 401))
             }
 
             req.user = info;

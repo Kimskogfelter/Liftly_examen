@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { SlPicture } from "react-icons/sl";
 
 function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo }) {
@@ -23,9 +23,8 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
         try {
 
             // send updated data to backend
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/profile-image`, { profileImage }, {
+            const response = await api.post(`/users/profile-image`, { profileImage }, {
                 headers: {
-                    Authorization: `Bearer ${currentUser?.token}`,
                     "Content-Type": "multipart/form-data"
                 }
             });

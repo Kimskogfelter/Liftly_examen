@@ -1,12 +1,11 @@
 import { useState, React, useEffect } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import PostFeed from "../components/posts/PostFeed";
 import SearchBar from "../components/layout/SearchBar";
 import { useSearchParams, Link } from "react-router-dom";
 
 function SearchPage({ currentUser, setCurrentUser }) {
 
-    const token = currentUser?.token;
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const [activeTab, setActiveTab] = useState("posts");
@@ -21,11 +20,8 @@ function SearchPage({ currentUser, setCurrentUser }) {
         try {
 
             // fetched created posts data from backend
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/search`, {
-                params: { query: searchQuery },
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+            const response = await api.get(`/search`, {
+                params: { query: searchQuery }
             });
 
             console.log("Search results fetched successfully:", response.data);

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { FiTrash2, FiPlus } from "react-icons/fi";
 
 function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) {
 
-    const token = currentUser?.token;
     const workoutId = workout._id;
     const [title, setTitle] = useState(workout.title || "");
     const [day, setDay] = useState(workout.day || "Monday");
@@ -74,13 +73,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
         setError("");
 
         try {
-            const response = await axios.patch(
-                `${import.meta.env.VITE_API_URL}/workouts/${workoutId}/update`,
-                { title, day, exercises: sanitizedExercises },
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            const response = await api.patch(`/workouts/${workoutId}/update`, { title, day, exercises: sanitizedExercises });
 
             console.log("Workout updated:", response.data);
             const updatedWorkout = response.data.workout;

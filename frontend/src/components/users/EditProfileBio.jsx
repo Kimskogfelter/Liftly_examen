@@ -1,5 +1,5 @@
 import { useState, React } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 
 function EditProfileBio({ onClose, currentUser, setCurrentUser, getUserInfo }) {
 
@@ -19,11 +19,7 @@ function EditProfileBio({ onClose, currentUser, setCurrentUser, getUserInfo }) {
         try {
 
             // send updated data to backend
-            const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/update`, { profileBio }, {
-                headers: {
-                    Authorization: `Bearer ${currentUser?.token}`
-                }
-            });
+            const response = await api.patch(`/users/update`, { profileBio });
 
             console.log("Profile bio update request sent successfully:", response.data);
 

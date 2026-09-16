@@ -142,7 +142,7 @@ export const loginUser = async (req, res, next) => {
         }
 
         // 1. generate authentication "access" token for login
-        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "10s" });
         // 2. Refresh token (60 days)
         const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "60d" });
         // 3. Spara refresh token på användaren i databasen

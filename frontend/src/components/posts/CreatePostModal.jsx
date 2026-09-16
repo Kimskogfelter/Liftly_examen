@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import { FiImage } from "react-icons/fi";
 import { IoCloseCircle } from "react-icons/io5";
 import { BsSpotify } from "react-icons/bs";
@@ -10,7 +10,6 @@ import { TagsInput } from "react-tag-input-component";
 
 function CreatePostModal({ currentUser, onClose }) {
   // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
-  const token = currentUser?.token;
   const [content, setContent] = useState("");
   const [media, setMedia] = useState([]);
   const [hashtags, setHashtags] = useState([]);
@@ -58,11 +57,7 @@ function CreatePostModal({ currentUser, onClose }) {
       }
 
       // Send post data to backend
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/create`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await api.post(`/posts/create`, formData);
       console.log("Post created successfully:", response.data);
 
       // Reset form fields and error message

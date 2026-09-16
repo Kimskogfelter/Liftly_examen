@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 function EditPostModal({ onClose, handleEditPost, post, currentUser }) {
@@ -18,11 +18,7 @@ function EditPostModal({ onClose, handleEditPost, post, currentUser }) {
     try {
       
       // Send updated post data to backend
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${postId}/update`, { content }, {
-        headers: {
-          Authorization: `Bearer ${currentUser?.token}`
-        }
-      });
+      const response = await api.patch(`/posts/${postId}/update`, { content });
 
       console.log("Post update request sent successfully:", response.data);
 

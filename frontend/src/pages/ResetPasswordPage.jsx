@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import logo from "../assets/images/liftly-logo.png";
 
 function ResetPasswordPage() {
@@ -29,10 +29,8 @@ function ResetPasswordPage() {
     setMessage("");
 
     try {
-      const res = await axios.patch(
-        `${import.meta.env.VITE_API_URL}/users/reset-password/${token}`,
-        { password }
-      );
+      const res = await api.patch(
+        `/users/reset-password/${token}`, { password });
       setMessage(res.data.message);
 
       setTimeout(() => {

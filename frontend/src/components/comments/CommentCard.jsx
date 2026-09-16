@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import ProfileImage from "../users/ProfileImage";
 import CommentReplyItem from "./CommentReplyItem";
 import { handleCommentLikeToggle } from "../../functions/comments/handleCommentLikeToggle";
@@ -8,7 +8,6 @@ import { FiHeart } from "react-icons/fi";
 import TimeAgo from "react-timeago";
 
 function CommentCard({ comment, currentUser }) {
-    const token = currentUser?.token;
 
     const [isLiked, setIsLiked] = useState(comment.likes?.includes(currentUser?.id) || false);
     const [likesCount, setLikesCount] = useState(comment.likes?.length || 0);
@@ -43,11 +42,9 @@ function CommentCard({ comment, currentUser }) {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/posts/comments/${comment._id}/reply`,
-                { content: replyContent },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            const response = await api.post(`/posts/comments/${comment._id}/reply`, {
+                content: replyContent,
+            });
 
             setReplies((prev) => [...prev, response.data.reply]);
             setReplyContent("");

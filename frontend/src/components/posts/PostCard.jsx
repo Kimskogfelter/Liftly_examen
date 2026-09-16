@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
 import { handlePostLikeToggle } from "../../functions/posts/handlePostLikeToggle";
@@ -26,6 +26,12 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
     const hasMedia = post.media && post.media.length > 0;
     const currentMediaUrl = hasMedia ? post.media[currentMediaIndex] : "";
     const isVideo = currentMediaUrl.match(/\.(mp4|mov|webm|mkv|avi)$/i) || currentMediaUrl.includes("/video/upload/");
+
+    const navigate = useNavigate();
+
+    const handleCardClick = () => {
+        navigate(`/posts/${post._id}`);
+    };
 
     const handleNextMedia = (e) => {
         e.preventDefault();
@@ -93,7 +99,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     </div>
 
                     {/* POST INNEHÅLL */}
-                    <Link to={`/posts/${post._id}`} className="block group text-left">
+                    <div onClick={handleCardClick} className="block group text-left">
 
                         {/* 🔴 1. MEDIA HÖGST UPP (Om det finns) */}
                         {hasMedia && (
@@ -161,16 +167,27 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 {post.content}
                                 {post.hashtags && post.hashtags.length > 0 && (
                                     <span className="inline-flex flex-wrap gap-1.5 ml-1.5 font-semibold text-gray-500">
-                                        {post.hashtags.map((hashtag, index) => (
-                                            <span key={index} className="hover:underline cursor-pointer">
-                                                {hashtag.startsWith('#') ? hashtag : `#${hashtag}`}
-                                            </span>
-                                        ))}
+                                        {post.hashtags.map((hashtag, index) => {
+                                            // Rensa bort # om det redan finns i strängen för URL:en
+                                            const cleanTag = hashtag.startsWith('#') ? hashtag.slice(1) : hashtag;
+                                            const displayTag = hashtag.startsWith('#') ? hashtag : `#${hashtag}`;
+
+                                            return (
+                                                <Link
+                                                    key={index}
+                                                    to={`/hashtag/${cleanTag}`}
+                                                    onClick={(e) => e.stopPropagation()} // STOPPAR klicket från att öppna post-sidan!
+                                                    className="text-gray-600 hover:text-black hover:underline cursor-pointer"
+                                                >
+                                                    {displayTag}
+                                                </Link>
+                                            );
+                                        })}
                                     </span>
                                 )}
                             </p>
                         </div>
-                    </Link>
+                    </div>
 
                     {/* 🎵 SPOTIFY EMBED (Ligger under text/hashtags) */}
                     {spotifyEmbedUrl && (

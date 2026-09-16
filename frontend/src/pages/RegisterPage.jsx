@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from '../assets/images/liftly-logo.png';
@@ -21,7 +21,7 @@ function RegisterPage() {
     try {
 
       // send registration data to backend
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, email, password, confirmPassword });
+      const response = await api.post(`/users/register`, { username, email, password, confirmPassword });
       console.log("Registration successful:", response.data);
       // redirect to login page after successful registration
       if (response.status === 201) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import PostFeed from "../components/posts/PostFeed";
 import { FiBookmark } from "react-icons/fi";
 
@@ -29,9 +29,7 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
 
   const getSavedPosts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/savedposts`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`${import.meta.env.VITE_API_URL}/users/savedposts`);
       setPosts(response.data.savedPosts);
     } catch (err) {
       const errorResponse = err.response?.data;

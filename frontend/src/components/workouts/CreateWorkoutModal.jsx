@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { LuDumbbell } from "react-icons/lu";
 
 function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
-  const token = currentUser?.token;
 
   const [day, setDay] = useState("Monday");
   const [title, setTitle] = useState("");
@@ -77,15 +76,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
     });
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/workouts/create`,
-        { day, title, exercises: formattedExercises }, // Skicka den omvandlade datan!
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const response = await api.post(`/workouts/create`, { day, title, exercises: formattedExercises });
 
       console.log("Workout created successfully:", response.data);
 

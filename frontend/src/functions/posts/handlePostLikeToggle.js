@@ -1,19 +1,13 @@
-import axios from "axios";
+import api from "../../api/axios";
 
 export const handlePostLikeToggle = async (isLiked, setIsLiked, setLikesCount, post, currentUser) => {
-
-    const token = currentUser?.token;
 
     try {
 
     if (isLiked) {
 
         // unlike post
-        const response = await axios.delete(`${import.meta.env.VITE_API_URL}/posts/${post._id}/unlike`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
+        const response = await api.delete(`/posts/${post._id}/unlike`); 
 
         console.log("unlike post data:", response.data);
         console.log(`Post with id${post._id} have been unliked`)
@@ -24,11 +18,7 @@ export const handlePostLikeToggle = async (isLiked, setIsLiked, setLikesCount, p
     } else {
 
         // like post
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/${post._id}/like`, {}, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await api.post(`/posts/${post._id}/like`, {});
 
         console.log("like post data:", response.data);
         console.log(`Post with id${post._id} have been liked`)

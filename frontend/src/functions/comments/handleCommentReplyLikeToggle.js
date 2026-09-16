@@ -1,8 +1,7 @@
-import axios from "axios";
+import api from "../../api/axios";
 
 export const handleCommentReplyLikeToggle = async (isReplyLiked, setIsReplyLiked, setReplyLikesCount, comment, reply, currentUser) => {
 
-    const token = currentUser?.token;
     const commentId = comment._id;
     const replyId = reply._id;
 
@@ -12,11 +11,7 @@ export const handleCommentReplyLikeToggle = async (isReplyLiked, setIsReplyLiked
         
 
         // unlike comment reply
-        const response = await axios.delete(`${import.meta.env.VITE_API_URL}/posts/comments/${commentId}/replies/${replyId}/unlike`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
+        const response = await api.delete(`/posts/comments/${commentId}/replies/${replyId}/unlike`); 
 
         console.log("unlike comment reply data:", response.data);
         console.log(`Reply with id ${replyId} has been unliked`)
@@ -27,11 +22,7 @@ export const handleCommentReplyLikeToggle = async (isReplyLiked, setIsReplyLiked
     } else {
 
         // like comment reply
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/comments/${commentId}/replies/${replyId}/like`, {}, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await api.post(`/posts/comments/${commentId}/replies/${replyId}/like`, {});
 
         console.log("like comment reply data:", response.data);
         console.log(`Reply with id ${replyId} has been liked`)

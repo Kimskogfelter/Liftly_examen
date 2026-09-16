@@ -13,7 +13,10 @@ export const errorHandler = (error, req, res, next) => {
     return next(error);
   }
 
-  res.status(error.status || 500).json({
+  // Kolla error.code först (där HttpError brukar spara statuskoden)
+  const statusCode = error.code || error.statusCode || error.status || 500;
+
+  res.status(statusCode).json({
     message: error.message || "An unknown error occured."
   });
 };

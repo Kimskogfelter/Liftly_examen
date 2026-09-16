@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import WorkoutCard from "../components/workouts/WorkoutCard";
 
 function SingleWorkoutPage({ currentUser }) {
@@ -13,12 +13,7 @@ function SingleWorkoutPage({ currentUser }) {
     // Funktion för att hämta passets detaljer från backend
     const getWorkout = async () => {
         try {
-            const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/workouts/${workoutId}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            const response = await api.get(`${import.meta.env.VITE_API_URL}/workouts/${workoutId}`);
             setWorkout(response.data.workout || response.data);
 
             console.log("Fetched workout details:", response.data);

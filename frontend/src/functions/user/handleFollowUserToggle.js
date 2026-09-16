@@ -1,19 +1,13 @@
-import axios from "axios";
+import api from "../../api/axios";
 
 export const handleFollowUserToggle = async (userInfo, setUserInfo, currentUser, isAlreadyFollowing) => {
-
-    const token = currentUser?.token;
 
     try {
 
     if (isAlreadyFollowing) {
 
         // unfollow user
-        const response = await axios.delete(`${import.meta.env.VITE_API_URL}/users/${userInfo._id}/unfollow`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }); 
+        const response = await api.delete(`/users/${userInfo._id}/unfollow`); 
 
         console.log("unfollowed user successfully:", response.data);
         console.log(`User with id${userInfo._id} have been unfollowed`)
@@ -28,11 +22,7 @@ export const handleFollowUserToggle = async (userInfo, setUserInfo, currentUser,
     } else {
 
         // follow user
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/${userInfo._id}/follow`, {}, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await api.post(`/users/${userInfo._id}/follow`, {});
 
         console.log("followed user successfully:", response.data);
         console.log(`User with id${userInfo._id} have been followed`)
