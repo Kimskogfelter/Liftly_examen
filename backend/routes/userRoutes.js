@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser, loginUser, getUser, getUsers, updateUser, followUser, unfollowUser, changeProfileImage, deleteUser, getSavedPosts, authUser, forgotPassword, resetPassword} from '../controllers/userController.js';
+import { registerUser, loginUser, getUser, getUsers, updateUser, followUser, unfollowUser, changeProfileImage, deleteUser, getSavedPosts, authUser, forgotPassword, resetPassword, refreshToken} from '../controllers/userController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/cloudinaryUpload.js'
 
@@ -10,6 +10,7 @@ export const userRouter = Router();
 // ---------------------------- user routes --------------------------- 
 userRouter.post('/register', registerUser)
 userRouter.post('/login', loginUser)
+userRouter.post('/refresh', refreshToken);
 
 userRouter.get('/', authMiddleware, getUsers)
 
