@@ -644,6 +644,45 @@ export const resetPassword = async (req, res, next) => {
     }
 };
 
+// ---------------------------- REFRESH TOKEN --------------------------- 
+// POST req: api/users/refresh
+// UNPROTECTED
+
+export const refreshToken = async (req, res, next) => {
+    try {
+        const { refreshToken } = req.body;
+
+        if (!refreshToken) {
+            return next(new HttpError("Refresh Token missing", 401));
+        }
+
+        // 1. Verifiera om refresh token är giltig (inte utgången eller manipulerad)
+        let decoded;
+        try {
+            decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        } catch (err) {
+            return next(new HttpError("Invalid or expired Refresh Token", 403));
+        }
+
+        // 2. Hitta användaren och kontrollera om denna refreshToken finns i MongoDB
+        const user = await User.findById(decoded.id);
+        const tokenExists = user?.refreshTokens.some(t => t.token === refreshToken);
+
+        if (!user || !tokenExists) {
+            return next(new HttpError("Refresh Token revoked or not found", 403));
+        }
+
+        // 3. Skapa en ny färsk Access Token (gäller 1 timme)
+        const newToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        // 4. Skicka tillbaka den nya access token till klienten
+        return res.status(200).json({ token: newToken });
+
+    } catch (error) {
+        return next(new HttpError(error));
+    }
+};
+
 // ---------------------------- POSTS ---------------------------
 
 // ---------------------------- GET SAVED POSTS --------------------------- 
