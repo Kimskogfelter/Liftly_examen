@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
@@ -19,32 +18,24 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
     const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUser?.id) || false);
     const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.map(String).includes(String(post._id)) || false);
 
-    // State to manage the selected image for the fullsize modal
     const [fullsizeImage, setFullsizeImage] = useState(null);
 
-    // spotify embed URL for the post if it exists
     const spotifyEmbedUrl = post.spotifyUrl ? createSpotifyEmbedUrl(post.spotifyUrl) : null;
-
-    // State to keep track of the currently active media index
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
 
-    // Guard clause to check if media exists and has items
     const hasMedia = post.media && post.media.length > 0;
     const currentMediaUrl = hasMedia ? post.media[currentMediaIndex] : "";
-
-    // Check if the currently active file is a video
     const isVideo = currentMediaUrl.match(/\.(mp4|mov|webm|mkv|avi)$/i) || currentMediaUrl.includes("/video/upload/");
 
-    // Functions to navigate between multiple images/videos
     const handleNextMedia = (e) => {
-        e.preventDefault(); // Prevents the Link component from triggering a redirect
+        e.preventDefault();
         if (post.media && currentMediaIndex < post.media.length - 1) {
             setCurrentMediaIndex(currentMediaIndex + 1);
         }
     };
 
     const handlePrevMedia = (e) => {
-        e.preventDefault(); // Prevents the Link component from triggering a redirect
+        e.preventDefault();
         if (currentMediaIndex > 0) {
             setCurrentMediaIndex(currentMediaIndex - 1);
         }
@@ -52,171 +43,156 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
     return (
         <>
-            {/* Outer card wrapper with dynamic height (h-auto) for seamless text and media layout */}
             <section className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
-                    {/* DISPLAY USER INFORMATION */}
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-full overflow-hidden">
+                    {/* HEADER: Användare, Tidsstämpel, Kategori och Meny */}
+                    <div className="flex items-center justify-between mb-3 gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
                                 <ProfileImage profileImage={post.createdBy?.profileImage} />
                             </div>
-                            <Link to={`/users/${post.createdBy?._id}`} className="font-semibold text-sm hover:underline text-black tracking-wide">
-                                {post.createdBy?.username}
-                            </Link>
-                        </div>
-
-                        {/* POST ACTIONS MENU */}
-                        {post.createdBy?._id === currentUser?.id && (
-                            <div className="relative flex items-center justify-center">
-
-                                {showPostActions && (
-                                    <div className="absolute right-11 top-1/2 -translate-y-1/2 z-35 flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1 shadow-md transition-all whitespace-nowrap">
-                                        <PostActionsMenu
-                                            currentUser={currentUser}
-                                            post={post}
-                                            handleEditPost={handleEditPost}
-                                            handleDeletePost={handleDeletePost}
-                                            closeMenu={() => setShowPostActions(false)}
-                                        />
-                                    </div>
-                                )}
-
-                                {/* "..." menu icon */}
-                                <button
-                                    className={`p-1.5 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 z-10 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
-                                    onClick={() => setShowPostActions(!showPostActions)}
-                                >
-                                    {showPostActions ? (
-                                        <FiX size={16} /> /* Displays X icon when edit/delete buttons are showing */
-                                    ) : (
-                                        <BsThreeDots size={16} />
-                                    )}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-
-                    <div>
-                        {/* HASHTAGS */}
-                        <div className="flex flex-wrap gap-1.5 text-xs font-bold text-gray-500 mb-1.5">
-                            {post.hashtags?.map((hashtag, index) => (
-                                <Link key={index} to={`/hashtag/${hashtag.replace('#', '')}`} className="px-1 py-0.5 rounded cursor-pointer transition-colors hover:underline">
-                                    {hashtag.startsWith('#') ? hashtag : `#${hashtag}`}
+                            <div className="flex items-center gap-1.5 truncate text-xs">
+                                <Link to={`/users/${post.createdBy?._id}`} className="font-bold text-black hover:underline tracking-wide truncate">
+                                    {post.createdBy?.username}
                                 </Link>
-                            ))}
+                                <span className="text-gray-400 shrink-0">•</span>
+                                <span className="text-[11px] text-gray-400 shrink-0 font-medium">
+                                    <TimeAgo date={post.createdAt} />
+                                </span>
+                            </div>
                         </div>
 
-                        {/* POST CONTENT WRAPPER */}
-                        <Link to={`/posts/${post._id}`} className="block group mb-3 text-left">
-                            {hasMedia ? (
-                                <>
-                                    {/* MEDIA */}
-                                    {/* Media slider container - Edge-to-edge layout with dynamic height */}
-                                    <div className="relative w-[calc(100%+2rem)] -mx-4 -mt-1 mb-3 bg-black/90 flex items-center justify-center overflow-hidden">
-                                        {isVideo ? (
-                                            <video
-                                                src={currentMediaUrl}
-                                                controls={true}
-                                                loop={true}
-                                                playsInline={true}
-                                                muted={true}
-                                                className="w-full h-auto max-h-80 object-contain"
+                        <div className="flex items-center gap-2 shrink-0">
+                            <span className="bg-zinc-100 text-zinc-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                                {post.category || "General"}
+                            </span>
+
+                            {post.createdBy?._id === currentUser?.id && (
+                                <div className="relative flex items-center justify-center">
+                                    {showPostActions && (
+                                        <div className="absolute right-9 top-1/2 -translate-y-1/2 z-35 flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1 shadow-md whitespace-nowrap">
+                                            <PostActionsMenu
+                                                currentUser={currentUser}
+                                                post={post}
+                                                handleEditPost={handleEditPost}
+                                                handleDeletePost={handleDeletePost}
+                                                closeMenu={() => setShowPostActions(false)}
                                             />
-                                        ) : (
-                                            <img
-                                                src={currentMediaUrl}
-                                                alt="Post media"
-                                                className={`w-full h-auto max-h-80 object-contain ${isDetailView ? "cursor-zoom-in" : ""
-                                                    }`}
-                                                onClick={(e) => {
-                                                    if (isDetailView) {
-                                                        e.preventDefault(); // Stoppa Link-navigering om den ligger inom en Link
-                                                        setFullsizeImage(currentMediaUrl);
-                                                    }
-                                                }}
-                                                onError={(e) => {
-                                                    e.currentTarget.style.display = "none";
-                                                }}
-                                            />
-                                        )}
+                                        </div>
+                                    )}
 
-                                        {/* Previous and next navigation buttons */}
-                                        {currentMediaIndex > 0 && (
-                                            <button
-                                                onClick={handlePrevMedia}
-                                                className="absolute left-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
-                                            >
-                                                <FiChevronLeft size={18} />
-                                            </button>
-                                        )}
-
-                                        {currentMediaIndex < post.media.length - 1 && (
-                                            <button
-                                                onClick={handleNextMedia}
-                                                className="absolute right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
-                                            >
-                                                <FiChevronRight size={18} />
-                                            </button>
-                                        )}
-
-                                        {/* Media position dot indicators */}
-                                        {post.media.length > 1 && (
-                                            <div className="absolute bottom-2 flex gap-1 z-10">
-                                                {post.media.map((_, idx) => (
-                                                    <div
-                                                        key={idx}
-                                                        className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentMediaIndex ? "bg-white scale-125" : "bg-white/50"}`}
-                                                    />
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* POST CONTENT TEXT */}
-                                    {/* Post content text for media posts */}
-                                    <p className={`${isDetailView ? "" : "line-clamp-3"} text-xs text-gray-800 font-normal px-1`}>
-                                        {post.content}
-                                    </p>
-                                </>
-                            ) : (
-                                /* Clean text-only post container without media boxes */
-                                <div className="py-2 px-1">
-                                    <p className={`${isDetailView ? "" : "line-clamp-3"} text-xs text-gray-800 font-normal px-1`}>
-                                        {post.content}
-                                    </p>
+                                    <button
+                                        className={`p-1 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 z-10 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
+                                        onClick={() => setShowPostActions(!showPostActions)}
+                                    >
+                                        {showPostActions ? <FiX size={16} /> : <BsThreeDots size={16} />}
+                                    </button>
                                 </div>
                             )}
-                        </Link>
-                        {/* 🎵 SPOTIFY EMBED PLAYER */}
-                        {spotifyEmbedUrl && (
-                            <div className="mt-2 mb-1 overflow-hidden rounded-lg border border-gray-100 shadow-2xs">
-                                <iframe
-                                    src={spotifyEmbedUrl}
-                                    width="100%"
-                                    height="80"
-                                    frameBorder="0"
-                                    allow="encrypted-media"
-                                    className="w-full block"
-                                />
+                        </div>
+                    </div>
+
+                    {/* POST INNEHÅLL */}
+                    <Link to={`/posts/${post._id}`} className="block group text-left">
+
+                        {/* 🔴 1. MEDIA HÖGST UPP (Om det finns) */}
+                        {hasMedia && (
+                            <div className="relative w-[calc(100%+2rem)] -mx-4 -mt-1 mb-3 bg-black/90 flex items-center justify-center overflow-hidden">
+                                {isVideo ? (
+                                    <video
+                                        src={currentMediaUrl}
+                                        controls={true}
+                                        loop={true}
+                                        playsInline={true}
+                                        muted={true}
+                                        className="w-full h-auto max-h-80 object-contain"
+                                    />
+                                ) : (
+                                    <img
+                                        src={currentMediaUrl}
+                                        alt="Post media"
+                                        className={`w-full h-auto max-h-80 object-contain ${isDetailView ? "cursor-zoom-in" : ""}`}
+                                        onClick={(e) => {
+                                            if (isDetailView) {
+                                                e.preventDefault();
+                                                setFullsizeImage(currentMediaUrl);
+                                            }
+                                        }}
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = "none";
+                                        }}
+                                    />
+                                )}
+
+                                {currentMediaIndex > 0 && (
+                                    <button
+                                        onClick={handlePrevMedia}
+                                        className="absolute left-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
+                                    >
+                                        <FiChevronLeft size={18} />
+                                    </button>
+                                )}
+
+                                {currentMediaIndex < post.media.length - 1 && (
+                                    <button
+                                        onClick={handleNextMedia}
+                                        className="absolute right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
+                                    >
+                                        <FiChevronRight size={18} />
+                                    </button>
+                                )}
+
+                                {post.media.length > 1 && (
+                                    <div className="absolute bottom-2 flex gap-1 z-10">
+                                        {post.media.map((_, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentMediaIndex ? "bg-white scale-125" : "bg-white/50"}`}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
-                    </div>
+
+                        {/* TEXT & HASHTAGS INTEGRERADE I SAMMA PARAGRAF */}
+                        <div className="mb-2 px-0.5">
+                            <p className={`${isDetailView ? "" : "line-clamp-3"} text-xs text-gray-800 font-normal leading-relaxed`}>
+                                {post.content}
+                                {post.hashtags && post.hashtags.length > 0 && (
+                                    <span className="inline-flex flex-wrap gap-1.5 ml-1.5 font-semibold text-gray-500">
+                                        {post.hashtags.map((hashtag, index) => (
+                                            <span key={index} className="hover:underline cursor-pointer">
+                                                {hashtag.startsWith('#') ? hashtag : `#${hashtag}`}
+                                            </span>
+                                        ))}
+                                    </span>
+                                )}
+                            </p>
+                        </div>
+                    </Link>
+
+                    {/* 🎵 SPOTIFY EMBED (Ligger under text/hashtags) */}
+                    {spotifyEmbedUrl && (
+                        <div className="mt-2 mb-2 overflow-hidden rounded-lg border border-gray-100 shadow-2xs">
+                            <iframe
+                                src={spotifyEmbedUrl}
+                                width="100%"
+                                height="80"
+                                frameBorder="0"
+                                allow="encrypted-media"
+                                className="w-full block"
+                            />
+                        </div>
+                    )}
                 </div>
 
+                {/* FOOTER: Enbart Linje + Gilla/Kommentarer/Spara */}
                 <div>
-                    {/* DISPLAY INFORMATION */}
-                    <p className="text-[10px] text-gray-400 mb-2"><TimeAgo date={post.createdAt} /></p>
-                    {/* Category badge */}
-                    <span className="inline-block bg-zinc-100 text-zinc-600 text-[11px] font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">
-                        {post.category || "General"}
-                    </span>
-                    <hr className="border-gray-100 my-3" />
+                    <hr className="border-gray-100 my-2" />
 
-                    {/* Footer Row containing actions and metrics */}
-                    <div className="flex items-center justify-between pt-0.5">
+                    <div className="flex items-center justify-between pt-1">
                         <div className="flex items-center gap-5">
-                            {/* DISPLAY LIKES */}
                             <div className="flex items-center gap-1.5">
                                 <button
                                     className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
@@ -227,7 +203,6 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 <span className="font-medium text-xs text-gray-700">{likesCount}</span>
                             </div>
 
-                            {/* DISPLAY COMMENT COUNT */}
                             <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-lg">
                                 <FiMessageCircle size={18} />
                                 <span className="font-medium text-xs text-gray-700">
@@ -239,16 +214,13 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             </Link>
                         </div>
 
-                        {/* SAVE / BOOKMARK BUTTON */}
                         <button onClick={() => handleSavePost(isSaved, setIsSaved, post, currentUser, setCurrentUser, getSavedPosts)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
                             {isSaved ? <FaBookmark size={18} /> : <FiBookmark size={18} />}
                         </button>
                     </div>
                 </div>
 
-                {/* FULLSIZE IMAGE MODAL */}
                 {fullsizeImage && (
-
                     <FullsizeImageModal imageUrl={fullsizeImage} onClose={() => setFullsizeImage(null)} />
                 )}
             </section>
