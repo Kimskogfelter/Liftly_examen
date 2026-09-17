@@ -150,13 +150,15 @@ export const loginUser = async (req, res, next) => {
         });
 
         // 8. Skicka svar till klienten
-        return res.status(200).json({ 
-            token, 
-            id: user._id, 
-            username: user.username, 
-            profileImage: user.profileImage, 
-            profileBio: user.profileBio, 
+        return res.status(200).json({
+            token,
+            id: user._id,
+            username: user.username,
+            profileImage: user.profileImage,
+            profileBio: user.profileBio,
             savedPosts: user.savedPosts,
+            followers: user.followers,
+            following: user.following
         });
 
     } catch (error) {
@@ -175,7 +177,7 @@ export const logoutUser = async (req, res, next) => {
             // 1. Dekryptera token för att hitta användarens ID (om den är giltig)
             try {
                 const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-                
+
                 // 2. Ta bort just denna refresh token från användarens array i MongoDB
                 await User.findByIdAndUpdate(decoded.id, {
                     $pull: { refreshTokens: { token: refreshToken } }
@@ -217,21 +219,21 @@ export const getUser = async (req, res, next) => {
 
         // fetch user and populate posts, comments, and replies
         const user = await User.findById(userId)
-        .select("-password -refreshTokens -email -resetPasswordToken -resetPasswordExpires")
-        .populate({
-            path: "posts",
-            options: { sort: { createdAt: -1 } },
-            populate: [
-                { path: "createdBy", select: "username profileImage" },
-                {
-                    path: "comments",
-                    populate: [
-                        { path: "createdBy", select: "username profileImage" },
-                        { path: "replies.createdBy", select: "username profileImage" }
-                    ]
-                }
-            ]
-        });
+            .select("-password -refreshTokens -email -resetPasswordToken -resetPasswordExpires")
+            .populate({
+                path: "posts",
+                options: { sort: { createdAt: -1 } },
+                populate: [
+                    { path: "createdBy", select: "username profileImage" },
+                    {
+                        path: "comments",
+                        populate: [
+                            { path: "createdBy", select: "username profileImage" },
+                            { path: "replies.createdBy", select: "username profileImage" }
+                        ]
+                    }
+                ]
+            });
 
         // check if user doesnt exist
         if (!user) {
