@@ -13,14 +13,17 @@
 - [ ] **Frontend: Silent Token Refresh**
   - [ ] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
   - [ ] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
+- Ändra namnet token till accessToken i både frontend och backend för bättre förståelse av vad den gör
 
 
-## Nya Funktioner (Träning & Hälsa)
+## Nya Funktioner
 - [ ] **Recept & Mat**
   - [ ] Skapa struktur och gränssnitt för att bygga egna recept (ingredienser, instruktioner, tillagningstid och makronätring).
 - [ ] **Tränings- & Matdagbok**
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
 - Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
+- Lägg till en following sida som ska visa alla man följer så man lätt kan avfölja personer
+
 
 
 
