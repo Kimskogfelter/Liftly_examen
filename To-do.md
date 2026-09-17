@@ -14,6 +14,7 @@
   - [ ] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
   - [ ] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
 - Ändra namnet token till accessToken i både frontend och backend för bättre förståelse av vad den gör
+- dubbelkolla att ingen del i backend skickar med känslig information till frontend!!
 
 
 ## Nya Funktioner
