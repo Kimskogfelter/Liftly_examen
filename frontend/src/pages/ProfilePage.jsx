@@ -165,6 +165,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
       </div>
       {/* Follower/following modal */}
       <FollowModal
+        currentUser={currentUser}
         userId={userInfo?._id}
         type={followModalType}
         isOpen={Boolean(followModalType)}
