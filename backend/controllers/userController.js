@@ -165,6 +165,39 @@ export const loginUser = async (req, res, next) => {
     }
 };
 
+// ---------------------------- LOG OUT USER --------------------------- 
+// POST req: api/users/logout
+export const logoutUser = async (req, res, next) => {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+
+        if (refreshToken) {
+            // 1. Dekryptera token för att hitta användarens ID (om den är giltig)
+            try {
+                const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+                
+                // 2. Ta bort just denna refresh token från användarens array i MongoDB
+                await User.findByIdAndUpdate(decoded.id, {
+                    $pull: { refreshTokens: { token: refreshToken } }
+                });
+            } catch (err) {
+                // Om tokenen redan var utgången behöver vi inte bry oss om DB-städingen
+            }
+        }
+
+        // 3. Rensa HttpOnly-cookien i webbläsaren
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+        });
+
+        return res.status(200).json({ message: "Logged out successfully" });
+
+    } catch (error) {
+        return next(new HttpError(error.message || "Logout failed", 500));
+    }
+};
 
 // ---------------------------- GET USER --------------------------- 
 // GET req: api/users/:userId
