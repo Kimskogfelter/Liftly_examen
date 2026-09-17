@@ -485,6 +485,41 @@ export const getFollowing = async (req, res, next) => {
     }
 };
 
+
+// ---------------------------- GET FOLLOWERS USERS --------------------------- 
+// GET req: api/users/:userId/followers
+// PROTECTED
+
+export const getFollowers = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+
+        // 1. Validera att ID:t har korrekt MongoDB-format
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: 'Invalid user ID format' });
+        }
+
+        // 2. Hämta användaren OCH fyll arrayen med användardata i ett och samma anrop
+        const user = await User.findById(userId).populate('followers', 'username profileImage');
+
+        // 3. Om användaren inte finns i databasen
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // 4. Returnera listan på följare
+        const followerUsers = user.followers;
+
+        return res.status(200).json({
+            message: "Successfully retrieved followers list",
+            followerUsers
+        });
+
+    } catch (error) {
+        return next(new HttpError(error.message || "Could not fetch followers", 500));
+    }
+};
+
 // ---------------------------- CHANGE PROFILE PICTURE --------------------------- 
 // no id required, only logged in user should be able to do this, verified thru auth middleware
 // POST req: api/users/profile-image
