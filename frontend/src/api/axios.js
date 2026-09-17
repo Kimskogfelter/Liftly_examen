@@ -1,15 +1,16 @@
 import axios from 'axios';
 
-// Skapa en anpassad axios-instans med din bas-URL
+// Skapa en anpassad axios-instans med din bas-URL och tillåt cookies
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+    withCredentials: true // 🔴 KRÄVS för att HttpOnly cookies ska skickas med automatiskt!
 });
 
-// 1. REQUEST INTERCEPTOR: Lägg alltid med den aktuella Access Token i Authorization-headern
+// 1. REQUEST INTERCEPTOR: Skicka med den kortlivade Access Token i Authorization-headern
 api.interceptors.request.use(
     (config) => {
         const user = JSON.parse(localStorage.getItem('currentUser'));
-        const token = user?.token;
+        const token = user?.token; // Access token (15m)
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
@@ -19,7 +20,7 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// 2. RESPONSE INTERCEPTOR: Fånga 401-fel och förnya token automatiskt
+// 2. RESPONSE INTERCEPTOR: Fånga 401-fel och förnya token automatiskt via HttpOnly Cookie
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -30,22 +31,17 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                const refreshToken = currentUser?.refreshToken;
-
-                if (!refreshToken) {
-                    throw new Error("Ingen refresh token tillgänglig");
-                }
-
-                // Anropa din nya refresh-endpoint på backend
+                // 🔴 Cookien med refreshToken skickas automatiskt med tack vare withCredentials: true
                 const response = await axios.post(
                     `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/users/refresh`,
-                    { refreshToken }
+                    {}, // Tom body!
+                    { withCredentials: true }
                 );
 
                 const { token: newAccessToken } = response.data;
 
-                // Uppdatera localStorage med den nya access token
+                // Uppdatera enbart access token i localStorage
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                 const updatedUser = { ...currentUser, token: newAccessToken };
                 localStorage.setItem('currentUser', JSON.stringify(updatedUser));
 
@@ -54,7 +50,7 @@ api.interceptors.response.use(
                 return api(originalRequest);
 
             } catch (refreshError) {
-                // Om refresh token också har gått ut eller återkallats: Logga ut användaren
+                // Om refresh har misslyckats, spärrats eller återanvänts: Logga ut användaren
                 localStorage.removeItem('currentUser');
                 window.location.href = '/login';
                 return Promise.reject(refreshError);
