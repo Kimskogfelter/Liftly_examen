@@ -1,4 +1,4 @@
-import api from './axios'; // Importera din anpassade axios-instans med withCredentials
+import api from '../../api/axios'; // Importera din anpassade axios-instans med withCredentials
 
 export const logout = async (setCurrentUser, navigate) => {
     try {
