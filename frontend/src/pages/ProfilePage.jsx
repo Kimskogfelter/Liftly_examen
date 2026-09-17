@@ -5,6 +5,7 @@ import ProfileImage from "../components/users/ProfileImage";
 import EditProfileImage from "../components/users/EditProfileImage";
 import EditProfileBio from "../components/users/EditProfileBio";
 import PostFeed from "../components/posts/PostFeed";
+import { FollowModal } from "../components/users/FollowModal";
 import { handleFollowUserToggle } from "../functions/user/handleFollowUserToggle";
 import { FaRegEdit } from "react-icons/fa";
 import { FaCamera } from "react-icons/fa";
@@ -22,6 +23,8 @@ function ProfilePage({ currentUser, setCurrentUser }) {
 
   const [showEditProfileImage, setShowEditProfileImage] = useState(false);
   const [showEditProfileBio, setShowEditProfileBio] = useState(false);
+
+  const [followModalType, setFollowModalType] = useState(null); // 'following', 'followers' eller null
 
   // function to fetch user information and posts
   const getUserInfo = async () => {
@@ -102,8 +105,8 @@ function ProfilePage({ currentUser, setCurrentUser }) {
               <button
                 onClick={() => handleFollowUserToggle(userInfo, setUserInfo, currentUser, isAlreadyFollowing)}
                 className={`px-4 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${isAlreadyFollowing
-                    ? "bg-gray-100 hover:bg-gray-200 text-black border border-gray-300"
-                    : "bg-black hover:bg-zinc-800 text-white"
+                  ? "bg-gray-100 hover:bg-gray-200 text-black border border-gray-300"
+                  : "bg-black hover:bg-zinc-800 text-white"
                   }`}
               >
                 {isAlreadyFollowing ? "Following" : "Follow"}
@@ -116,10 +119,10 @@ function ProfilePage({ currentUser, setCurrentUser }) {
             <div>
               <span className="font-bold text-black text-sm">{userInfo?.posts.length}</span> posts
             </div>
-            <div>
+            <div className="cursor-pointer" onClick={() => setFollowModalType('followers')}>
               <span className="font-bold text-black text-sm">{userInfo?.followers.length}</span> followers
             </div>
-            <div>
+            <div className="cursor-pointer" onClick={() => setFollowModalType('following')}>
               <span className="font-bold text-black text-sm">{userInfo?.following.length}</span> following
             </div>
           </div>
@@ -160,6 +163,13 @@ function ProfilePage({ currentUser, setCurrentUser }) {
           layout="grid-3x3"
         />
       </div>
+      {/* Follower/following modal */}
+      <FollowModal
+        userId={userInfo?._id}
+        type={followModalType}
+        isOpen={Boolean(followModalType)}
+        onClose={() => setFollowModalType(null)}
+      />
     </section>
   );
 }
