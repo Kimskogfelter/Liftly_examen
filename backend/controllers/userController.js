@@ -216,7 +216,9 @@ export const getUser = async (req, res, next) => {
         }
 
         // fetch user and populate posts, comments, and replies
-        const user = await User.findById(userId).populate({
+        const user = await User.findById(userId)
+        .select("-password -refreshTokens -email -resetPasswordToken -resetPasswordExpires")
+        .populate({
             path: "posts",
             options: { sort: { createdAt: -1 } },
             populate: [
