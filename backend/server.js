@@ -1,6 +1,7 @@
 import express from 'express';
 import connect from 'mongoose';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import multer from 'multer';
 // Ladda miljövariabler från .env
 import 'dotenv/config';
@@ -21,6 +22,7 @@ const server = express();
 const port = process.env.PORT || 3000;
 
 // middleware funktioner
+server.use(cookieParser());
 server.use(express.urlencoded({extended: true}))
 server.use(express.json({extended: true}))
 server.use(cors({credentials: true, origin: ["http://localhost:5173", "https://liftly-examen.vercel.app"]}))
