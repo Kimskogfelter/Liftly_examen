@@ -112,63 +112,58 @@ export const registerUser = async (req, res, next) => {
 // UNPROTECTED
 
 export const loginUser = async (req, res, next) => {
-
     try {
-
-        // get input from frontend
+        // 1. Hämta indata
         const { username, password } = req.body;
 
-        // validate required fields
+        // 2. Validera fält
         if (!username || !password) {
-
-            return next(new HttpError("Fill in all fields", 422))
+            return next(new HttpError("Fill in all fields", 422));
         }
 
-        // ensure user exists before proceeding
-        const user = await User.findOne({ username: username })
-
+        // 3. Hitta användare
+        const user = await User.findOne({ username: username });
         if (!user) {
-
-            return next(new HttpError("Username doesnt exist", 422))
+            return next(new HttpError("Username doesnt exist", 422));
         }
 
-
-        // compare password with hashed password
+        // 4. Jämför lösenord
         const correctPassword = await bcrypt.compare(password, user.password);
         if (!correctPassword) {
-
-            return next(new HttpError("Incorrect password", 422))
-
+            return next(new HttpError("Incorrect password", 422));
         }
 
-        // 1. generate authentication "access" token for login
-        const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "10s" });
-        // 2. Refresh token (60 days)
-        const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "60d" });
-        // 3. Spara refresh token på användaren i databasen
+        // 5. Skapa Access Token (15m) och Refresh Token (30d)
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
+
+        // 6. Spara refresh token i MongoDB
         user.refreshTokens.push({ token: refreshToken });
         await user.save();
-        // sends token, refreshToken, user id, username, profile bio. profile image and saved posts to client
+
+        // 7. Sätt refreshToken i en HttpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true, // 🔒 Skyddar mot XSS
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 dagar
+        });
+
+        // 8. Skicka svar till klienten
         return res.status(200).json({ 
             token, 
-            refreshToken, 
             id: user._id, 
             username: user.username, 
             profileImage: user.profileImage, 
             profileBio: user.profileBio, 
-            savedPosts: user.savedPosts, })
-
+            savedPosts: user.savedPosts,
+        });
 
     } catch (error) {
-        // Om något går fel när vi försöker logga in användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        // Skicka error.message så att felhanteraren läser det rätt
+        return next(new HttpError(error.message || "Login failed", 500));
     }
-
-}
+};
 
 
 // ---------------------------- GET USER --------------------------- 
@@ -650,13 +645,14 @@ export const resetPassword = async (req, res, next) => {
 
 export const refreshToken = async (req, res, next) => {
     try {
-        const { refreshToken } = req.body;
+        // 1. Hämta refreshToken från cookien
+        const refreshToken = req.cookies.refreshToken;
 
         if (!refreshToken) {
             return next(new HttpError("Refresh Token missing", 401));
         }
 
-        // 1. Verifiera om refresh token är giltig (inte utgången eller manipulerad)
+        // 2. Verifiera om refresh token är giltig
         let decoded;
         try {
             decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
@@ -664,22 +660,45 @@ export const refreshToken = async (req, res, next) => {
             return next(new HttpError("Invalid or expired Refresh Token", 403));
         }
 
-        // 2. Hitta användaren och kontrollera om denna refreshToken finns i MongoDB
+        // 3. Hitta användaren i MongoDB
         const user = await User.findById(decoded.id);
-        const tokenExists = user?.refreshTokens.some(t => t.token === refreshToken);
 
-        if (!user || !tokenExists) {
-            return next(new HttpError("Refresh Token revoked or not found", 403));
+        if (!user) {
+            return next(new HttpError("User not found", 404));
         }
 
-        // 3. Skapa en ny färsk Access Token (gäller 1 timme)
-        const newToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        // 4. REFRESH TOKEN ROTATION & CHECK: Hitta index för tokenen i arrayen
+        const tokenIndex = user.refreshTokens.findIndex(t => t.token === refreshToken);
 
-        // 4. Skicka tillbaka den nya access token till klienten
+        // 🚨 Säkerhet: Om token saknas i DB har den blivit spärrad eller stulen/återanvänd
+        if (tokenIndex === -1) {
+            user.refreshTokens = []; // Töm alla tokens för säkerhets skydd
+            await user.save();
+            res.clearCookie('refreshToken');
+            return next(new HttpError("Reuse detected! Tokens revoked. Please log in again.", 403));
+        }
+
+        // 5. Skapa en ny Access Token och en ny Refresh Token (Rotation)
+        const newToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        const newRefreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
+
+        // 6. Ersätt den gamla tokenen med newRefreshToken i MongoDB
+        user.refreshTokens[tokenIndex] = { token: newRefreshToken };
+        await user.save();
+
+        // 7. Sätt den nya Refresh Tokenen i HttpOnly Cookien
+        res.cookie('refreshToken', newRefreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 dagar
+        });
+
+        // 8. Skicka tillbaka den nya access token till klienten
         return res.status(200).json({ token: newToken });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Internal server error", 500));
     }
 };
 
