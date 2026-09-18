@@ -63,16 +63,19 @@ export const getWorkout = async (req, res, next) => {
             return next(new HttpError("Invalid workout ID", 400));
         }
 
-        const workout = await Workout.findById(workoutId).populate("createdBy", "username profileImage");
+        const workout = await Workout.findById(workoutId);
 
         if (!workout) {
             return next(new HttpError("Workout not found", 404));
         }
 
-        // Check ownership
+        // 🔒 Ägarkontroll på rått ObjectId innan populate
         if (!workout.createdBy.equals(req.user.id)) {
             return next(new HttpError("You are not authorized to view this workout", 403));
         }
+
+        // Populera säkert efter behörighetskontrollen
+        await workout.populate("createdBy", "username profileImage");
 
         return res.status(200).json({
             message: "Workout found",
@@ -80,7 +83,7 @@ export const getWorkout = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error.message || error, 500));
+        return next(new HttpError(error.message || "Could not fetch workout", 500));
     }
 };
 
