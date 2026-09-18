@@ -90,8 +90,10 @@ export const registerUser = async (req, res, next) => {
 
 
         // --------- create new user to database ----------
-        const newUser = await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword })
-        return res.status(201).json(newUser);
+        await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword })
+        return res.status(201).json({
+            message: "User registered successfully!"
+        });
 
 
     } catch (error) {
@@ -259,10 +261,10 @@ export const getUsers = async (req, res, next) => {
     try {
 
         // fetch all users from database, limited to 20
-        const getAllUsers = await User.find().limit(20);
+        const getAllUsers = await User.find().limit(20).select("-password -refreshTokens -email -resetPasswordToken -resetPasswordExpires");
 
         // check if users doesnt exists
-        if (!getAllUsers) {
+        if (!getAllUsers || getAllUsers.length === 0) {
 
             return next(new HttpError("No users could be found", 404))
         }
@@ -276,7 +278,7 @@ export const getUsers = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not fetch users", 500))
     }
 
 }
