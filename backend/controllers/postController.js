@@ -18,6 +18,7 @@ export const createPost = async (req, res, next) => {
         const user = await User.findById(req.user.id);
 
         if (!user) {
+            
             return next(new HttpError("User not found", 404));
         }
 
@@ -477,7 +478,7 @@ export const likePost = async (req, res, next) => {
             return res.status(200).json({
                 message: "Post liked",
                 likesCount: likedPost.likes.length,
-                post: likedPost
+                // post: likedPost
             })
 
 
@@ -489,7 +490,7 @@ export const likePost = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not like post", 500))
     }
 
 }
@@ -535,7 +536,7 @@ export const unlikePost = async (req, res, next) => {
             return res.status(200).json({
                 message: "Post unliked",
                 likesCount: unlikedPost.likes.length,
-                post: unlikedPost
+                // post: unlikedPost
             })
 
 
@@ -547,7 +548,7 @@ export const unlikePost = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not unlike post", 500))
     }
 
 }
@@ -605,7 +606,7 @@ export const updatePost = async (req, res, next) => {
             postId,
             { $set: updateData },
             { new: true, runValidators: true }
-        ).populate("createdBy");
+        ).populate("createdBy", "username profileImage");
 
 
         // success message
