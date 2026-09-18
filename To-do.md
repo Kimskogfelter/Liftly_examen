@@ -23,7 +23,7 @@
 - [ ] **Tränings- & Matdagbok**
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
 - Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
-- Lägg till en following sida som ska visa alla man följer så man lätt kan avfölja personer
+
 
 
 
@@ -44,3 +44,4 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
 - [x] **Glömt Lösenord**
   - [x] Skapa återställningsflöde med e-post/tillfällig token för lösenordsåterställning.
 - [x] skapa reply schema, controller etc för kommentarer så användare kan svara på varandras kommentarer på inlägg
+- [x] Lägg till en following sida som ska visa alla man följer så man lätt kan avfölja personer
