@@ -14,6 +14,7 @@ import SingleWorkoutPage from './pages/SingleWorkoutPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import AppLayout from './components/layout/AppLayout';
+import api from './api/axios';
 
 
 function App() {
@@ -30,20 +31,14 @@ function App() {
 
       if (storedUser && storedUser.token) {
         try {
-          const response = await fetch("http://localhost:5000/api/users/verify", {
-            headers: {
-              "Authorization": `Bearer ${storedUser.token}`
-            }
-          });
-
-          // IF token is invalid, remove user from localStorage and set currentUser to null
-          if (!response.ok) {
-            localStorage.removeItem("currentUser");
-            setCurrentUser(null);
-          }
-
+          // Använd api istället för fetch! 
+          // Om token gått ut kommer interceptorn automatiskt köra /users/refresh först.
+          await api.get("/users/verify");
         } catch (err) {
-          console.log("Kunde inte nå servern för verifiering", err);
+          // Logga bara ut om refresh OCKSA misslyckades (dvs. refreshToken är ogiltig/utgången)
+          console.log("Verifiering misslyckades, loggar ut", err);
+          localStorage.removeItem("currentUser");
+          setCurrentUser(null);
         }
       }
     };
