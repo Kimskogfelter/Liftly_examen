@@ -217,7 +217,7 @@ export const replyComment = async (req, res, next) => {
         return res.status(201).json({ 
             message: "Reply added successfully", 
             reply: addedReply,
-            comment 
+            // comment 
         });
 
     } catch (error) {
@@ -267,7 +267,7 @@ export const likeComment = async (req, res, next) => {
             return res.status(200).json({
                 message: "Comment liked",
                 likesCount: likedComment.likes.length,
-                comment: likedComment
+                // comment: likedComment
             })
 
 
@@ -279,7 +279,7 @@ export const likeComment = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not like comment", 500))
     }
 
 }
@@ -325,7 +325,7 @@ export const unlikeComment = async (req, res, next) => {
             return res.status(200).json({
                 message: "Comment unliked",
                 likesCount: unlikedComment.likes.length,
-                comment: unlikedComment
+                // comment: unlikedComment
             })
 
 
@@ -337,7 +337,7 @@ export const unlikeComment = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not unlike comment", 500))
     }
 
 }
@@ -382,11 +382,11 @@ export const likeCommentReply = async (req, res, next) => {
         return res.status(200).json({
             message: "Reply liked",
             likesCount: reply.likes.length,
-            reply
+            // reply
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not like reply", 500));
     }
 };
 
@@ -429,11 +429,11 @@ export const unlikeCommentReply = async (req, res, next) => {
         return res.status(200).json({
             message: "Reply unliked",
             likesCount: reply.likes.length,
-            reply
+            // reply
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not unlike reply", 500));
     }
 };
 
