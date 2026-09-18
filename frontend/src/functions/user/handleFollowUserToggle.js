@@ -1,44 +1,77 @@
 import api from "../../api/axios";
 
-export const handleFollowUserToggle = async (userInfo, setUserInfo, currentUser, isAlreadyFollowing) => {
-
+export const handleFollowUserToggle = async (
+    targetUser,
+    setTargetUser,
+    currentUser,
+    setCurrentUser,
+    isAlreadyFollowing
+) => {
     try {
+        const currentUserId = (currentUser?._id || currentUser?.id)?.toString();
+        const targetUserId = (targetUser?._id || targetUser?.id)?.toString();
 
-    if (isAlreadyFollowing) {
+        if (isAlreadyFollowing) {
+            // Unfollow user
+            const response = await api.delete(`/users/${targetUserId}/unfollow`);
+            console.log("Unfollowed user successfully:", response.data);
 
-        // unfollow user
-        const response = await api.delete(`/users/${userInfo._id}/unfollow`); 
+            // 1. Uppdatera den profil du kollar på (ta bort ditt ID från deras followers)
+            if (setTargetUser) {
+                setTargetUser((prev) => {
+                    if (Array.isArray(prev)) {
+                        return prev.map((u) =>
+                            u._id.toString() === targetUserId
+                                ? { ...u, followers: (u.followers || []).filter((id) => (id._id || id).toString() !== currentUserId) }
+                                : u
+                        );
+                    }
+                    return {
+                        ...prev,
+                        followers: (prev?.followers || []).filter((id) => (id._id || id).toString() !== currentUserId)
+                    };
+                });
+            }
 
-        console.log("unfollowed user successfully:", response.data);
-        console.log(`User with id${userInfo._id} have been unfollowed`)
+            // 2. Uppdatera din egen inloggade användare (ta bort deras ID från din following)
+            if (setCurrentUser) {
+                setCurrentUser((prev) => ({
+                    ...prev,
+                    following: (prev?.following || []).filter((id) => (id._id || id).toString() !== targetUserId)
+                }));
+            }
 
-        // remove current user id from list of followers locally
-        setUserInfo(prev => ({
-                ...prev,
-                followers: prev.followers.filter(id => id !== currentUser.id)
-            }));
+        } else {
+            // Follow user
+            const response = await api.post(`/users/${targetUserId}/follow`, {});
+            console.log("Followed user successfully:", response.data);
 
+            // 1. Uppdatera den profil du kollar på (lägg till ditt ID i deras followers)
+            if (setTargetUser) {
+                setTargetUser((prev) => {
+                    if (Array.isArray(prev)) {
+                        return prev.map((u) =>
+                            u._id.toString() === targetUserId
+                                ? { ...u, followers: [...(u.followers || []), currentUserId] }
+                                : u
+                        );
+                    }
+                    return {
+                        ...prev,
+                        followers: [...(prev?.followers || []), currentUserId]
+                    };
+                });
+            }
 
-    } else {
-
-        // follow user
-        const response = await api.post(`/users/${userInfo._id}/follow`, {});
-
-        console.log("followed user successfully:", response.data);
-        console.log(`User with id${userInfo._id} have been followed`)
-
-        // add current user id to list of followers locally
-        setUserInfo(prev => ({
-                ...prev,
-                followers: [...prev.followers, currentUser.id]
-            }));
-
+            // 2. Uppdatera din egen inloggade användare (lägg till deras ID i din following)
+            if (setCurrentUser) {
+                setCurrentUser((prev) => ({
+                    ...prev,
+                    following: [...(prev?.following || []), targetUserId]
+                }));
+            }
+        }
+    } catch (err) {
+        console.error("Error toggling follow:", err);
     }
-
-        } catch (err) {
-
-        console.error(err);
-
-    }
-
 };

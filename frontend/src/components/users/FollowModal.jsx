@@ -70,7 +70,7 @@ export const FollowModal = ({ userId, type, isOpen, onClose, currentUser, setCur
                         <ul className="divide-y divide-gray-50">
                             {users.map((targetUser) => {
                                 // 1. Kolla om targetUser._id finns i den inloggade användarens (currentUser) following-array
-                                const isFollowing = currentUser?.following?.some(
+                                const isAlreadyFollowing = currentUser?.following?.some(
                                     (id) => (id._id || id).toString() === targetUser._id.toString()
                                 ) || false;
 
@@ -96,13 +96,13 @@ export const FollowModal = ({ userId, type, isOpen, onClose, currentUser, setCur
                                         {/* Visa knappen om det inte är du själv */}
                                         {!isSelf && (
                                             <button
-                                                onClick={() => handleFollowUserToggle(targetUser, setUsers, currentUser, isFollowing)}
-                                                className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer shrink-0 ${isFollowing
+                                                onClick={() => handleFollowUserToggle(targetUser, setUsers, currentUser, setCurrentUser, isAlreadyFollowing)}
+                                                className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer shrink-0 ${isAlreadyFollowing
                                                         ? "bg-gray-100 hover:bg-gray-200 text-black border border-gray-300"
                                                         : "bg-black hover:bg-zinc-800 text-white"
                                                     }`}
                                             >
-                                                {isFollowing ? "Following" : "Follow"}
+                                                {isAlreadyFollowing ? "Following" : "Follow"}
                                             </button>
                                         )}
                                     </li>
