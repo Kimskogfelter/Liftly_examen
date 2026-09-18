@@ -44,6 +44,8 @@ api.interceptors.response.use(
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                 const updatedUser = { ...currentUser, token: newAccessToken };
                 localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                
+                window.dispatchEvent(new Event("userTokenRefreshed"));
 
                 // Uppdatera Authorization-headern för det misslyckade anropet och kör om det
                 originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
