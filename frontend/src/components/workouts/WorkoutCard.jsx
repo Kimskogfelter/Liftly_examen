@@ -33,9 +33,19 @@ function WorkoutCard({ workout, currentUser }) {
         updatedExercises[exerciseIndex].sets[setIndex].completed = !currentStatus;
         setExercises(updatedExercises);
 
-        // 2. Vibrera bara när setet bockas I (går från ej klart -> klart)
-        if (!currentStatus && typeof window !== "undefined" && "navigator" in window && "vibrate" in navigator) {
-            navigator.vibrate(40);
+        // 2. Kör feedback bara när setet ändras från ej klart -> klart
+        if (!currentStatus) {
+            // Om mobilen stöder vibration (f.d. Android)
+            if (typeof window !== "undefined" && "navigator" in window && "vibrate" in navigator) {
+                navigator.vibrate(40);
+            }
+
+            // Spela upp ett mjukt ljud (fungerar på iPhone & dator)
+            const popSound = new Audio("/sounds/pop.mp3");
+            popSound.volume = 0.3; // Låg och behaglig volym
+            popSound.play().catch(() => {
+                // Tystar eventuella fel om webbläsaren blockerar autoplays
+            });
         }
     };
 
@@ -95,8 +105,8 @@ function WorkoutCard({ workout, currentUser }) {
                                     <button
                                         onClick={() => toggleSetComplete(exIdx, setIdx)}
                                         className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg font-semibold text-[11px] sm:text-xs cursor-pointer transition-all ${set.completed
-                                                ? "bg-emerald-500 text-white"
-                                                : "bg-zinc-200 hover:bg-zinc-300 text-zinc-700"
+                                            ? "bg-emerald-500 text-white"
+                                            : "bg-zinc-200 hover:bg-zinc-300 text-zinc-700"
                                             }`}
                                     >
                                         {set.completed ? "Done ✓" : "Check"}
