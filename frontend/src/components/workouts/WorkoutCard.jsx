@@ -28,8 +28,15 @@ function WorkoutCard({ workout, currentUser }) {
     const toggleSetComplete = (exerciseIndex, setIndex) => {
         const updatedExercises = [...exercises];
         const currentStatus = updatedExercises[exerciseIndex].sets[setIndex].completed;
+
+        // 1. Uppdatera statusen
         updatedExercises[exerciseIndex].sets[setIndex].completed = !currentStatus;
         setExercises(updatedExercises);
+
+        // 2. Vibrera bara när setet bockas I (går från ej klart -> klart)
+        if (!currentStatus && typeof window !== "undefined" && "navigator" in window && "vibrate" in navigator) {
+            navigator.vibrate(40);
+        }
     };
 
     return (
@@ -87,11 +94,10 @@ function WorkoutCard({ workout, currentUser }) {
                                     {/* Checkbox */}
                                     <button
                                         onClick={() => toggleSetComplete(exIdx, setIdx)}
-                                        className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg font-semibold text-[11px] sm:text-xs cursor-pointer transition-all ${
-                                            set.completed
+                                        className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg font-semibold text-[11px] sm:text-xs cursor-pointer transition-all ${set.completed
                                                 ? "bg-emerald-500 text-white"
                                                 : "bg-zinc-200 hover:bg-zinc-300 text-zinc-700"
-                                        }`}
+                                            }`}
                                     >
                                         {set.completed ? "Done ✓" : "Check"}
                                     </button>
