@@ -279,6 +279,7 @@ Under projektet har följande områden utforskats:
 * Säker lösenordshantering med bcrypt
 * State management och routing i React
 * Kommunikation mellan frontend och backend
+* Micro-interactions & Cross-platform UX: Implementering av haptisk feedback (`navigator.vibrate`) för Android och ljudeffekter (Audio API) för iOS/webb för att ge omedelbar feedback när användaren bockar av set i träningsdagboken.
 
 ### Användarperspektiv
 Syftet med applikationen är att skapa ett community liknande sociala plattformar som TikTok och Instagram, men med fullt fokus på träning och hälsa. Målet är att samla likasinnade användare på ett och samma ställe där de kan inspirera, motivera och följa varandra.
