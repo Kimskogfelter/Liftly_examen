@@ -23,6 +23,7 @@
 - [ ] **Tränings- & Matdagbok**
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
 - Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
+- fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 
 
 
