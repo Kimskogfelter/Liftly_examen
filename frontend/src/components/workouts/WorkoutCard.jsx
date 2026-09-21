@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../../api/axios";
+import popSoundFile from "../../assets/sounds/pop.mp3";
 
 function WorkoutCard({ workout, currentUser }) {
 
@@ -41,10 +42,11 @@ function WorkoutCard({ workout, currentUser }) {
             }
 
             // Spela upp ett mjukt ljud (fungerar på iPhone & dator)
-            const popSound = new Audio("/sounds/pop.mp3");
-            popSound.volume = 0.3; // Låg och behaglig volym
-            popSound.play().catch(() => {
-                // Tystar eventuella fel om webbläsaren blockerar autoplays
+            const popSound = new Audio(popSoundFile);
+            popSound.volume = 0.5;
+
+            popSound.play().catch((err) => {
+                console.log("Audio play blocked by browser:", err);
             });
         }
     };
