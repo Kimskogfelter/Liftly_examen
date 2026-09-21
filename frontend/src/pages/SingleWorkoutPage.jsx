@@ -30,16 +30,6 @@ function SingleWorkoutPage({ currentUser }) {
         }
     }, [workoutId, token]);
 
-    // Hantera redigering lokalt i statet
-    const handleEditWorkout = (updatedWorkout) => {
-        setWorkout(updatedWorkout);
-    };
-
-    // Hantera radering genom att skicka användaren tillbaka till alla träningspass
-    const handleDeleteWorkout = () => {
-        navigate("/workouts");
-    };
-
     return (
         <section className="flex-1 px-2 md:px-6 max-w-2xl mx-auto pt-16 md:pt-24 xl:pt-8 pb-24 font-sans text-gray-800">
             {error && (
