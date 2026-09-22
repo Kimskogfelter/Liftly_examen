@@ -112,13 +112,17 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
     MONGO_URI=your_mongodb_connection_string
 
     JWT_SECRET=your_super_secret_jwt_key
+    JWT_REFRESH_SECRET=your_super_secret_jwt_refresh_key
 
     LIFTLY_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
     LIFTLY_CLOUDINARY_API_KEY=your_cloudinary_api_key
     LIFTLY_CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+    RESEND_API_KEY=your_resend_api_key
+    FRONTEND_URL=http://localhost:5173
     ```
 
-    Lägg till en egen sträng för variabeln JWT_SECRET
+    Obs: Värdena för JWT_SECRET och JWT_REFRESH_SECRET är valfria hemliga nycklar/strängar som du hittar på själv (t.ex. två olika slumpmässiga textsträngar).
 
 4. Skapa `.env` fil i **frontend** med nedan variabler
 
@@ -152,7 +156,13 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
         - API Secret
     4. Lägg in värdena i `.env` för backend
 
-7. Starta applikationen
+7. Resend setup (Lösenordsåterställning via e-post)
+
+   1. Skapa ett gratis konto på [Resend](https://resend.com).
+   2. Gå till **API Keys** i menyn och skapa en ny API-nyckel.
+   3. Kopiera nyckeln och klistra in som värde för `RESEND_API_KEY` i backendens `.env`.
+
+8. Starta applikationen
 
     Kör följande kommandon i respektive terminal:
 
