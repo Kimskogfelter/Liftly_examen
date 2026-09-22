@@ -25,6 +25,7 @@
 - Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
 - fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
+- fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
 
 
 
