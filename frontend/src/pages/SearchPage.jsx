@@ -66,7 +66,7 @@ function SearchPage({ currentUser, setCurrentUser }) {
     };
     return (
         <>
-            <section className="pt-12 flex-1 p-4 max-w-5xl mx-auto w-full font-sans">
+            <section className="flex-1 px-4 md:px-6 max-w-4xl mx-auto pt-24 sm:pt-28 xl:pt-8 font-sans text-gray-800 w-full">
 
                 <div className="max-w-xl mx-auto w-full mb-6">
 
