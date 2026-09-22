@@ -16,16 +16,22 @@ Här kommer en demonstration av min hemsida som jag hittills har hunnit bygga in
 3. Ska kunna logga ut med sin skapade användare
 4. Ska kunna skapa egna inlägg med text
 5. Ska kunna skapa egna inlägg med bild
-6. Ska kunna redigera egna inlägg
-7. Ska kunna radera egna inlägg
-8. Ska kunna se andra användares inlägg
-9. Ska kunna spara andra användares inlägg för att kolla på senare
-10. Ska kunna besöka en annan användares profil 
-11. Ska ha en egen profil sida
-12. Ska kunna lägga till hashtags på sina egna inlägg
-13. Ska kunna gilla andra användares inlägg
-14. Ska kunna kommentera på andra användares inlägg
-15. Ska kunna gilla andra användares kommentarer
+6. Ska kunna skapa egna inlägg med video
+7. Ska kunna redigera egna inlägg
+8. Ska kunna radera egna inlägg
+9. Ska kunna se andra användares inlägg
+10. Ska kunna spara andra användares inlägg för att kolla på senare
+11. Ska kunna besöka en annan användares profil 
+12. Ska ha en egen profil sida
+13. Ska kunna lägga till hashtags på sina egna inlägg
+14. Ska kunna gilla andra användares inlägg
+15. Ska kunna kommentera på andra användares inlägg
+16. Ska kunna gilla andra användares kommentarer
+17. Ska kunna söka efter användare och inlägg
+18. Ska kunna filtrera inlägg efter kategori
+19. Ska kunna sortera sparade inlägg efter kategorier
+20. Ska kunna följa andra användare
+21. Ska kunna återställa glömt lösenord
 
 
 #### Besökare
@@ -309,15 +315,7 @@ Planerade features för framtida versioner av appen:
 * Admin - Ska kunna blockera en användare från appen via en admin panel
 * Admin - Ska kunna radera en användare från appen via en admin panel
 
-* Frontend - Ska kunna använda sökfunktion
-* Frontend - Ska kunna filtrera inlägg efter kategori
-* Frontend - Ska kunna sortera sparade inlägg efter kategorier
-* Frontend - Ska kunna följa andra användare
-* Frontend - Ska kunna skapa egna inlägg med video
-
 * Funktion - Notiser/feedback: bekräftelse på like, kommentar eller radering
-* Funktion - Sök och filter: sök efter användare eller inlägg
-* Funktion - Lösenordhantering: glömt/ändra lösenord
 
 
 ### Referenser
