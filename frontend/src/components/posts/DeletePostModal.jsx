@@ -36,7 +36,7 @@ function DeletePostModal({ post, onClose, currentUser, handleDeletePost }) {
   return (
     <>
       {/* Outer card wrapper - Modal */}
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-sans">
       
       {/* Delete container - The actual white modal box containing the confirmation */}
       <div className="w-full max-w-sm bg-white rounded-xl p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150 text-left">

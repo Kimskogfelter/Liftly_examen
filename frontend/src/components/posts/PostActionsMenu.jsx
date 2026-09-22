@@ -8,15 +8,19 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
     const [showEditPostModal, setShowEditPostModal] = useState(false);
     const [showDeletePostModal, setShowDeletePostModal] = useState(false);
 
+    // Gemensam bakgrundsklass för alla modaler så att blur/mörker är 100% identiskt
+    const backdropClasses = "fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in duration-200";
+
     return (
         <>
-            {createPortal(
+            {/* 1. Huvudmeny */}
+            {!showEditPostModal && !showDeletePostModal && createPortal(
                 <div 
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200"
+                    className={backdropClasses}
                     onClick={closeMenu}
                 >
                     <div 
-                        className="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 text-gray-800 relative animate-in zoom-in-95 duration-150"
+                        className="w-full max-w-sm bg-white rounded-3xl p-6 text-gray-800 relative animate-in zoom-in-95 duration-150"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header med kryss */}
@@ -78,10 +82,16 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
                 document.body
             )}
 
-            {/* Edit Post Modal */}
+            {/* 2. Edit Post Modal */}
             {showEditPostModal && createPortal(
-                <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 whitespace-normal">
-                    <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
+                <div 
+                    className={backdropClasses}
+                    onClick={() => {
+                        setShowEditPostModal(false);
+                        closeMenu();
+                    }}
+                >
+                    <div className="w-full max-w-md bg-white rounded-3xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
                         <EditPostModal 
                             currentUser={currentUser} 
                             post={post} 
@@ -96,10 +106,16 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
                 document.body
             )}
 
-            {/* Delete Post Modal */}
+            {/* 3. Delete Post Modal */}
             {showDeletePostModal && createPortal(
-                <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 whitespace-normal">
-                    <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
+                <div 
+                    className={backdropClasses}
+                    onClick={() => {
+                        setShowDeletePostModal(false);
+                        closeMenu();
+                    }}
+                >
+                    <div className="w-full max-w-md bg-white rounded-3xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
                         <DeletePostModal 
                             currentUser={currentUser} 
                             post={post} 

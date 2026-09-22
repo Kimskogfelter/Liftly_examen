@@ -45,7 +45,7 @@ function EditPostModal({ onClose, handleEditPost, post, currentUser }) {
   return (
     <>
       {/* Outer card wrapper - Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-sans">
 
         {/* Edit container - The actual white modal box containing the form */}
         <div className="w-full max-w-md bg-white rounded-2xl p-5 shadow-2xl border border-gray-100 text-left">
