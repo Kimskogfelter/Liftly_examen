@@ -55,9 +55,7 @@ function CategoryPage({ currentUser }) {
                         Category: <span className="text-zinc-500 font-normal">{categoryName}</span>
                     </h1>
                 </div>
-                <p className="text-xs text-zinc-500 font-medium">
-                    {posts.length} {posts.length === 1 ? "post" : "posts"} in this topic
-                </p>
+               
             </div>
 
             {/* {error && (
