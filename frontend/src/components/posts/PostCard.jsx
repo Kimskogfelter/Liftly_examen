@@ -11,6 +11,20 @@ import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa";
 
+// funktion för att formatera datumstämpel
+const customTimeFormatter = (value, unit) => {
+    const unitMap = {
+        second: "s",
+        minute: "m",
+        hour: "h",
+        day: "d",
+        week: "w",
+        month: "mo",
+        year: "y",
+    };
+    return `${value}${unitMap[unit] || unit.charAt(0)}`;
+};
+
 function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDeletePost, getSavedPosts, isDetailView }) {
 
     const [showPostActions, setShowPostActions] = useState(false);
@@ -52,18 +66,19 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
             <section className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
                     {/* HEADER: Användare, Tidsstämpel, Kategori och Meny */}
+                    {/* HEADER: Användare, Tidsstämpel, Kategori och Meny */}
                     <div className="flex items-center justify-between mb-3 gap-2">
-                        <div className="flex items-center gap-2 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
                             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
                                 <ProfileImage profileImage={post.createdBy?.profileImage} />
                             </div>
-                            <div className="flex items-center gap-1.5 truncate text-xs">
+                            <div className="flex items-center gap-1.5 min-w-0 text-xs">
                                 <Link to={`/users/${post.createdBy?._id}`} className="font-bold text-black hover:underline tracking-wide truncate">
                                     {post.createdBy?.username}
                                 </Link>
                                 <span className="text-gray-400 shrink-0">•</span>
                                 <span className="text-[11px] text-gray-400 shrink-0 font-medium">
-                                    <TimeAgo date={post.createdAt} />
+                                    <TimeAgo date={post.createdAt} formatter={customTimeFormatter} />
                                 </span>
                             </div>
                         </div>
