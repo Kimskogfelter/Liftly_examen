@@ -1,9 +1,5 @@
 # Liftly - Project To-Do List
 
-## Prestanda & Skalbarhet
-- [ ] **Pagination & Lazy Loading (Flöde)**
-  - [ ] **Backend:** Uppdatera GET `/posts` för att ta emot `page` och `limit` (t.ex. `limit=10`) och returnera datan i batcher.
-  - [ ] **Frontend:** Implementera Infinite Scroll (med `IntersectionObserver` eller `react-infinite-scroll-component`) för att ladda fler inlägg automatiskt vid scroll.
 
 ## Säkerhet & Autentisering
 - [ ] **Backend: Refresh Tokens & Cookies**
@@ -49,3 +45,6 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
   - [x] Skapa återställningsflöde med e-post/tillfällig token för lösenordsåterställning.
 - [x] skapa reply schema, controller etc för kommentarer så användare kan svara på varandras kommentarer på inlägg
 - [x] Lägg till en following sida som ska visa alla man följer så man lätt kan avfölja personer
+- [x] Pagination & Infinite Scroll (Flöde, Profil, Kategori, Hashtag, Sparade & Sök)
+  - [x] Backend: Uppdaterat samtliga post-endpoints (/posts, /posts/following, /posts/users/:userId, /posts/category, /posts/hashtag, /users/savedposts, /search) till att hantera page och limit samt returnera en enhetlig paginerad datastruktur (posts, hasMore, currentPage, totalPosts).
+  - [x] Frontend: Implementerat Infinite Scroll med IntersectionObserver i PostFeed och alla tillhörande vyer (HomePage, ProfilePage, CategoryPage, HashtagPage, SavedPostsPage, SearchPage) för sömlös och prestandaoptimerad laddning på mobil och desktop.
