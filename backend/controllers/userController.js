@@ -9,6 +9,8 @@ import mongoose from "mongoose";
 import { Resend } from "resend";
 import { v4 as uuidv4 } from "uuid";
 import { cloudinaryService } from "../config/cloudinaryConfig.js";
+// funktion för pagination/scroll
+import { getPagination, formatPaginatedResponse } from "../utils/pagination.js";
 
 // loading env var from .env
 import 'dotenv/config';
@@ -811,48 +813,62 @@ export const refreshToken = async (req, res, next) => {
 };
 
 // ---------------------------- POSTS ---------------------------
-
 // ---------------------------- GET SAVED POSTS --------------------------- 
 // GET req: api/users/savedposts
 // PROTECTED
 export const getSavedPosts = async (req, res, next) => {
 
     try {
-
-        // fetch user
+        // 1. Hämta användaren
         const user = await User.findById(req.user.id);
 
-        // check if user exist
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // populate savedPosts with creator, comments, and nested replies
-        await user.populate({
-            path: "savedPosts",
-            options: { sort: { createdAt: -1 } },
-            populate: [
-                {
-                    path: "createdBy",
-                    select: "username profileImage"
-                },
-                {
-                    path: "comments",
-                    populate: [
-                        { path: "createdBy", select: "username profileImage" },
-                        { path: "replies.createdBy", select: "username profileImage" }
-                    ]
-                }
-            ]
+        // 2. Hämta page, limit och skip från query
+        const { page, limit, skip } = getPagination(req.query, 10);
+
+        const savedPostIds = user.savedPosts || [];
+        const totalPosts = savedPostIds.length;
+
+        // Om användaren inte har några sparade inlägg
+        if (totalPosts === 0) {
+            return res.status(200).json({
+                message: "No saved posts found",
+                savedPosts: [],
+                hasMore: false,
+                currentPage: page,
+                totalPosts: 0
+            });
+        }
+
+        // 3. Hämta endast de paginerade inläggen direkt från Post-modellen
+        const savedPosts = await Post.find({ _id: { $in: savedPostIds } })
+            .populate("createdBy", "username profileImage")
+            .populate({
+                path: "comments",
+                populate: [
+                    { path: "createdBy", select: "username profileImage" },
+                    { path: "replies.createdBy", select: "username profileImage" }
+                ]
+            })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        // 4. Formatera svaret
+        const paginatedData = formatPaginatedResponse(savedPosts, totalPosts, page, limit);
+
+        return res.status(200).json({ 
+            message: "Saved posts fetched successfully", 
+            savedPosts: paginatedData.posts,
+            hasMore: paginatedData.hasMore,
+            currentPage: paginatedData.currentPage,
+            totalPosts: paginatedData.totalPosts
         });
-
-        // fetch only saved posts
-        const savedPosts = user.savedPosts;
-
-        return res.status(200).json({ message: "Saved posts: ", savedPosts });
 
     } catch (error) {
         return next(new HttpError(error));
     }
-
 };

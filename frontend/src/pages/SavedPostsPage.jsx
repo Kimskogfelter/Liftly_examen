@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import api from "../api/axios";
 import PostFeed from "../components/posts/PostFeed";
 import { FiBookmark } from "react-icons/fi";
@@ -8,6 +8,13 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
   const token = currentUser?.token;
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // Paginerings-states
+  const [page, setPage] = useState(1);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
+  const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+
+  const observer = useRef();
 
   const categories = [
     { id: "All", label: "All" },
@@ -27,38 +34,76 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
     { id: "Helpme", label: "Helpme" },
   ];
 
-  const getSavedPosts = async () => {
+  // Funktion för att hämta sparade inlägg
+  const getSavedPosts = async (currentPage, isInitialLoad = false) => {
+    if (isInitialLoad) {
+      setError("");
+    } else {
+      setLoadingMorePosts(true);
+    }
+
     try {
-      const response = await api.get(`${import.meta.env.VITE_API_URL}/users/savedposts`);
-      setPosts(response.data.savedPosts);
+      const response = await api.get(`/users/savedposts?page=${currentPage}&limit=10`);
+      const { savedPosts: newPosts, hasMore } = response.data;
+
+      setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
+      setHasMorePosts(hasMore);
     } catch (err) {
       const errorResponse = err.response?.data;
       setError(errorResponse?.message || "Saved posts could not be fetched. Please try again.");
+    } finally {
+      setLoadingMorePosts(false);
     }
   };
 
+  // Ladda sida 1 när token finns
   useEffect(() => {
-    if (token) getSavedPosts();
+    if (token) {
+      setPage(1);
+      setHasMorePosts(true);
+      getSavedPosts(1, true);
+    }
   }, [token]);
 
-  const filteredPosts = selectedCategory === "All"
-    ? posts
-    : posts.filter(post => post.category?.toLowerCase() === selectedCategory.toLowerCase());
+  // Hämta fler inlägg när 'page' ökar
+  useEffect(() => {
+    if (page > 1) {
+      getSavedPosts(page, false);
+    }
+  }, [page]);
+
+  // Observer-callback för oändlig skrollning
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (loadingMorePosts) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMorePosts) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loadingMorePosts, hasMorePosts]
+  );
+
+  const filteredPosts =
+    selectedCategory === "All"
+      ? posts
+      : posts.filter((post) => post.category?.toLowerCase() === selectedCategory.toLowerCase());
 
   return (
-    /* 🔴 KORRIGERAT: Separerad sido-padding (px) och topp-padding (pt) så att titeln alltid knuffas ner under headern på iPad */
     <section className="flex-1 w-full max-w-4xl mx-auto px-2 md:px-6 pb-10 pt-20 xl:pt-6 font-sans text-gray-800 relative">
-
       {/* Header */}
       <div className="w-full text-center mb-4 border-b border-zinc-200 pb-4">
         <div className="flex items-center justify-center gap-2 mb-1">
           <FiBookmark size={20} className="text-black fill-black" />
-          <h1 className="text-xl font-bold text-gray-900 tracking-wide">
-            Saved Posts
-          </h1>
+          <h1 className="text-xl font-bold text-gray-900 tracking-wide">Saved Posts</h1>
         </div>
 
-        {/* MOBIL & IPAD: Kategori-scroll (visas under xl) */}
+        {/* MOBIL & IPAD: Kategori-scroll */}
         {posts.length > 0 && (
           <div className="xl:hidden w-full max-w-[calc(100vw-2rem)] mx-auto overflow-x-auto no-scrollbar py-2 mt-3">
             <div className="flex items-center gap-2 w-max px-1">
@@ -83,7 +128,9 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
       {error && (
         <div className="w-full bg-red-50 text-red-600 border border-red-100 p-3 rounded-xl mb-6 text-xs font-medium flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError("")} className="text-red-400 hover:text-red-700 font-bold ml-2">✕</button>
+          <button onClick={() => setError("")} className="text-red-400 hover:text-red-700 font-bold ml-2">
+            ✕
+          </button>
         </div>
       )}
 
@@ -109,12 +156,15 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
             currentUser={currentUser}
             setCurrentUser={setCurrentUser}
             layout="grid-3x3"
-            getSavedPosts={getSavedPosts}
+            getSavedPosts={() => getSavedPosts(1, true)}
+            lastPostElementRef={lastPostElementRef}
+            loadingMorePosts={loadingMorePosts}
+            hasMorePosts={hasMorePosts}
           />
         )}
       </div>
 
-      {/* DESKTOP-MENY: Placerad till höger (endast på XL-skärmar) */}
+      {/* DESKTOP-MENY */}
       {posts.length > 0 && (
         <aside className="hidden xl:block absolute left-[102%] top-6 w-44">
           <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-3">
@@ -140,7 +190,6 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
           </div>
         </aside>
       )}
-
     </section>
   );
 }
