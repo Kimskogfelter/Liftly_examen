@@ -60,7 +60,7 @@ Här kommer en demonstration av min hemsida som jag hittills har hunnit bygga in
 * **Säkerhet:** JWT, bcrypt
 * **Verktyg:** Nodemon, Dotenv, CORS, uuid, Postman (API testing), Validator
 * **Filhantering:** Multer, Cloudinary
-* **Hosting:** Vercel för frontend, Render för backend
+* **Hosting & Domän:** Vercel (Frontend), Render (Backend), Porkbun (DNS & Domänhantering)
 
 ## Arkitektur
 Applikationen är byggd enligt MERN-stackens arkitektur där frontend, backend och databas är separerade men kommunicerar via ett REST-API.
@@ -182,11 +182,8 @@ Detta inkluderade att skicka HTTP-requests (GET, POST, PUT, DELETE) för att ver
     Backend API: http://localhost:5000
 
     ### Live demo
-    Frontend:
-    https://liftly-examen.vercel.app/login
-
-    Backend API:
-    https://liftly-examen.onrender.com
+    * **Frontend:** https://liftlyfit.com
+    * **Backend API:** https://api.liftlyfit.com
 
 
 ## Design
