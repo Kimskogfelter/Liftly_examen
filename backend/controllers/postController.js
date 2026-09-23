@@ -271,39 +271,48 @@ export const getFollowingPosts = async (req, res, next) => {
     }
 }
 
-
 // ---------------------------- GET CATEGORY POSTS --------------------------- 
 // GET req: api/posts/category
 
 export const getCategoryPosts = async (req, res, next) => {
     try {
-        // 1. Fetch category from url (t.ex. /api/posts?category=Lifting)
+        // 1. Hämta category från query (t.ex. ?category=Lifting)
         const { category } = req.query;
 
-        // if no category fetch all {} 
-        const queryFilter = category ? { category: category } : {};
+        // Om inga kategorier skickas med söker vi på alla inlägg, annars filtrerar vi på kategorin
+        const queryFilter = category ? { category } : {};
 
-        // 2. Fetch post based on category filter
-        const posts = await Post.find(queryFilter)
-            .populate("createdBy", "username profileImage")
-            .populate({
-                path: "comments",
-                populate: [
-                    { path: "createdBy", select: "username profileImage" },
-                    { path: "replies.createdBy", select: "username profileImage" }
-                ]
-            })
-            .sort({ createdAt: -1 });
+        // 2. Hämta page, limit och skip från query
+        const { page, limit, skip } = getPagination(req.query, 10);
 
-        // 3. If NO posts found
-        if (posts.length === 0) {
-            return next(new HttpError(`No posts found in the category: ${category}`, 404));
+        // 3. Hämta inläggen och räkna totala antalet i kategorin parallellt
+        const [posts, totalPosts] = await Promise.all([
+            Post.find(queryFilter)
+                .populate("createdBy", "username profileImage")
+                .populate({
+                    path: "comments",
+                    populate: [
+                        { path: "createdBy", select: "username profileImage" },
+                        { path: "replies.createdBy", select: "username profileImage" }
+                    ]
+                })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Post.countDocuments(queryFilter)
+        ]);
+
+        // Om inga inlägg hittas för kategorin
+        if (totalPosts === 0) {
+            return next(new HttpError(`No posts found in the category: ${category || 'all'}`, 404));
         }
 
-        // 4. Return list with posts
+        // 4. Formatera svaret med formatPaginatedResponse
+        const paginatedData = formatPaginatedResponse(posts, totalPosts, page, limit);
+
         return res.status(200).json({
             message: "Posts found successfully",
-            getAllPosts: posts
+            ...paginatedData
         });
 
     } catch (error) {
