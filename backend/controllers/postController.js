@@ -319,7 +319,6 @@ export const getCategoryPosts = async (req, res, next) => {
         return next(new HttpError(error.message || error, 500));
     }
 };
-
 // ---------------------------- GET HASHTAG POSTS --------------------------- 
 // GET req: api/posts/hashtag?hashtag=träning
 
@@ -336,29 +335,42 @@ export const getHashtagPosts = async (req, res, next) => {
         // 3. Clean the hashtag string by removing any leading '#' character
         const cleanTag = hashtag.replace('#', '');
 
-        // 4. Fetch posts matching either clean tag format ("gym") or hashed tag format ("#gym")
-        const posts = await Post.find({
-            hashtags: { $in: [cleanTag, `#${cleanTag}`] }
-        })
-            .populate("createdBy", "username profileImage")
-            .populate({
-                path: "comments",
-                populate: [
-                    { path: "createdBy", select: "username profileImage" },
-                    { path: "replies.createdBy", select: "username profileImage" }
-                ]
-            })
-            .sort({ createdAt: -1 });
+        // 4. Hämta page, limit och skip från query
+        const { page, limit, skip } = getPagination(req.query, 10);
 
-        // 5. If NO posts found
-        if (posts.length === 0) {
+        // 5. Query-filter för hashtagen
+        const queryFilter = {
+            hashtags: { $in: [cleanTag, `#${cleanTag}`] }
+        };
+
+        // 6. Hämta inlägg och räkna totalen i parallellt anrop
+        const [posts, totalPosts] = await Promise.all([
+            Post.find(queryFilter)
+                .populate("createdBy", "username profileImage")
+                .populate({
+                    path: "comments",
+                    populate: [
+                        { path: "createdBy", select: "username profileImage" },
+                        { path: "replies.createdBy", select: "username profileImage" }
+                    ]
+                })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Post.countDocuments(queryFilter)
+        ]);
+
+        // 7. If NO posts found
+        if (totalPosts === 0) {
             return next(new HttpError(`No posts found with hashtag: #${cleanTag}`, 404));
         }
 
-        // 6. return list with posts
+        // 8. Formatera svaret med formatPaginatedResponse
+        const paginatedData = formatPaginatedResponse(posts, totalPosts, page, limit);
+
         return res.status(200).json({
             message: "Posts found successfully",
-            getAllPosts: posts
+            ...paginatedData
         });
 
     } catch (error) {

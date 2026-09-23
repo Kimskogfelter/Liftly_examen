@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import PostFeed from "../components/posts/PostFeed";
 import api from "../api/axios";
@@ -10,28 +10,71 @@ function HashtagPage({ currentUser }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getHashtagPosts = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        setPosts([]);
+  // Paginerings-states
+  const [page, setPage] = useState(1);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
+  const [loadingMorePosts, setLoadingMorePosts] = useState(false);
 
-        const res = await api.get(`/posts/hashtag?hashtag=${hashtag}`);
-        setPosts(res.data.getAllPosts || res.data);
-      } catch (err) {
-        if (err.response?.status === 404) {
-          setPosts([]);
-        } else {
-          setError("Could not fetch posts for this hashtag.");
-        }
-      } finally {
-        setLoading(false);
+  const observer = useRef();
+
+  // Funktion för att hämta hashtag-inlägg med paginering
+  const fetchHashtagPosts = async (currentPage, isInitialLoad = false) => {
+    if (isInitialLoad) {
+      setLoading(true);
+      setError("");
+    } else {
+      setLoadingMorePosts(true);
+    }
+
+    try {
+      const res = await api.get(`/posts/hashtag?hashtag=${hashtag}&page=${currentPage}&limit=10`);
+      const { posts: newPosts, hasMore } = res.data;
+
+      setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
+      setHasMorePosts(hasMore);
+    } catch (err) {
+      if (err.response?.status === 404) {
+        if (isInitialLoad) setPosts([]);
+        setHasMorePosts(false);
+      } else {
+        setError("Could not fetch posts for this hashtag.");
       }
-    };
+    } finally {
+      setLoading(false);
+      setLoadingMorePosts(false);
+    }
+  };
 
-    getHashtagPosts();
+  // Återställ sida & ladda om vid ändrad hashtag
+  useEffect(() => {
+    setPage(1);
+    setHasMorePosts(true);
+    fetchHashtagPosts(1, true);
   }, [hashtag]);
+
+  // Hämta fler inlägg när 'page' ökar
+  useEffect(() => {
+    if (page > 1) {
+      fetchHashtagPosts(page, false);
+    }
+  }, [page]);
+
+  // Observer-callback för oändlig skrollning
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (loading || loadingMorePosts) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMorePosts) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, loadingMorePosts, hasMorePosts]
+  );
 
   if (loading) {
     return (
@@ -42,10 +85,8 @@ function HashtagPage({ currentUser }) {
   }
 
   return (
-    
     <section className="flex-1 px-2 md:px-6 max-w-4xl mx-auto pt-20 xl:pt-6 pb-10 font-sans text-gray-800">
-
-      {/* Centrerad Header – Matchar Category & Saved Posts */}
+      {/* Centrerad Header */}
       <div className="w-full text-center mb-6 border-b border-zinc-200 pb-4">
         <div className="flex items-center justify-center gap-1.5 mb-1">
           <FiHash size={20} className="text-black" />
@@ -53,7 +94,6 @@ function HashtagPage({ currentUser }) {
             Hashtag: <span className="text-zinc-500 font-normal">{hashtag}</span>
           </h1>
         </div>
-       
       </div>
 
       {error && (
@@ -80,7 +120,13 @@ function HashtagPage({ currentUser }) {
             </p>
           </div>
         ) : (
-          <PostFeed posts={posts} layout="grid-3x3" />
+          <PostFeed 
+            posts={posts} 
+            layout="grid-3x3" 
+            lastPostElementRef={lastPostElementRef}
+            loadingMorePosts={loadingMorePosts}
+            hasMorePosts={hasMorePosts}
+          />
         )}
       </div>
     </section>
