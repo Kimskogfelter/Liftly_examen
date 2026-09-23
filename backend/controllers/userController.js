@@ -149,7 +149,8 @@ export const loginUser = async (req, res, next) => {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true, // 🔒 Skyddar mot XSS
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax', // 'lax' fungerar klockrent på samma domän
+            domain: process.env.NODE_ENV === 'production' ? '.liftlyfit.com' : undefined,
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 dagar
         });
 
@@ -195,7 +196,8 @@ export const logoutUser = async (req, res, next) => {
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+            sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax',
+            domain: process.env.NODE_ENV === 'production' ? '.liftlyfit.com' : undefined
         });
 
         return res.status(200).json({ message: "Logged out successfully" });
@@ -860,8 +862,8 @@ export const getSavedPosts = async (req, res, next) => {
         // 4. Formatera svaret
         const paginatedData = formatPaginatedResponse(savedPosts, totalPosts, page, limit);
 
-        return res.status(200).json({ 
-            message: "Saved posts fetched successfully", 
+        return res.status(200).json({
+            message: "Saved posts fetched successfully",
             savedPosts: paginatedData.posts,
             hasMore: paginatedData.hasMore,
             currentPage: paginatedData.currentPage,
