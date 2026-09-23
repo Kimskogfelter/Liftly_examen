@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import { upload } from "../middleware/cloudinaryUpload.js";
 // loading env var from .env
 import 'dotenv/config';
+// funktion för pagination/scroll
+import { getPagination, formatPaginatedResponse } from '../utils/pagination.js';   
 import path from "path";
 
 
@@ -122,7 +124,6 @@ export const getPost = async (req, res, next) => {
 
 }
 
-
 // ---------------------------- GET POSTS --------------------------- 
 // GET req: api/posts
 // PROTECTED
@@ -130,37 +131,43 @@ export const getPost = async (req, res, next) => {
 export const getPosts = async (req, res, next) => {
 
     try {
+        // 1. Räkna ut page, limit och skip från query-parametrarna
+        const { page, limit, skip } = getPagination(req.query, 10);
 
-        // fetch all posts from database
-        const getAllPosts = await Post.find()
-            .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
-            .populate({
-                path: "comments",
-                populate: [
-                    { path: "createdBy", select: "username profileImage" },
-                    { path: "replies.createdBy", select: "username profileImage" } // Populerar svar och deras skapare
-                ]
-            })
-            .sort({ createdAt: -1 }); // sort by newest first
+        // 2. Hämta inläggen och räkna totala antalet i parallellt anrop
+        const [posts, totalPosts] = await Promise.all([
+            Post.find()
+                .populate("createdBy", "username profileImage")
+                .populate({
+                    path: "comments",
+                    populate: [
+                        { path: "createdBy", select: "username profileImage" },
+                        { path: "replies.createdBy", select: "username profileImage" }
+                    ]
+                })
+                .sort({ createdAt: -1 })
+                .skip(skip)     // Hoppa över tidigare sidor
+                .limit(limit),  // Hämta max 10 åt gången
+            Post.countDocuments() // Räkna totala antalet inlägg för hasMore-beräkning
+        ]);
 
-        // check if posts doesnt exists
-        if (getAllPosts.length === 0) {
-
+        // Om inga inlägg finns alls
+        if (totalPosts === 0) {
             return next(new HttpError("No posts could be found", 404));
         }
 
-        // return list of posts
-        return res.status(200).json({ message: "Posts found: ", getAllPosts })
+        // 3. Formatera svaret med formatPaginatedResponse
+        const paginatedData = formatPaginatedResponse(posts, totalPosts, page, limit);
+
+        // returnera paginerad data
+        return res.status(200).json({ 
+            message: "Posts found", 
+            ...paginatedData 
+        });
 
     } catch (error) {
-        // Om något går fel när vi försöker hämta flera användare:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error));
     }
-
 }
 
 
