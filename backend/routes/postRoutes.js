@@ -10,7 +10,7 @@ export const postRouter = Router();
 
 // ---------------------------- post routes SUBROUTES --------------------------- 
 postRouter.post('/create', authMiddleware, upload.array("media", 5), createPost)
-postRouter.get('/users/:userId/posts', authMiddleware, getUserPosts)
+postRouter.get('/users/:userId', authMiddleware, getUserPosts)
 postRouter.get('/following',authMiddleware, getFollowingPosts)
 postRouter.get('/category',authMiddleware, getCategoryPosts)
 postRouter.get('/hashtag',authMiddleware, getHashtagPosts)

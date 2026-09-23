@@ -170,14 +170,12 @@ export const getPosts = async (req, res, next) => {
     }
 }
 
-
 // ---------------------------- GET USER POSTS --------------------------- 
 // GET req: api/posts/users/:userId/
 
 export const getUserPosts = async (req, res, next) => {
 
     try {
-
         const { userId } = req.params;
 
         // check id
@@ -189,28 +187,39 @@ export const getUserPosts = async (req, res, next) => {
         const user = await User.findById(userId);
 
         if (!user) {
-
-            return next(new HttpError("User not found", 404))
+            return next(new HttpError("User not found", 404));
         }
 
-        // fetch all posts from one user from database
-        const getPosts = await Post.find({ "createdBy": userId })
-            .populate("createdBy", "username profileImage") // populates createdBy field with user data (username and profile image)
-            .sort({ createdAt: -1 }) // sort by newest first
+        // 1. Hämta page, limit och skip
+        const { page, limit, skip } = getPagination(req.query, 10);
 
+        // 2. Hämta inläggen för användaren och räkna totalen samtidigt
+        const query = { "createdBy": userId };
 
-        // return list of posts
-        return res.status(200).json({ message: "Posts found: ", getPosts })
+        const [userPosts, totalPosts] = await Promise.all([
+            Post.find(query)
+                .populate("createdBy", "username profileImage")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Post.countDocuments(query)
+        ]);
+
+        // 3. Formatera svaret med hasMore
+        const paginatedData = formatPaginatedResponse(userPosts, totalPosts, page, limit);
+
+        // returnera paginerad data
+        return res.status(200).json({ 
+            message: "Posts found", 
+            userPosts: paginatedData.posts,
+            hasMore: paginatedData.hasMore,
+            currentPage: paginatedData.currentPage,
+            totalPosts: paginatedData.totalPosts
+        });
 
     } catch (error) {
-        // Om något går fel när vi försöker hämta flera användare:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error));
     }
-
 }
 
 
