@@ -6,6 +6,21 @@ const api = axios.create({
     withCredentials: true // 🔴 KRÄVS för att HttpOnly cookies ska skickas med automatiskt!
 });
 
+// Variabler för att hantera parallella refresh-anrop (kölapp)
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
 // 1. REQUEST INTERCEPTOR: Skicka med den kortlivade Access Token i Authorization-headern
 api.interceptors.request.use(
     (config) => {
@@ -26,9 +41,23 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // Om svaret är 401 (Unauthorized) och vi inte redan har försökt förnya denna request
+        // Om svaret är 401 och det inte gällde själva refresh-anropet
         if (error.response?.status === 401 && !originalRequest._retry) {
+            
+            // 🔒 OM ETT REFRESH-ANROP REDAN PÅGÅR: Lägg detta anrop i kön och vänta!
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                })
+                    .then((newToken) => {
+                        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+                        return api(originalRequest);
+                    })
+                    .catch((err) => Promise.reject(err));
+            }
+
             originalRequest._retry = true;
+            isRefreshing = true;
 
             try {
                 // 🔴 Cookien med refreshToken skickas automatiskt med tack vare withCredentials: true
@@ -47,15 +76,22 @@ api.interceptors.response.use(
                 
                 window.dispatchEvent(new Event("userTokenRefreshed"));
 
-                // Uppdatera Authorization-headern för det misslyckade anropet och kör om det
+                // Släpp fram alla anrop som stod i kön och väntade
+                processQueue(null, newAccessToken);
+
+                // Uppdatera Authorization-headern för det ursprungliga anropet och kör om det
                 originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
 
             } catch (refreshError) {
-                // Om refresh har misslyckats, spärrats eller återanvänts: Logga ut användaren
+                // Om refresh har misslyckats (t.ex. 30 dagar har gått): Skicka fel till kön & logga ut
+                processQueue(refreshError, null);
+
                 localStorage.removeItem('currentUser');
                 window.location.href = '/login';
                 return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false; // Lås upp igen när allt är klart
             }
         }
 
