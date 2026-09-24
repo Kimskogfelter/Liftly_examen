@@ -782,12 +782,17 @@ export const refreshToken = async (req, res, next) => {
         // 4. REFRESH TOKEN ROTATION & CHECK: Hitta index för tokenen i arrayen
         const tokenIndex = user.refreshTokens.findIndex(t => t.token === refreshToken);
 
-        // 🚨 Säkerhet: Om token saknas i DB har den blivit spärrad eller stulen/återanvänd
+        // Om token saknas i DB (t.ex. vid en dubbel-request eller om den redan uppdaterats):
         if (tokenIndex === -1) {
-            user.refreshTokens = []; // Töm alla tokens för säkerhets skydd
-            await user.save();
-            res.clearCookie('refreshToken');
-            return next(new HttpError("Reuse detected! Tokens revoked. Please log in again.", 403));
+            // Rensa BARA cookien på klienten som skickade anropet,
+            // men rör INTE user.refreshTokens i databasen så att andra enheter inte loggas ut!
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                domain: process.env.NODE_ENV === 'production' ? '.liftlyfit.com' : undefined
+            });
+            return next(new HttpError("Invalid or expired Refresh Token", 403));
         }
 
         // 5. Skapa en ny Access Token och en ny Refresh Token (Rotation)
