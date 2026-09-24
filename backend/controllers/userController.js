@@ -802,7 +802,8 @@ export const refreshToken = async (req, res, next) => {
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax',
+            domain: process.env.NODE_ENV === 'production' ? '.liftlyfit.com' : undefined,
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 dagar
         });
 
