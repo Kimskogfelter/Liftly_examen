@@ -5,17 +5,15 @@
 - Ändra namnet token till accessToken i både frontend och backend för bättre förståelse av vad den gör
 - dubbelkolla att ingen del i backend skickar med känslig information till frontend!!
 
-
 ## Nya Funktioner
 - [ ] **Recept & Mat**
   - [ ] Skapa struktur och gränssnitt för att bygga egna recept (ingredienser, instruktioner, tillagningstid och makronätring).
 - [ ] **Tränings- & Matdagbok**
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
-
 - fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
 - fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
-
+- skönhetsfilter till bild/video
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
