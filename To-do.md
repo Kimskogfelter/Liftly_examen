@@ -11,7 +11,7 @@
   - [ ] Skapa struktur och gränssnitt för att bygga egna recept (ingredienser, instruktioner, tillagningstid och makronätring).
 - [ ] **Tränings- & Matdagbok**
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
-- Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
+
 - fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
 - fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
@@ -44,3 +44,4 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
 - [x] **Frontend: Silent Token Refresh**
   - [x] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
   - [x] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
+- [x] Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
