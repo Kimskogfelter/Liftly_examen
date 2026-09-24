@@ -2,13 +2,6 @@
 
 
 ## Säkerhet & Autentisering
-- [ ] **Backend: Refresh Tokens & Cookies**
-  - [ ] Installera och konfigurera `cookie-parser` i Express.
-  - [ ] Uppdatera `/login`-controllern att skapa `accessToken` (15m) och `refreshToken` (30d) i en `httpOnly` cookie.
-  - [ ] Skapa endpoint `/api/v1/users/refresh-token` som validerar cookien och skickar en ny `accessToken`.
-- [ ] **Frontend: Silent Token Refresh**
-  - [ ] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
-  - [ ] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
 - Ändra namnet token till accessToken i både frontend och backend för bättre förståelse av vad den gör
 - dubbelkolla att ingen del i backend skickar med känslig information till frontend!!
 
@@ -22,10 +15,6 @@
 - fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
 - fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
-
-
-
-
 
 
 ## ✅ Redan Klart
@@ -48,3 +37,10 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
 - [x] Pagination & Infinite Scroll (Flöde, Profil, Kategori, Hashtag, Sparade & Sök)
   - [x] Backend: Uppdaterat samtliga post-endpoints (/posts, /posts/following, /posts/users/:userId, /posts/category, /posts/hashtag, /users/savedposts, /search) till att hantera page och limit samt returnera en enhetlig paginerad datastruktur (posts, hasMore, currentPage, totalPosts).
   - [x] Frontend: Implementerat Infinite Scroll med IntersectionObserver i PostFeed och alla tillhörande vyer (HomePage, ProfilePage, CategoryPage, HashtagPage, SavedPostsPage, SearchPage) för sömlös och prestandaoptimerad laddning på mobil och desktop.
+- [x] **Backend: Refresh Tokens & Cookies**
+  - [x] Installera och konfigurera `cookie-parser` i Express.
+  - [x] Uppdatera `/login`-controllern att skapa `accessToken` (15m) och `refreshToken` (30d) i en `httpOnly` cookie.
+  - [x] Skapa endpoint `/api/v1/users/refresh` som validerar cookien och skickar en ny `accessToken`.
+- [x] **Frontend: Silent Token Refresh**
+  - [x] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
+  - [x] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
