@@ -35,7 +35,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
     })
   );
 
-  // 1. Hämta enbart användarinformationen (bio, bilder, följare etc.)
+  // 1. Hämta enbart användarinformationen
   const getUserInfo = async () => {
     try {
       const response = await api.get(`/users/${userId}`);
@@ -68,7 +68,6 @@ function ProfilePage({ currentUser, setCurrentUser }) {
     }
   };
 
-  // Nollställ och hämta på nytt om vi byter profil (nytt userId)
   useEffect(() => {
     getUserInfo();
     setPage(1);
@@ -76,14 +75,12 @@ function ProfilePage({ currentUser, setCurrentUser }) {
     fetchUserPosts(1, true);
   }, [userId]);
 
-  // Hämta fler inlägg när page stegras via observern
   useEffect(() => {
     if (page > 1) {
       fetchUserPosts(page, false);
     }
   }, [page]);
 
-  // Ref-callback för att känna av sista inlägget på profilsidan
   const lastPostElementRef = useCallback(
     (node) => {
       if (loadingMorePosts) return;
@@ -112,80 +109,88 @@ function ProfilePage({ currentUser, setCurrentUser }) {
     <section className="flex-1 px-2 md:px-6 max-w-4xl mx-auto font-sans text-gray-800 pt-16 xl:pt-6">
       {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">{error}</div>}
 
-      {/* User Header Info */}
-      <div className="w-full max-w-md mx-auto bg-white p-5 mb-6 flex items-start gap-5 font-sans">
-        <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full overflow-hidden border border-gray-100">
-          {targetUser?._id === currentUser?.id ? (
-            <div className="relative group cursor-pointer w-full h-full" onClick={() => setShowEditProfileImage(true)}>
-              <ProfileImage profileImage={targetUser?.profileImage} />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs">
-                <FaCamera size={12} />
+      {/* User Header Info Card */}
+      <div className="w-full max-w-md mx-auto bg-white p-5 mb-6 font-sans">
+        
+        {/* ÖVRE RADEN: Bild & Info bredvid varandra */}
+        <div className="flex items-start gap-5">
+          <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full overflow-hidden border border-gray-100">
+            {targetUser?._id === currentUser?.id ? (
+              <div className="relative group cursor-pointer w-full h-full" onClick={() => setShowEditProfileImage(true)}>
+                <ProfileImage profileImage={targetUser?.profileImage} />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs">
+                  <FaCamera size={12} />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full overflow-hidden border border-gray-100">
-              <ProfileImage profileImage={targetUser?.profileImage} />
-            </div>
-          )}
-        </div>
-
-        {showEditProfileImage && (
-          <EditProfileImage getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileImage(false)} />
-        )}
-
-        <div className="flex-1 space-y-3 text-left max-w-70 sm:max-w-75">
-          <div className="flex items-center justify-between gap-3 w-full">
-            <h2 className="text-base md:text-lg font-bold text-black tracking-wide leading-none truncate">
-              {targetUser?.username || "Username"}
-            </h2>
-
-            {targetUser?._id !== currentUser?.id && targetUser?._id !== currentUser?._id && (
-              <button
-                onClick={() => handleFollowUserToggle(targetUser, setTargetUser, currentUser, setCurrentUser, isAlreadyFollowing)}
-                className={`px-4 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                  isAlreadyFollowing
-                    ? "bg-gray-100 hover:bg-gray-200 text-black border border-gray-300"
-                    : "bg-black hover:bg-zinc-800 text-white"
-                }`}
-              >
-                {isAlreadyFollowing ? "Following" : "Follow"}
-              </button>
+            ) : (
+              <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-full overflow-hidden border border-gray-100">
+                <ProfileImage profileImage={targetUser?.profileImage} />
+              </div>
             )}
           </div>
 
-          <div className="flex items-center gap-4 text-xs text-gray-600">
-            <div>
-              <span className="font-bold text-black text-sm">{targetUser?.posts?.length || 0}</span> posts
+          {showEditProfileImage && (
+            <EditProfileImage getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileImage(false)} />
+          )}
+
+          <div className="flex-1 space-y-3 text-left min-w-0">
+            <div className="flex items-center justify-between gap-3 w-full">
+              <h2 className="text-base md:text-lg font-bold text-black tracking-wide leading-none truncate">
+                {targetUser?.username || "Username"}
+              </h2>
             </div>
-            <div className="cursor-pointer" onClick={() => setFollowModalType('followers')}>
-              <span className="font-bold text-black text-sm">{targetUser?.followers?.length || 0}</span> followers
+
+            <div className="flex items-center gap-4 text-xs text-gray-600">
+              <div>
+                <span className="font-bold text-black text-sm">{targetUser?.posts?.length || 0}</span> posts
+              </div>
+              <div className="cursor-pointer" onClick={() => setFollowModalType('followers')}>
+                <span className="font-bold text-black text-sm">{targetUser?.followers?.length || 0}</span> followers
+              </div>
+              <div className="cursor-pointer" onClick={() => setFollowModalType('following')}>
+                <span className="font-bold text-black text-sm">{targetUser?.following?.length || 0}</span> following
+              </div>
             </div>
-            <div className="cursor-pointer" onClick={() => setFollowModalType('following')}>
-              <span className="font-bold text-black text-sm">{targetUser?.following?.length || 0}</span> following
-            </div>
+
+            {targetUser?._id === currentUser?.id ? (
+              <p
+                className="text-gray-700 text-xs leading-relaxed pt-0.5 p-1.5 -m-1.5 rounded-lg cursor-pointer hover:bg-gray-50/80 hover:text-black transition-all flex items-center justify-between group w-full"
+                onClick={() => setShowEditProfileBio(true)}
+                title="Click to edit bio"
+              >
+                <span className="wrap-break-words pr-4">{targetUser?.profileBio || "No bio yet."}</span>
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 group-hover:text-black shrink-0">
+                  <FaRegEdit size={14} />
+                </span>
+              </p>
+            ) : (
+              <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
+                {targetUser?.profileBio || "No bio yet."}
+              </p>
+            )}
+
+            {showEditProfileBio && (
+              <EditProfileBio getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileBio(false)} />
+            )}
           </div>
-
-          {targetUser?._id === currentUser?.id ? (
-            <p
-              className="text-gray-700 text-xs leading-relaxed pt-0.5 p-1.5 -m-1.5 rounded-lg cursor-pointer hover:bg-gray-50/80 hover:text-black transition-all flex items-center justify-between group w-full"
-              onClick={() => setShowEditProfileBio(true)}
-              title="Click to edit bio"
-            >
-              <span className="wrap-break-words pr-4">{targetUser?.profileBio || "No bio yet."}</span>
-              <span className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 group-hover:text-black shrink-0">
-                <FaRegEdit size={14} />
-              </span>
-            </p>
-          ) : (
-            <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
-              {targetUser?.profileBio || "No bio yet."}
-            </p>
-          )}
-
-          {showEditProfileBio && (
-            <EditProfileBio getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileBio(false)} />
-          )}
         </div>
+
+        {/* NEDRE RADEN: Knappen placerad separat under hela headern */}
+        {targetUser?._id !== currentUser?.id && targetUser?._id !== currentUser?._id && (
+          <div className="mt-4 w-full">
+            <button
+              onClick={() => handleFollowUserToggle(targetUser, setTargetUser, currentUser, setCurrentUser, isAlreadyFollowing)}
+              className={`w-full py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                isAlreadyFollowing
+                  ? "bg-gray-100 hover:bg-gray-200 text-black border border-gray-300"
+                  : "bg-black hover:bg-zinc-800 text-white"
+              }`}
+            >
+              {isAlreadyFollowing ? "Following" : "Follow"}
+            </button>
+          </div>
+        )}
+
       </div>
 
       {/* Posts Section */}
