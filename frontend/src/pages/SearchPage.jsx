@@ -158,7 +158,7 @@ function SearchPage({ currentUser, setCurrentUser }) {
           )}
 
           {activeTab === "users" && (
-            <div className="w-full max-w-xl mx-auto">
+            <div className="w-full max-w-xl mx-auto pb-24 sm:pb-12">
               {users.length > 0 ? (
                 <div className="flex flex-col gap-2 w-full">
                   {users.map((u) => (
