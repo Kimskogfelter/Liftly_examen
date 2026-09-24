@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, maxlength: 45 },
     password: { type: String, required: true, minlength: 10 },
     profileBio: { type: String, default: "No bio yet.", maxlength: 200 },
+    socialLinks: {
+        instagram: { type: String, default: "" },
+        tiktok: { type: String, default: "" },
+        youtube: { type: String, default: "" }
+    },
     profileImage: { type: String, default: "https://res.cloudinary.com/dn3kezspn/image/upload/q_auto/f_auto/v1775115252/Liftly_profile_avatar_image_le0vou.png" },
     followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: Schema.Types.ObjectId, ref: "User" }],
