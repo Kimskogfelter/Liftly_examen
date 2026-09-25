@@ -2,7 +2,16 @@ import React from "react";
 import defaultProfileImage from "../../assets/images/Liftly_profile_avatar_image.png";
 
 function ProfileImage({ currentUser, profileImage }) {
-  const imageSrc = profileImage || currentUser?.profileImage || defaultProfileImage;
+  
+  const rawImage = profileImage || currentUser?.profileImage;
+
+  // Om bilden finns, häng på en cache-buster parameter baserat på när profilen uppdaterades (eller fallback till tid)
+  // Detta tvingar mobilens webbläsare att förstå att det är en NY bild fast URL:en i grunden är samma
+  const imageSrc = rawImage 
+    ? `${rawImage}${rawImage.includes('?') ? '&' : '?'}v=${currentUser?.updatedAt || '1'}`
+    : defaultProfileImage;
+
+
 
   return (
     <div className="w-full h-full rounded-full overflow-hidden">
