@@ -26,25 +26,29 @@ function App() {
 
   // check if the user(token) is still valid when the app loads, if not, log out the user
   useEffect(() => {
-    const verifyToken = async () => {
-      const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+  const verifyToken = async () => {
+    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
 
-      if (storedUser && storedUser.token) {
-        try {
-          // Använd api istället för fetch! 
-          // Om token gått ut kommer interceptorn automatiskt köra /users/refresh först.
-          await api.get("/users/verify");
-        } catch (err) {
-          // Logga bara ut om refresh OCKSA misslyckades (dvs. refreshToken är ogiltig/utgången)
-          console.log("Verifiering misslyckades, loggar ut", err);
-          localStorage.removeItem("currentUser");
-          setCurrentUser(null);
+    if (storedUser?.token) {
+      try {
+        const response = await api.get("/users/verify");
+        
+        // Om backend returnerar den uppdaterade användaren vid verify (t.ex. response.data.user eller response.data):
+        if (response.data) {
+          const freshUser = { ...storedUser, ...response.data };
+          setCurrentUser(freshUser);
+          localStorage.setItem("currentUser", JSON.stringify(freshUser));
         }
+      } catch (err) {
+        console.log("Verifiering misslyckades, loggar ut", err);
+        localStorage.removeItem("currentUser");
+        setCurrentUser(null);
       }
-    };
+    }
+  };
 
-    verifyToken();
-  }, []);
+  verifyToken();
+}, []);
 
   return (
     <>
