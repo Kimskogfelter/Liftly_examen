@@ -39,7 +39,7 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
                 const updatedProfileImage = response.data.cloudinaryImagePath;
 
                 // create a new user object to update currentUser state with updated profile image
-                const updatedUser = { ...currentUser, profileImage: updatedProfileImage };
+                const updatedUser = { ...currentUser, profileImage: updatedProfileImage, updatedAt: new Date().toISOString() };
 
                 // update state for currentUser in React AND localstorage
                 setCurrentUser(updatedUser);
