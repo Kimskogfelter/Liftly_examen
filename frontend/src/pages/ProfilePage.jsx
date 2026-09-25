@@ -5,6 +5,7 @@ import ProfileImage from "../components/users/ProfileImage";
 import EditProfileImage from "../components/users/EditProfileImage";
 import EditProfileModal from "../components/users/EditProfileModal";
 import PostFeed from "../components/posts/PostFeed";
+import SettingsModal from "../components/users/SettingsModal";
 import { FollowModal } from "../components/users/FollowModal";
 import { handleFollowUserToggle } from "../functions/user/handleFollowUserToggle";
 import { FaCamera } from "react-icons/fa";
@@ -275,6 +276,14 @@ function ProfilePage({ currentUser, setCurrentUser }) {
         isOpen={Boolean(followModalType)}
         onClose={() => setFollowModalType(null)}
       />
+
+      {showSettingsModal && (
+        <SettingsModal
+          onClose={() => setShowSettingsModal(false)}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        />
+      )}
     </section>
   );
 }
