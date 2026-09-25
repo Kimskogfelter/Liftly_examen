@@ -14,6 +14,7 @@
 - ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
 - fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
 - skönhetsfilter till bild/video
+- fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
