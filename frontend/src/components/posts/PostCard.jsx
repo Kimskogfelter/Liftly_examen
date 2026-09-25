@@ -114,7 +114,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     </div>
 
                     {/* POST INNEHÅLL */}
-                    <div onClick={handleCardClick} className="block group text-left">
+                    <div onClick={handleCardClick} className="block group text-left cursor-pointer transition-opacity hover:opacity-95">
 
                         {/* 🔴 1. MEDIA HÖGST UPP (Om det finns) */}
                         {hasMedia && (
