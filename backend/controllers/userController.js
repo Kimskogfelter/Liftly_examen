@@ -1,6 +1,7 @@
 import { HttpError } from "../models/errorModel.js"
 import { User } from "../models/userModel.js"
 import { Post } from "../models/postModel.js"
+import { Comment } from "../models/commentModel.js";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -575,60 +576,102 @@ export const changeProfileImage = async (req, res, next) => {
 // PROTECTED
 
 export const deleteUser = async (req, res, next) => {
-
     const { userId } = req.params;
 
-    // check id
+    // Check valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(404).json({ message: 'User Id is not valid' });
     }
 
     // Verify authorization: users can only delete themselves
     if (req.user.id !== userId) {
-        return next(new HttpError("You can only delete your own account", 403))
+        return next(new HttpError("You can only delete your own account", 403));
     }
 
     try {
-
-        // find user 
         const findUser = await User.findById(userId);
 
-        // if user cant be found 
         if (!findUser) {
-
             return res.status(404).json({ message: 'User not found' });
-
-        } else {
-
-            // remove user from followers and following lists
-            await User.updateMany(
-                {}, // all users
-                {
-                    $pull: {
-                        followers: userId,
-                        following: userId
-                    }
-                }
-            );
-
-            // delete user
-            await User.findByIdAndDelete(userId);
-            return res.status(200).json(`User with id: ${userId} was successfully removed from followers and following lists and deleted from database`)
-
         }
 
+        // 1. Hitta alla inlägg skapade av användaren
+        const userPosts = await Post.find({ createdBy: userId });
+        const userPostIds = userPosts.map((post) => post._id);
 
+        // 2. Ta bort alla kommentarer som hör till användarens inlägg
+        if (userPostIds.length > 0) {
+            await Comment.deleteMany({ post: { $in: userPostIds } });
+        }
+
+        // 3. Ta bort alla inlägg skapade av användaren
+        await Post.deleteMany({ createdBy: userId });
+
+        // 4. Hitta alla kommentarer som användaren har skrivit på ANDRA inlägg och ta bort dem
+        const userComments = await Comment.find({ createdBy: userId });
+        const userCommentIds = userComments.map((comment) => comment._id);
+
+        if (userCommentIds.length > 0) {
+            // Ta bort referensen från Post-modellens comments-array
+            await Post.updateMany(
+                { comments: { $in: userCommentIds } },
+                { $pull: { comments: { $in: userCommentIds } } }
+            );
+            // Ta bort själva kommentarerna
+            await Comment.deleteMany({ createdBy: userId });
+        }
+
+        // 5. Ta bort användarens likes på inlägg och kommentarer
+        await Post.updateMany(
+            { likes: userId },
+            { $pull: { likes: userId } }
+        );
+        await Comment.updateMany(
+            { likes: userId },
+            { $pull: { likes: userId } }
+        );
+        // 6a. Ta bort användarens likes i replies (endast på kommentarer som har replies)
+        await Comment.updateMany(
+            { "replies.likes": userId },
+            {
+                $pull: {
+                    "replies.$[].likes": userId
+                }
+            }
+        );
+
+        // 6b. Ta bort användarens skapade replies på kommentarer
+        await Comment.updateMany(
+            { "replies.createdBy": userId },
+            {
+                $pull: {
+                    replies: { createdBy: userId }
+                }
+            }
+        );
+
+        // 7. Ta bort användaren från alla andra användares followers & following
+        await User.updateMany(
+            {},
+            {
+                $pull: {
+                    followers: userId,
+                    following: userId
+                }
+            }
+        );
+
+        // 8. Radera själva användaren
+        await User.findByIdAndDelete(userId);
+
+        return res.status(200).json({
+            message: `User with id: ${userId} and all associated data were successfully deleted.`
+        });
 
     } catch (error) {
-        // Om något går fel när vi försöker radera användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not delete user account", 500));
     }
-
-}
+};
 
 
 // ---------------------------- CHECK AUTH USER --------------------------- 
