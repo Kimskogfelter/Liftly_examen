@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import api from "../api/axios";
 import ProfileImage from "../components/users/ProfileImage";
 import EditProfileImage from "../components/users/EditProfileImage";
-import EditProfileBio from "../components/users/EditProfileBio";
+import EditProfileModal from "../components/users/EditProfileModal";
 import PostFeed from "../components/posts/PostFeed";
 import { FollowModal } from "../components/users/FollowModal";
 import { handleFollowUserToggle } from "../functions/user/handleFollowUserToggle";
-import { FaRegEdit, FaCamera } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
+import { FiSettings } from "react-icons/fi";
 
 function ProfilePage({ currentUser, setCurrentUser }) {
   const [error, setError] = useState("");
@@ -24,7 +25,8 @@ function ProfilePage({ currentUser, setCurrentUser }) {
   const observer = useRef();
 
   const [showEditProfileImage, setShowEditProfileImage] = useState(false);
-  const [showEditProfileBio, setShowEditProfileBio] = useState(false);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [followModalType, setFollowModalType] = useState(null);
 
   const myId = (currentUser?._id || currentUser?.id)?.toString();
@@ -34,6 +36,8 @@ function ProfilePage({ currentUser, setCurrentUser }) {
       return followerId?.toString() === myId;
     })
   );
+
+  const isOwnProfile = targetUser?._id === currentUser?.id || targetUser?._id === currentUser?._id;
 
   // 1. Hämta enbart användarinformationen
   const getUserInfo = async () => {
@@ -110,16 +114,27 @@ function ProfilePage({ currentUser, setCurrentUser }) {
       {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">{error}</div>}
 
       {/* User Header Info Card */}
-      <div className="w-full max-w-md mx-auto bg-white p-5 mb-6 font-sans">
+      <div className="w-full max-w-md mx-auto bg-white p-5 mb-6 font-sans relative">
+
+        {/* Inställningsikon uppe i högra hörnet (visas endast för egen profil) */}
+        {isOwnProfile && (
+          <button
+            onClick={() => setShowSettingsModal(true)}
+            className="absolute top-5 right-5 text-gray-400 hover:text-gray-800 transition-colors p-1.5 rounded-full hover:bg-gray-100 cursor-pointer"
+            title="Account Settings"
+          >
+            <FiSettings size={18} />
+          </button>
+        )}
 
         {/* ÖVRE RADEN: Bild & Info bredvid varandra */}
         <div className="flex items-center gap-5">
           <div className="w-20 h-20 md:w-32 md:h-32 shrink-0 rounded-full overflow-hidden border border-gray-100">
-            {targetUser?._id === currentUser?.id ? (
+            {isOwnProfile ? (
               <div className="relative group cursor-pointer w-full h-full" onClick={() => setShowEditProfileImage(true)}>
                 <ProfileImage profileImage={targetUser?.profileImage} />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs">
-                  <FaCamera size={12} />
+                  <FaCamera size={14} />
                 </div>
               </div>
             ) : (
@@ -133,7 +148,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
             <EditProfileImage getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileImage(false)} />
           )}
 
-          <div className="flex-1 space-y-3 text-left min-w-0">
+          <div className="flex-1 space-y-3 text-left min-w-0 pr-6">
             <div className="flex items-center justify-between gap-3 w-full">
               <h2 className="text-base md:text-lg font-bold text-black tracking-wide leading-none truncate">
                 {targetUser?.username || "Username"}
@@ -152,32 +167,27 @@ function ProfilePage({ currentUser, setCurrentUser }) {
               </div>
             </div>
 
-            {targetUser?._id === currentUser?.id ? (
-              <p
-                className="text-gray-700 text-xs leading-relaxed pt-0.5 p-1.5 -m-1.5 rounded-lg cursor-pointer hover:bg-gray-50/80 hover:text-black transition-all flex items-center justify-between group w-full"
-                onClick={() => setShowEditProfileBio(true)}
-                title="Click to edit bio"
-              >
-                <span className="wrap-break-words pr-4">{targetUser?.profileBio || "No bio yet."}</span>
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 group-hover:text-black shrink-0">
-                  <FaRegEdit size={14} />
-                </span>
-              </p>
-            ) : (
-              <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
-                {targetUser?.profileBio || "No bio yet."}
-              </p>
-            )}
+            {/* Bio text (utan förvirrande hover-redigering) */}
+            <p className="text-gray-700 text-xs leading-relaxed max-w-xs pt-0.5">
+              {targetUser?.profileBio || "No bio yet."}
+            </p>
 
-            {showEditProfileBio && (
-              <EditProfileBio getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileBio(false)} />
+            {showEditProfileModal && (
+              <EditProfileModal getUserInfo={getUserInfo} currentUser={currentUser} setCurrentUser={setCurrentUser} onClose={() => setShowEditProfileModal(false)} />
             )}
           </div>
         </div>
 
-        {/* NEDRE RADEN: Knappen placerad separat under hela headern */}
-        {targetUser?._id !== currentUser?.id && targetUser?._id !== currentUser?._id && (
-          <div className="mt-4 w-full">
+        {/* KNAPP-RAD: "Edit profile" för ägaren ELLER "Follow" för besökare */}
+        <div className="mt-4 w-full">
+          {isOwnProfile ? (
+            <button
+              onClick={() => setShowEditProfileModal(true)}
+              className="w-full py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer bg-gray-100 hover:bg-gray-200 text-black border border-gray-300/80 shadow-xs"
+            >
+              Edit profile
+            </button>
+          ) : (
             <button
               onClick={() => handleFollowUserToggle(targetUser, setTargetUser, currentUser, setCurrentUser, isAlreadyFollowing)}
               className={`w-full py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${isAlreadyFollowing
@@ -187,10 +197,10 @@ function ProfilePage({ currentUser, setCurrentUser }) {
             >
               {isAlreadyFollowing ? "Following" : "Follow"}
             </button>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Social Links Block */}
+        {/* Social Links Block (100% klickbara länkar) */}
         {targetUser?.socialLinks && (
           <div className="flex items-center gap-2 md:gap-3 mt-4 pt-3 border-t border-gray-100/60">
             {/* Instagram */}
@@ -204,7 +214,6 @@ function ProfilePage({ currentUser, setCurrentUser }) {
                 <svg className="w-4 h-4 text-pink-500 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                 </svg>
-                {/* Visa bara texten på medium skärmar och större */}
                 <span className="hidden md:inline">@{targetUser.socialLinks.instagram}</span>
               </a>
             )}
