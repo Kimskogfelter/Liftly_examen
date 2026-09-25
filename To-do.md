@@ -9,7 +9,7 @@
 - [ ] **Recept & Mat**
   - [ ] Skapa struktur och gränssnitt för att bygga egna recept (ingredienser, instruktioner, tillagningstid och makronätring).
 - [ ] **Tränings- & Matdagbok**
-  - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost i samma vy.
+  - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost/kcal/protein intag i samma vy.
 - fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
 - fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
