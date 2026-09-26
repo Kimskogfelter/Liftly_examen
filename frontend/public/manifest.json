@@ -3,8 +3,8 @@
   "name": "Liftly - Fitness & Social",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "type": "image/svg+xml",
+      "src": "/icon.png",
+      "type": "image/png",
       "sizes": "512x512"
     }
   ],
