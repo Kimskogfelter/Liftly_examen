@@ -15,6 +15,8 @@
 - fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
 - skönhetsfilter till bild/video
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
+- RENSA bort alla console.logs
+- fixa ett språk filter mot fula ord?! 
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
