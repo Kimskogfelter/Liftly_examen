@@ -48,10 +48,21 @@ function HomePage({ currentUser, setCurrentUser }) {
   };
 
   // Återställ sida & ladda om när man byter flik
+  // Lyssna på när ett nytt inlägg skapas (från CreatePostModal i Navbaren)
   useEffect(() => {
     setPage(1);
     setHasMorePosts(true);
     fetchPosts(1, true);
+
+    // Lyssna på när ett nytt inlägg skapas
+    const handleNewPost = () => {
+      setPage(1);
+      setHasMorePosts(true);
+      fetchPosts(1, true);
+    };
+
+    window.addEventListener("postCreated", handleNewPost);
+    return () => window.removeEventListener("postCreated", handleNewPost);
   }, [activeTab]);
 
   // Hämta fler inlägg när 'page' ökar
@@ -60,6 +71,7 @@ function HomePage({ currentUser, setCurrentUser }) {
       fetchPosts(page, false);
     }
   }, [page]);
+
 
   // Ref-callback som kopplas till det sista elementet i PostFeed
   const lastPostElementRef = useCallback(
@@ -95,22 +107,20 @@ function HomePage({ currentUser, setCurrentUser }) {
         <div className="max-w-2xl mx-auto flex">
           <button
             onClick={() => setActiveTab("posts")}
-            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${
-              activeTab === "posts"
-                ? "border-gray-800 text-gray-800"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
+            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${activeTab === "posts"
+              ? "border-gray-800 text-gray-800"
+              : "border-transparent text-gray-400 hover:text-gray-600"
+              }`}
           >
             All
           </button>
 
           <button
             onClick={() => setActiveTab("following")}
-            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${
-              activeTab === "following"
-                ? "border-gray-800 text-gray-800"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
+            className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 text-center cursor-pointer ${activeTab === "following"
+              ? "border-gray-800 text-gray-800"
+              : "border-transparent text-gray-400 hover:text-gray-600"
+              }`}
           >
             Following
           </button>

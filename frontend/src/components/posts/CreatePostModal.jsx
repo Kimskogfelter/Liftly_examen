@@ -58,7 +58,7 @@ function CreatePostModal({ currentUser, onClose }) {
 
       // Send post data to backend
       const response = await api.post(`/posts/create`, formData);
-      console.log("Post created successfully:", response.data);
+      // console.log("Post created successfully:", response.data);
 
       // Reset form fields and error message
       setContent("");
@@ -70,10 +70,11 @@ function CreatePostModal({ currentUser, onClose }) {
 
       // Redirect to home page after successful creation of post
       if (response.status === 201) {
-        navigate('/home');
+        // Skicka ut signalen till alla som lyssnar!
+        window.dispatchEvent(new Event("postCreated"));
+
+        onClose();
       }
-      // Close the CreatePost component after successful post creation
-      onClose();
 
     } catch (err) {
       // Handle errors and display error message to user
@@ -218,14 +219,14 @@ function CreatePostModal({ currentUser, onClose }) {
                 type="button"
                 onClick={() => setShowSpotifyInput((prev) => !prev)}
                 className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${spotifyUrl || showSpotifyInput
-                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                    : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                  : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
                   }`}
               >
                 <BsSpotify size={15} className={spotifyUrl || showSpotifyInput ? "text-emerald-500" : "text-zinc-800"} />
                 <span>Spotify</span>
               </button>
-              
+
               {/* Category Dropdown */}
               <div className="relative shrink-0">
                 <select
