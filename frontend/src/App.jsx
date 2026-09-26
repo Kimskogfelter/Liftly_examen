@@ -40,7 +40,7 @@ function App() {
           localStorage.setItem("currentUser", JSON.stringify(freshUser));
         }
       } catch (err) {
-        console.log("Verifiering misslyckades, loggar ut", err);
+        // console.log("Verifiering misslyckades, loggar ut", err);
         localStorage.removeItem("currentUser");
         setCurrentUser(null);
       }
