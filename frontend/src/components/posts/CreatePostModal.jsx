@@ -68,7 +68,8 @@ function CreatePostModal({ currentUser, onClose }) {
       setCategory("General");
       setError("");
 
-      // Redirect to home page after successful creation of post
+      // Notify components (like HomePage) that a new post was created with a event
+      // that home page can add a event listener to
       if (response.status === 201) {
         // Skicka ut signalen till alla som lyssnar!
         window.dispatchEvent(new Event("postCreated"));
