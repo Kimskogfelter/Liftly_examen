@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import PostFeed from "../components/posts/PostFeed";
 import api from "../api/axios";
 import { FiFolder, FiGrid } from "react-icons/fi";
 
 function CategoryPage({ currentUser }) {
     const { categoryName } = useParams();
+    const [searchParams] = useSearchParams();
+    const subCategory = searchParams.get("sub");
+
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
@@ -17,7 +20,7 @@ function CategoryPage({ currentUser }) {
 
     const observer = useRef();
 
-    // Funktion för att hämta kategoriposters med paginering
+    // Funktion för att hämta kategoriposters med stöd för subCategory
     const fetchCategoryPosts = async (currentPage, isInitialLoad = false) => {
         if (isInitialLoad) {
             setLoading(true);
@@ -27,7 +30,12 @@ function CategoryPage({ currentUser }) {
         }
 
         try {
-            const res = await api.get(`/posts/category?category=${categoryName}&page=${currentPage}&limit=10`);
+            let url = `/posts/category?category=${categoryName}&page=${currentPage}&limit=10`;
+            if (subCategory) {
+                url += `&subCategory=${encodeURIComponent(subCategory)}`;
+            }
+
+            const res = await api.get(url);
             const { posts: newPosts, hasMore } = res.data;
 
             setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
@@ -45,12 +53,12 @@ function CategoryPage({ currentUser }) {
         }
     };
 
-    // Återställ och hämta sida 1 vid nyladdning eller om kategorin byts
+    // Återställ och hämta sida 1 vid nyladdning eller om kategori/underkategori byts
     useEffect(() => {
         setPage(1);
         setHasMorePosts(true);
         fetchCategoryPosts(1, true);
-    }, [categoryName]);
+    }, [categoryName, subCategory]);
 
     // Hämta fler inlägg när page höjs
     useEffect(() => {
@@ -76,6 +84,13 @@ function CategoryPage({ currentUser }) {
         [loading, loadingMorePosts, hasMorePosts]
     );
 
+    const getDisplayTitle = () => {
+        if (subCategory && subCategory !== categoryName) {
+            return `${categoryName} → ${subCategory}`;
+        }
+        return categoryName;
+    };
+
     if (loading) {
         return <p className="text-zinc-500 text-center mt-20 text-sm animate-pulse">Loading feed...</p>;
     }
@@ -87,10 +102,17 @@ function CategoryPage({ currentUser }) {
                 <div className="flex items-center justify-center gap-2 mb-1">
                     <FiFolder size={20} className="text-black" />
                     <h1 className="text-xl font-bold text-gray-900 tracking-wide">
-                        Category: <span className="text-zinc-500 font-normal">{categoryName}</span>
+                        Category: <span className="text-zinc-500 font-normal">{getDisplayTitle()}</span>
                     </h1>
                 </div>
             </div>
+
+            {/* Error message om det skulle behövas */}
+            {error && (
+                <div className="bg-red-50 text-red-600 text-xs p-3 rounded-lg mb-4 text-center font-medium">
+                    {error}
+                </div>
+            )}
 
             {/* 3x3 GRID LAYOUT / POST FEED */}
             {posts.length === 0 ? (
@@ -99,7 +121,7 @@ function CategoryPage({ currentUser }) {
                         <FiGrid size={22} />
                     </div>
                     <p className="text-zinc-700 text-sm font-semibold">No posts found in this category yet</p>
-                    <p className="text-zinc-400 text-xs mt-1">Be the first to create a post for {categoryName}.</p>
+                    <p className="text-zinc-400 text-xs mt-1">Be the first to create a post for {getDisplayTitle()}.</p>
                 </div>
             ) : (
                 <PostFeed 
