@@ -51,7 +51,7 @@ function CommentCard({ comment, currentUser }) {
             setReplyToUser("");
             setShowReplyInput(false);
         } catch (err) {
-            console.error("Kunde inte skicka svaret:", err);
+            // console.error("Kunde inte skicka svaret:", err);
         } finally {
             setIsSubmitting(false);
         }

@@ -25,7 +25,7 @@ function SettingsModal({ onClose, currentUser, setCurrentUser }) {
       onClose();
       navigate("/login");
     } catch (err) {
-      console.error("Failed to delete account:", err);
+      // console.error("Failed to delete account:", err);
       setError(
         err.response?.data?.message ||
           "Could not delete your account. Please try again."

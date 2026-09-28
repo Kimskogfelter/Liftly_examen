@@ -16,7 +16,7 @@ function SingleWorkoutPage({ currentUser }) {
             const response = await api.get(`${import.meta.env.VITE_API_URL}/workouts/${workoutId}`);
             setWorkout(response.data.workout || response.data);
 
-            console.log("Fetched workout details:", response.data);
+            // console.log("Fetched workout details:", response.data);
             
         } catch (err) {
             setError("Could not fetch workout details.");

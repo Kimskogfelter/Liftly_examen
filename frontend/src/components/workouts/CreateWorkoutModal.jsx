@@ -78,7 +78,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
     try {
       const response = await api.post(`/workouts/create`, { day, title, exercises: formattedExercises });
 
-      console.log("Workout created successfully:", response.data);
+      // console.log("Workout created successfully:", response.data);
 
       if (onWorkoutCreated) {
         onWorkoutCreated(response.data.workout);

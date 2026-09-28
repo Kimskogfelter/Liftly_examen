@@ -14,7 +14,7 @@ export const handleFollowUserToggle = async (
         if (isAlreadyFollowing) {
             // Unfollow user
             const response = await api.delete(`/users/${targetUserId}/unfollow`);
-            console.log("Unfollowed user successfully:", response.data);
+            // console.log("Unfollowed user successfully:", response.data);
 
             // 1. Uppdatera den profil du kollar på (ta bort ditt ID från deras followers)
             if (setTargetUser) {
@@ -44,7 +44,7 @@ export const handleFollowUserToggle = async (
         } else {
             // Follow user
             const response = await api.post(`/users/${targetUserId}/follow`, {});
-            console.log("Followed user successfully:", response.data);
+            // console.log("Followed user successfully:", response.data);
 
             // 1. Uppdatera den profil du kollar på (lägg till ditt ID i deras followers)
             if (setTargetUser) {
@@ -72,6 +72,6 @@ export const handleFollowUserToggle = async (
             }
         }
     } catch (err) {
-        console.error("Error toggling follow:", err);
+        // console.error("Error toggling follow:", err);
     }
 };

@@ -75,7 +75,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
         try {
             const response = await api.patch(`/workouts/${workoutId}/update`, { title, day, exercises: sanitizedExercises });
 
-            console.log("Workout updated:", response.data);
+            // console.log("Workout updated:", response.data);
             const updatedWorkout = response.data.workout;
 
             // 2. Anropar förälderns funktion med det nya passet

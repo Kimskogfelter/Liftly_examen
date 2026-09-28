@@ -18,7 +18,7 @@ function LoginPage({ setCurrentUser }) {
 
       // send login data to backend
       const response = await api.post(`/users/login`, { username, password });
-      console.log("Login successful:", response.data);
+      // console.log("Login successful:", response.data);
       // redirect to dashboard page after successful login
       if (response.status === 200) {
         // save user data to local storage
@@ -31,8 +31,8 @@ function LoginPage({ setCurrentUser }) {
     } catch (err) {
 
       // handle errors and display error message to user
-      const errorResponse = err.response.data;
-      setError(errorResponse.message || "Your login attempt was unsuccessful. Please check your credentials and try again.");
+      const errorResponse = err.response?.data;
+      setError(errorResponse?.message || "Your login attempt was unsuccessful. Please check your credentials and try again.");
     }
   };
 

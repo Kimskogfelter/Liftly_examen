@@ -12,13 +12,13 @@ function DeletePostModal({ post, onClose, currentUser, handleDeletePost }) {
 
       // delete post data from backend
       const response = await api.delete(`/posts/${post._id}`);
-      console.log("Post deleted successfully from backend with id:", post._id);
+      // console.log("Post deleted successfully from backend with id:", post._id);
 
 
       // Execute the function from Home/ProfilePage to update the UI instantly
       // pass the deleted post's ID down to the filter function
       handleDeletePost(post._id);
-      console.log("handleDeletePost function executed successfully for ID:", post._id);
+      // console.log("handleDeletePost function executed successfully for ID:", post._id);
 
       // close the deletePost component after successful post deletion
       onClose();

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import api from '../api/axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from '../assets/images/liftly-logo.png';
 
@@ -22,7 +22,7 @@ function RegisterPage() {
 
       // send registration data to backend
       const response = await api.post(`/users/register`, { username, email, password, confirmPassword });
-      console.log("Registration successful:", response.data);
+      // console.log("Registration successful:", response.data);
       // redirect to login page after successful registration
       if (response.status === 201) {
         navigate('/login');
@@ -137,9 +137,9 @@ function RegisterPage() {
           <p className="text-xs text-gray-300">
             Already have an account?{/* {" "} renders space between the paragraph and link */}
             {" "}
-            <a href="/login" className="font-semibold text-white hover:underline">
+           <Link to="/login" className="font-semibold text-white hover:underline">
               Login
-            </a>
+            </Link>
           </p>
         </div>
 

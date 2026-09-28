@@ -23,7 +23,7 @@ export const FollowModal = ({ userId, type, isOpen, onClose, currentUser, setCur
 
                 setUsers(userList || []);
             } catch (error) {
-                console.error(`Could not fetch ${type}:`, error);
+                // console.error(`Could not fetch ${type}:`, error);
             } finally {
                 setLoading(false);
             }

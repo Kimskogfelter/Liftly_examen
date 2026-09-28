@@ -19,13 +19,13 @@ function SinglePostPage({ currentUser, setCurrentUser }) {
         try {
             // fetch post data from backend
             const response = await api.get(`/posts/${postId}`);
-            console.log("Post details fetched successfully:", response.data);
+            // console.log("Post details fetched successfully:", response.data);
             // update the post and comments state with the fetched data from the backend
             setPost(response.data.post);
             setComments(response.data.post.comments);
 
         } catch (err) {
-            console.log(err.response);
+            // console.log(err.response);
             const errorResponse = err.response?.data;
             setError(errorResponse?.message || "Your post details could not be fetched. Please try again.");
 

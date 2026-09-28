@@ -29,7 +29,7 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
                 }
             });
 
-            console.log("Profile image update request sent successfully:", response.data);
+            // console.log("Profile image update request sent successfully:", response.data);
 
 
             // after successful post req to backend of profile image

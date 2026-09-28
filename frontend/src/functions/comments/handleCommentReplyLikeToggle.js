@@ -7,36 +7,29 @@ export const handleCommentReplyLikeToggle = async (isReplyLiked, setIsReplyLiked
 
     try {
 
-    if (isReplyLiked) {
-        
+        if (isReplyLiked) {
 
-        // unlike comment reply
-        const response = await api.delete(`/posts/comments/${commentId}/replies/${replyId}/unlike`); 
 
-        console.log("unlike comment reply data:", response.data);
-        console.log(`Reply with id ${replyId} has been unliked`)
+            // unlike comment reply
+            await api.delete(`/posts/comments/${commentId}/replies/${replyId}/unlike`);
 
-        // remove 1 from likes count
-        setReplyLikesCount(prev => prev - 1);
+            // remove 1 from likes count
+            setReplyLikesCount(prev => prev - 1);
 
-    } else {
+        } else {
 
-        // like comment reply
-        const response = await api.post(`/posts/comments/${commentId}/replies/${replyId}/like`, {});
+            // like comment reply
+            await api.post(`/posts/comments/${commentId}/replies/${replyId}/like`, {});
 
-        console.log("like comment reply data:", response.data);
-        console.log(`Reply with id ${replyId} has been liked`)
 
-        // add 1 to likes count
-        setReplyLikesCount(prev => prev + 1);
+            // add 1 to likes count
+            setReplyLikesCount(prev => prev + 1);
 
-    }
+        }
 
-    setIsReplyLiked(prev => !prev); 
+        setIsReplyLiked(prev => !prev);
 
-        } catch (err) {
-
-        console.error(err);
+    } catch (err) {
 
     }
 

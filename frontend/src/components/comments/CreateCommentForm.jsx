@@ -16,7 +16,7 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
 
       // send comment data to backend
       const response = await api.post(`/posts/${postId}/comments/create`, { content, postId });
-      console.log("Comment created successfully:", response.data);
+      // console.log("Comment created successfully:", response.data);
 
       // add the new comment to the comments state to update the UI
       const newComment = response.data.newComment;

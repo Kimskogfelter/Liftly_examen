@@ -13,7 +13,7 @@ function DeleteWorkoutModal({ workout, currentUser, onClose, handleDeleteWorkout
             handleDeleteWorkout(workout._id);
             onClose();
         } catch (err) {
-            console.error(err);
+            // console.error(err);
         } finally {
             setIsDeleting(false);
         }

@@ -19,9 +19,9 @@ function WorkoutCard({ workout, currentUser }) {
         try {
             await api.patch(`/workouts/${workout._id}/update`,
                 { exercises: exercises });
-            console.log("Auto-saved successfully!", exercises);
+            // console.log("Auto-saved successfully!", exercises);
         } catch (err) {
-            console.error("Auto-save failed:", err);
+            // console.error("Auto-save failed:", err);
         }
     };
 
@@ -46,7 +46,7 @@ function WorkoutCard({ workout, currentUser }) {
             popSound.volume = 0.5;
 
             popSound.play().catch((err) => {
-                console.log("Audio play blocked by browser:", err);
+                // console.log("Audio play blocked by browser:", err);
             });
         }
     };

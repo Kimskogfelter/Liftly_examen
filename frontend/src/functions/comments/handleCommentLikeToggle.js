@@ -6,10 +6,7 @@ export const handleCommentLikeToggle = async (isLiked, setIsLiked, setLikesCount
     if (isLiked) {
 
         // unlike comment
-        const response = await api.delete(`/posts/comments/${comment._id}/unlike`); 
-
-        console.log("unlike comment data:", response.data);
-        console.log(`Comment with id${comment._id} have been unliked`)
+        await api.delete(`/posts/comments/${comment._id}/unlike`); 
 
         // remove 1 from likes count
         setLikesCount(prev => prev - 1);
@@ -17,10 +14,7 @@ export const handleCommentLikeToggle = async (isLiked, setIsLiked, setLikesCount
     } else {
 
         // like comment
-        const response = await api.post(`/posts/comments/${comment._id}/like`, {}); 
-
-        console.log("like comment data:", response.data);
-        console.log(`Comment with id${comment._id} have been liked`)
+        await api.post(`/posts/comments/${comment._id}/like`, {}); 
 
         // add 1 to likes count
         setLikesCount(prev => prev + 1);
@@ -30,8 +24,6 @@ export const handleCommentLikeToggle = async (isLiked, setIsLiked, setLikesCount
     setIsLiked(prev => !prev); 
 
         } catch (err) {
-
-        console.error(err);
 
     }
 

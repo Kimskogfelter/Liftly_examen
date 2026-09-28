@@ -20,12 +20,12 @@ function EditPostModal({ onClose, handleEditPost, post, currentUser }) {
       // Send updated post data to backend
       const response = await api.patch(`/posts/${postId}/update`, { content });
 
-      console.log("Post update request sent successfully:", response.data);
+      // console.log("Post update request sent successfully:", response.data);
 
       // Add the updated post to the posts state to update the UI
       const updatedPost = response.data.updatedPost;
       handleEditPost(updatedPost);
-      console.log("handleEditPost function executed", updatedPost);
+      // console.log("handleEditPost function executed", updatedPost);
 
       // Redirect to home page after successful post editing
       if (response.status === 200) {
