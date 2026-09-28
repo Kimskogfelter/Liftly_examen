@@ -15,6 +15,7 @@
 - skönhetsfilter till bild/video
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
+- göra så postCard tar upp mer bredd på mobiler?? 
 
 
 ## ✅ Redan Klart
