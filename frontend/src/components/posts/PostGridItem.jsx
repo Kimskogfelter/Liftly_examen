@@ -10,6 +10,11 @@ function PostGridItem({ post }) {
     0
   ) || 0;
 
+  // Formatera kategorietiketten (visar underkategori om den finns)
+  const displayCategory = post.subCategory && post.subCategory !== post.category 
+    ? `${post.category} / ${post.subCategory}` 
+    : post.category || "General";
+
   return (
     <Link
       to={`/posts/${post._id}`}
@@ -22,10 +27,10 @@ function PostGridItem({ post }) {
             alt="Post thumbnail"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          {/* Ren text-tagg centrerad längst ner, precis som på textinläggen */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-            <span className="text-[9px] font-bold text-zinc-300 uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-              {post.category || "General"}
+          {/* Ren text-tagg centrerad längst ner */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none px-2">
+            <span className="text-[9px] font-bold text-zinc-300 uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] truncate block">
+              {displayCategory}
             </span>
           </div>
         </>
@@ -37,8 +42,8 @@ function PostGridItem({ post }) {
               {post.content}
             </p>
           </div>
-          <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider pt-1">
-            {post.category || "General"}
+          <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider pt-1 truncate max-w-full">
+            {displayCategory}
           </span>
         </div>
       )}

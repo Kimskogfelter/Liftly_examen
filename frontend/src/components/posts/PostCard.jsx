@@ -85,7 +85,9 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
                         <div className="flex items-center gap-2 shrink-0">
                             <span className="bg-zinc-100 text-zinc-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
-                                {post.category || "General"}
+                                {post.subCategory && post.subCategory !== post.category
+                                    ? `${post.category} / ${post.subCategory}`
+                                    : post.category || "General"}
                             </span>
 
                             {post.createdBy?._id === currentUser?.id && (
