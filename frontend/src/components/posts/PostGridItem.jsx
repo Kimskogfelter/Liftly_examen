@@ -16,11 +16,19 @@ function PostGridItem({ post }) {
       className="relative aspect-square rounded-xl overflow-hidden group shadow-sm block bg-zinc-900"
     >
       {hasMedia ? (
-        <img
-          src={post.media[0]}
-          alt="Post thumbnail"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+        <>
+          <img
+            src={post.media[0]}
+            alt="Post thumbnail"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          {/* Ren text-tagg centrerad längst ner, precis som på textinläggen */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+            <span className="text-[9px] font-bold text-zinc-300 uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+              {post.category || "General"}
+            </span>
+          </div>
+        </>
       ) : (
         /* Textinlägg - Flex col så text och kategori staplas lodrätt */
         <div className="w-full h-full p-4 flex flex-col items-center justify-between text-center relative z-0">
@@ -35,7 +43,7 @@ function PostGridItem({ post }) {
         </div>
       )}
 
-      {/* TikTok/Instagram-style Overlay vid hover (z-10 så den täcker texten rent) */}
+      {/* TikTok/Instagram-style Overlay vid hover */}
       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-4 text-white font-semibold text-xs z-10 backdrop-blur-[2px]">
         {/* LIKES COUNT */}
         <div className="flex items-center gap-1">
