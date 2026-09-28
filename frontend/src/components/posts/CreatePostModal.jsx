@@ -1,95 +1,91 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import { FiImage } from "react-icons/fi";
+import { FiImage, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { IoCloseCircle } from "react-icons/io5";
 import { BsSpotify } from "react-icons/bs";
-// Import the tag-input component
 import { TagsInput } from "react-tag-input-component";
 
 function CreatePostModal({ currentUser, onClose }) {
-  // Get token, profile photo, and user ID from localStorage through currentUser prop passed down from App.jsx
   const [content, setContent] = useState("");
   const [media, setMedia] = useState([]);
   const [hashtags, setHashtags] = useState([]);
   const [spotifyUrl, setSpotifyUrl] = useState(null);
   const [showSpotifyInput, setShowSpotifyInput] = useState(false);
+  
   const [category, setCategory] = useState("General");
+  const [subCategory, setSubCategory] = useState("");
+  
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // Håller koll på vilken kategori som är expanderad vid klick (perfekt för mobil)
+  const [expandedCategory, setExpandedCategory] = useState(null);
+
+  const dropdownRef = useRef(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Function to remove a specific file from the preview list before uploading
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+        setExpandedCategory(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const removeMediaFile = (indexToRemove) => {
     setMedia(media.filter((_, index) => index !== indexToRemove));
   };
 
-  // Function to create a post
   const createPost = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
-
-      // CONTENT
-      // Always append content, an empty string is perfectly fine for the backend
       formData.append('content', content);
-
-      // CATEGORY
-      // Always append category because backend needs it to add post to correct category IF chosen
       formData.append('category', category);
-
-      // SPOTIFY URL
-      // Append spotifyUrl if it exists, otherwise append an empty string
+      formData.append('subCategory', subCategory);
       formData.append('spotifyUrl', spotifyUrl || "");
-
-      // HASHTAGS
-      // FormData only accepts strings or files. We use JSON.stringify to convert 
-      // the hashtags array into a JSON string so it can be sent over the backend.
       formData.append('hashtags', JSON.stringify(hashtags));
 
-      // MEDIA
-      // Loop through all media files and append them to the same 'media' key.
-      // This allows Multer on the backend (upload.array('media')) to capture all of them.
       if (media.length > 0) {
         media.forEach((file) => {
           formData.append('media', file);
         });
       }
 
-      // Send post data to backend
       const response = await api.post(`/posts/create`, formData);
-      // console.log("Post created successfully:", response.data);
 
-      // Reset form fields and error message
       setContent("");
       setSpotifyUrl(null);
       setMedia([]);
       setHashtags([]);
       setCategory("General");
+      setSubCategory("");
       setError("");
 
-      // Notify components (like HomePage) that a new post was created with a event
-      // that home page can add a event listener to
       if (response.status === 201) {
-        // Skicka ut signalen till alla som lyssnar!
         window.dispatchEvent(new Event("postCreated"));
-
         onClose();
       }
 
     } catch (err) {
-      // Handle errors and display error message to user
       const errorResponse = err.response?.data;
       setError(errorResponse?.message || "Your post could not be created. Please try again.");
     }
   };
 
+  const getDisplayCategoryText = () => {
+    if (subCategory && subCategory !== category) {
+      return `Category: ${category} → ${subCategory}`;
+    }
+    return `Category: ${category}`;
+  };
+
   return (
     <>
-      {/* Outer card wrapper - Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
-
-        {/* Create container - The actual white modal box containing the form */}
         <div className="w-full max-w-md bg-white rounded-2xl p-5 shadow-2xl border border-gray-100 text-left">
 
           <h3 className="text-sm font-bold text-gray-900 mb-3">Create Post</h3>
@@ -106,7 +102,7 @@ function CreatePostModal({ currentUser, onClose }) {
               ></textarea>
             </div>
 
-            {/* MEDIA preview box (Supports both images and videos) */}
+            {/* MEDIA preview box */}
             {media.length > 0 && (
               <div className="flex gap-2 overflow-x-auto pb-2 pt-1">
                 {media.map((file, index) => {
@@ -120,8 +116,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       ) : (
                         <img src={fileUrl} alt="Preview" className="w-full h-full object-cover" />
                       )}
-
-                      {/* Remove file button */}
                       <button
                         type="button"
                         onClick={() => removeMediaFile(index)}
@@ -140,15 +134,11 @@ function CreatePostModal({ currentUser, onClose }) {
               <TagsInput
                 value={hashtags}
                 onChange={(newTags) => {
-                  // 1. Format tags to always have a single '#'
                   const formatted = newTags.map((tag) => {
                     const cleanTag = tag.trim().replace(/^#+/, "");
-                    return cleanTag ? `#${cleanTag.toLowerCase()}` : ""; // Make lowercase to prevent duplicates
+                    return cleanTag ? `#${cleanTag.toLowerCase()}` : "";
                   }).filter(Boolean);
-
-                  // 2. Remove duplicates
                   const uniqueTags = [...new Set(formatted)];
-
                   setHashtags(uniqueTags);
                 }}
                 name="hashtags"
@@ -164,7 +154,7 @@ function CreatePostModal({ currentUser, onClose }) {
               </div>
             )}
 
-            {/* SPOTIFY INPUT FIELD (Visas när man klickat på Spotify-knappen) */}
+            {/* SPOTIFY INPUT FIELD */}
             {showSpotifyInput && (
               <div className="relative flex items-center gap-2">
                 <div className="relative flex-1">
@@ -177,7 +167,6 @@ function CreatePostModal({ currentUser, onClose }) {
                     className="w-full pl-8 pr-3 py-1.5 text-xs border border-zinc-200 rounded-lg bg-gray-50/30 focus:outline-none focus:border-emerald-500 transition-colors"
                   />
                 </div>
-                {/* Rensa / Stäng knapp */}
                 <button
                   type="button"
                   onClick={() => {
@@ -191,8 +180,7 @@ function CreatePostModal({ currentUser, onClose }) {
               </div>
             )}
 
-            {/* Footer Row: Media button, Category dropdown and Action buttons */}
-            {/* MEDIA & CATEGORY options row */}
+            {/* MEDIA & CUSTOM DROPDOWN OPTIONS ROW */}
             <div className="flex flex-wrap items-center gap-2 pt-2">
               {/* Media upload button */}
               <label htmlFor="media" className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
@@ -219,42 +207,160 @@ function CreatePostModal({ currentUser, onClose }) {
               <button
                 type="button"
                 onClick={() => setShowSpotifyInput((prev) => !prev)}
-                className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${spotifyUrl || showSpotifyInput
-                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                  : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
-                  }`}
+                className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                  spotifyUrl || showSpotifyInput
+                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                    : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
+                }`}
               >
                 <BsSpotify size={15} className={spotifyUrl || showSpotifyInput ? "text-emerald-500" : "text-zinc-800"} />
                 <span>Spotify</span>
               </button>
 
-              {/* Category Dropdown */}
-              <div className="relative shrink-0">
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 pr-7 rounded-lg appearance-none cursor-pointer outline-none transition-colors"
+              {/* MOBILANPASSAD ACCORDION-DROPDOWN */}
+              <div className="relative shrink-0" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                  className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 pr-7 rounded-lg inline-flex items-center gap-1.5 cursor-pointer outline-none transition-colors relative"
                 >
-                  <option value="General">Category: General</option>
-                  <option value="Breakfast">Category: Breakfast</option>
-                  <option value="Lunch & Dinner">Category: Lunch & Dinner</option>
-                  <option value="Desserts">Category: Desserts</option>
-                  <option value="Candy">Category: Candy</option>
-                  <option value="Snacks">Category: Snacks</option>
-                  <option value="Supplements">Category: Supplements</option>
-                  <option value="Training">Category: Training</option>
-                  <option value="Cardio">Category: Cardio</option>
-                  <option value="Lifting">Category: Lifting</option>
-                  <option value="Music">Category: Music</option>
-                  <option value="Activewear">Category: Activewear</option>
-                  <option value="Mindset & Recovery">Category: Mindset & Recovery</option>
-                  <option value="Helpme">Category: Helpme</option>
-                </select>
-                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500 text-[8px]">▼</span>
+                  <span>{getDisplayCategoryText()}</span>
+                  <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500" size={12} />
+                </button>
+
+                {/* Dropdown Box */}
+                {isDropdownOpen && (
+                  <div className="absolute left-0 bottom-full mb-1 w-56 bg-white rounded-xl shadow-xl border border-zinc-100 py-1.5 z-50 text-xs font-medium text-zinc-700 max-h-64 overflow-y-auto">
+                    
+                    {/* General */}
+                    <button
+                      type="button"
+                      onClick={() => { setCategory("General"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                      className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors ${category === "General" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                    >
+                      General
+                    </button>
+
+                    {/* FOOD MED EXPAND */}
+                    <div>
+                      <div 
+                        onClick={() => setExpandedCategory(expandedCategory === "Food" ? null : "Food")}
+                        className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors flex items-center justify-between cursor-pointer ${category === "Food" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                      >
+                        <span onClick={(e) => { e.stopPropagation(); setCategory("Food"); setSubCategory("Food"); setIsDropdownOpen(false); setExpandedCategory(null); }}>Food</span>
+                        <FiChevronDown size={12} className={`text-zinc-400 transition-transform ${expandedCategory === "Food" ? "rotate-180" : ""}`} />
+                      </div>
+
+                      {expandedCategory === "Food" && (
+                        <div className="bg-zinc-50/80 py-1 border-y border-zinc-100">
+                          {["Breakfast", "Lunch & Dinner", "Desserts", "Candy", "Snacks"].map((sub) => (
+                            <button
+                              key={sub}
+                              type="button"
+                              onClick={() => { setCategory("Food"); setSubCategory(sub); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                              className={`w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-200/50 transition-colors text-zinc-600 ${subCategory === sub ? "font-semibold text-black bg-zinc-200/40" : ""}`}
+                            >
+                              └ {sub}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Supplements */}
+                    <button
+                      type="button"
+                      onClick={() => { setCategory("Supplements"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                      className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors ${category === "Supplements" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                    >
+                      Supplements
+                    </button>
+
+                    {/* TRAINING MED EXPAND */}
+                    <div>
+                      <div 
+                        onClick={() => setExpandedCategory(expandedCategory === "Training" ? null : "Training")}
+                        className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors flex items-center justify-between cursor-pointer ${category === "Training" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                      >
+                        <span onClick={(e) => { e.stopPropagation(); setCategory("Training"); setSubCategory("Training"); setIsDropdownOpen(false); setExpandedCategory(null); }}>Training</span>
+                        <FiChevronDown size={12} className={`text-zinc-400 transition-transform ${expandedCategory === "Training" ? "rotate-180" : ""}`} />
+                      </div>
+
+                      {expandedCategory === "Training" && (
+                        <div className="bg-zinc-50/80 py-1 border-y border-zinc-100">
+                          {["Cardio", "Lifting", "CrossFit", "Powerlifting", "Running", "Other"].map((sub) => (
+                            <button
+                              key={sub}
+                              type="button"
+                              onClick={() => { setCategory("Training"); setSubCategory(sub); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                              className={`w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-200/50 transition-colors text-zinc-600 ${subCategory === sub ? "font-semibold text-black bg-zinc-200/40" : ""}`}
+                            >
+                              └ {sub}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* MUSIC MED EXPAND */}
+                    <div>
+                      <div 
+                        onClick={() => setExpandedCategory(expandedCategory === "Music" ? null : "Music")}
+                        className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors flex items-center justify-between cursor-pointer ${category === "Music" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                      >
+                        <span onClick={(e) => { e.stopPropagation(); setCategory("Music"); setSubCategory("Music"); setIsDropdownOpen(false); setExpandedCategory(null); }}>Music</span>
+                        <FiChevronDown size={12} className={`text-zinc-400 transition-transform ${expandedCategory === "Music" ? "rotate-180" : ""}`} />
+                      </div>
+
+                      {expandedCategory === "Music" && (
+                        <div className="bg-zinc-50/80 py-1 border-y border-zinc-100">
+                          {["Electronic", "Rock", "HipHop", "Pop", "R&B", "Reggaeton", "Other"].map((sub) => (
+                            <button
+                              key={sub}
+                              type="button"
+                              onClick={() => { setCategory("Music"); setSubCategory(sub); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                              className={`w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-200/50 transition-colors text-zinc-600 ${subCategory === sub ? "font-semibold text-black bg-zinc-200/40" : ""}`}
+                            >
+                              └ {sub}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Activewear */}
+                    <button
+                      type="button"
+                      onClick={() => { setCategory("Activewear"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                      className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors ${category === "Activewear" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                    >
+                      Activewear
+                    </button>
+
+                    {/* Mindset & Recovery */}
+                    <button
+                      type="button"
+                      onClick={() => { setCategory("Mindset & Recovery"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                      className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors ${category === "Mindset & Recovery" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                    >
+                      Mindset & Recovery
+                    </button>
+
+                    {/* Helpme */}
+                    <button
+                      type="button"
+                      onClick={() => { setCategory("Helpme"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
+                      className={`w-full text-left px-3.5 py-2 hover:bg-zinc-100 transition-colors ${category === "Helpme" ? "bg-zinc-50 font-semibold text-black" : ""}`}
+                    >
+                      Helpme
+                    </button>
+
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Action buttons row (CANCEL & POST) */}
+            {/* Action buttons row */}
             <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100 mt-3">
               <button
                 type="button"
@@ -270,7 +376,6 @@ function CreatePostModal({ currentUser, onClose }) {
                 Post
               </button>
             </div>
-
 
           </form>
         </div>
