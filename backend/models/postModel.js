@@ -10,9 +10,13 @@ const postSchema = new mongoose.Schema({
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     hashtags: [{ type: String }],
     category: { type: String, 
-                enum: ["General", "Breakfast", "Lunch & Dinner", "Desserts", "Candy", "Snacks", "Supplements", "Training", "Cardio", "Lifting", "Music", "Activewear", "Mindset & Recovery", "Helpme"],
+                enum: ["General", "Food", "Supplements", "Training", "Music", "Activewear", "Mindset & Recovery", "Helpme"],
                 default: "General"
-    }
+    },
+    subCategory: { 
+    type: String, 
+    default: "" 
+}
 
 }, {timestamps: true})
 
