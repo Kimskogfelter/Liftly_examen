@@ -25,7 +25,7 @@ export const createPost = async (req, res, next) => {
         }
 
         // get inputs from frontend
-        const { content, hashtags, category, spotifyUrl } = req.body;
+        const { content, hashtags, category, subCategory, spotifyUrl } = req.body;
 
         // --------- media -----------
         let mediaFiles = req.files ? req.files.map(file => file.path) : [];
@@ -45,6 +45,7 @@ export const createPost = async (req, res, next) => {
             createdBy: user._id,
             hashtags: parsedHashtags,
             category: category || "General",
+            subCategory: subCategory || "",
             spotifyUrl: spotifyUrl || ""
         };
 
@@ -276,11 +277,13 @@ export const getFollowingPosts = async (req, res, next) => {
 
 export const getCategoryPosts = async (req, res, next) => {
     try {
-        // 1. Hämta category från query (t.ex. ?category=Lifting)
-        const { category } = req.query;
+        // 1. Hämta både category och subCategory från query (t.ex. ?category=Music&subCategory=Electronic)
+        const { category, subCategory } = req.query;
 
         // Om inga kategorier skickas med söker vi på alla inlägg, annars filtrerar vi på kategorin
-        const queryFilter = category ? { category } : {};
+        const queryFilter = {};
+        if (category) queryFilter.category = category;
+        if (subCategory) queryFilter.subCategory = subCategory;
 
         // 2. Hämta page, limit och skip från query
         const { page, limit, skip } = getPagination(req.query, 10);
@@ -319,6 +322,7 @@ export const getCategoryPosts = async (req, res, next) => {
         return next(new HttpError(error.message || error, 500));
     }
 };
+
 // ---------------------------- GET HASHTAG POSTS --------------------------- 
 // GET req: api/posts/hashtag?hashtag=träning
 
