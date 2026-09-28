@@ -12,11 +12,10 @@
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost/kcal/protein intag i samma vy.
 - fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
-- fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
 - skönhetsfilter till bild/video
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
-- RENSA bort alla console.logs
 - fixa ett språk filter mot fula ord?! 
+
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
@@ -46,3 +45,6 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
   - [x] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
   - [x] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
 - [x] Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
+- [x] RENSA bort alla console.logs
+- [x] fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
+- [x] ordna fler under kategorier på musik, mat, träning
