@@ -13,7 +13,7 @@ function WorkoutGridItem({ workout, handleDeleteWorkout, handleEditWorkout, curr
 
   return (
     <>
-      <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:border-zinc-300 transition-all flex flex-col justify-between text-left group">
+      <div className="bg-white rounded-lg p-5 border border-gray-100 shadow-sm hover:border-zinc-300 transition-all flex flex-col justify-between text-left group">
         <div>
           {/* Top row: Dag & Action-knappar */}
           <div className="flex items-center justify-between mb-2">

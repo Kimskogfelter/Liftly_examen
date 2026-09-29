@@ -53,7 +53,7 @@ function WorkoutCard({ workout, currentUser }) {
 
     return (
         /* 🔴 MOBILJUSTERAT: Justerad padding (p-4 sm:p-6) och w-full för att ta hela utrymmet snyggt */
-        <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-100 max-w-lg mx-auto shadow-sm w-full">
+        <div className="bg-white rounded-lg p-4 sm:p-6 border border-gray-100 max-w-lg mx-auto shadow-sm w-full">
             {/* Header-info */}
             <div className="mb-5 border-b border-zinc-100 pb-4">
                 <span className="text-[10px] font-bold tracking-wider uppercase bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-md">
