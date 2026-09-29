@@ -30,9 +30,6 @@ function TrainingPage({ currentUser }) {
         <section className="px-2 md:px-6 max-w-2xl mx-auto pt-20 md:pt-24 xl:pt-8 pb-24 font-sans text-gray-800">
             <div className="w-full text-center mb-8 border-b border-zinc-200 pb-5">
                 <div className="flex items-center justify-center gap-3 mb-1.5">
-                    <div className="p-2 bg-black text-white rounded-xl shadow-xs shrink-0">
-                        <LuDumbbell size={18} />
-                    </div>
                     <h1 className="text-xl font-bold text-gray-900 tracking-wide">
                         Training & Health
                     </h1>
