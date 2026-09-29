@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema } from "mongoose";
 
-const foodEntrySchema = new mongoose.Schema({
+const foodEntrySchema = new Schema({
     mealName: { type: String, default: "Meal" }, // T.ex. Frukost, Lunch, Snacks
     calories: { type: Number, required: true, default: 0 },
     protein: { type: Number, default: 0 },
@@ -8,10 +8,10 @@ const foodEntrySchema = new mongoose.Schema({
     fat: { type: Number, default: 0 },
 });
 
-const foodLogSchema = new mongoose.Schema(
+const foodLogSchema = new Schema(
     {
         user: { 
-            type: mongoose.Schema.Types.ObjectId, 
+            type: Schema.Types.ObjectId, 
             ref: "User", 
             required: true 
         },
@@ -24,4 +24,4 @@ const foodLogSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model("FoodLog", foodLogSchema);
+export const FoodLog = mongoose.model("FoodLog", foodLogSchema);
