@@ -20,7 +20,7 @@ function TrainingPage({ currentUser }) {
         },
         {
             title: "Food Log",
-            description: "Keep track of your daily calories, protein, and fat.",
+            description: "Keep track of your daily calories, protein, carbs and fat.",
             icon: <LuApple size={18} className="text-white" />,
             path: "/foodlogs",
         },
