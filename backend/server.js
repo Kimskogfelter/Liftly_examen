@@ -14,6 +14,7 @@ import { userRouter } from './routes/userRoutes.js';
 import { postRouter } from './routes/postRoutes.js';
 import { searchRouter } from './routes/searchRoutes.js';
 import { workoutRouter } from './routes/workoutRoutes.js';
+import { foodLogRouter } from './routes/foodLogRoutes.js';
 
 // skapa express server
 const server = express();
@@ -34,6 +35,7 @@ server.use(cors({credentials: true, origin: ["http://localhost:5173", "https://l
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
 server.use('/api/search', searchRouter);
+server.use('/api/foodlogs', foodLogRouter);
 server.use('/api/workouts', workoutRouter);
 
 // fallback middleware, for route not found and error handler
