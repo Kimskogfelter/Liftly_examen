@@ -11,11 +11,10 @@
 - [ ] **Tränings- & Matdagbok**
   - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost/kcal/protein intag i samma vy.
 - fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
-- ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
 - skönhetsfilter till bild/video
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
-- göra så postCard tar upp mer bredd på mobiler?? 
+- dubbelkolla ifall du behöver någon del som användaren klickar i att de godkänner att deras info sparas pga GDPR när de skapar en användare ?! 
 
 
 ## ✅ Redan Klart
@@ -49,3 +48,4 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
 - [x] RENSA bort alla console.logs
 - [x] fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
 - [x] ordna fler under kategorier på musik, mat, träning
+- [x] ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
