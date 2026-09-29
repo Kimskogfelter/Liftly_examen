@@ -18,7 +18,7 @@ function PostGridItem({ post }) {
   return (
     <Link
       to={`/posts/${post._id}`}
-      className="relative aspect-square rounded-xl overflow-hidden group shadow-sm block bg-zinc-900"
+      className="relative aspect-square rounded-lg overflow-hidden group shadow-sm border border-gray-100 block bg-zinc-900"
     >
       {hasMedia ? (
         <>

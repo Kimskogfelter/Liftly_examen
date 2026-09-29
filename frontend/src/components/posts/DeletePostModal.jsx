@@ -39,7 +39,7 @@ function DeletePostModal({ post, onClose, currentUser, handleDeletePost }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-sans">
       
       {/* Delete container - The actual white modal box containing the confirmation */}
-      <div className="w-full max-w-sm bg-white rounded-xl p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150 text-left">
+      <div className="w-full max-w-sm bg-white rounded-lg p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150 text-left">
         
         <h3 className="text-sm font-bold text-gray-900 mb-2">Delete Post</h3>
         <p className="text-gray-600 text-xs mb-4">Are you sure you want to delete this post?</p>

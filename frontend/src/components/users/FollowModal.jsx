@@ -40,7 +40,7 @@ export const FollowModal = ({ userId, type, isOpen, onClose, currentUser, setCur
             onClick={onClose}
         >
             <div
-                className="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[80vh] font-sans"
+                className="bg-white w-full max-w-sm rounded-lg shadow-xl overflow-hidden flex flex-col max-h-[80vh] font-sans"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}

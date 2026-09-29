@@ -21,7 +21,7 @@ function DeleteWorkoutModal({ workout, currentUser, onClose, handleDeleteWorkout
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4">
-            <div className="bg-white p-5 rounded-2xl max-w-sm w-full">
+            <div className="bg-white p-5 rounded-lg max-w-sm w-full">
                 <h3 className="font-bold text-sm">Delete Workout?</h3>
                 <p className="text-xs text-zinc-500 my-2">
                     Are you sure you want to delete "{workout.title}"?

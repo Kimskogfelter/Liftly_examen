@@ -71,7 +71,7 @@ function EditProfileImage({ onClose, currentUser, setCurrentUser, getUserInfo })
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
 
                 {/* edit container */}
-                <div className="w-full max-w-md bg-white rounded-xl p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
+                <div className="w-full max-w-md bg-white rounded-lg p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
 
                     <h3 className="text-sm font-bold text-gray-900 mb-3 text-left">Edit Profile Image</h3>
 

@@ -89,7 +89,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
     };
 
     return (
-        <div className="w-full max-w-lg bg-white rounded-2xl p-5 shadow-2xl border border-gray-100 text-left max-h-[85vh] overflow-y-auto">
+        <div className="w-full max-w-lg bg-white rounded-lg p-5 shadow-2xl border border-gray-100 text-left max-h-[85vh] overflow-y-auto">
             <h3 className="text-sm font-bold text-gray-900 mb-3">Edit Workout Routine</h3>
 
             <form onSubmit={editWorkout} className="space-y-4">

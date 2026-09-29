@@ -86,7 +86,7 @@ function CreatePostModal({ currentUser, onClose }) {
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
-        <div className="w-full max-w-md bg-white rounded-2xl p-5 shadow-2xl border border-gray-100 text-left">
+        <div className="w-full max-w-md bg-white rounded-lg p-5 shadow-2xl border border-gray-100 text-left">
 
           <h3 className="text-sm font-bold text-gray-900 mb-3">Create Post</h3>
 

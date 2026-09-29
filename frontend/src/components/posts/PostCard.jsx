@@ -63,9 +63,8 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
     return (
         <>
-            <section className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
+            <section className="w-full max-w-lg mx-auto bg-white rounded-lg shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
-                    {/* HEADER: Användare, Tidsstämpel, Kategori och Meny */}
                     {/* HEADER: Användare, Tidsstämpel, Kategori och Meny */}
                     <div className="flex items-center justify-between mb-3 gap-2">
                         <div className="flex items-center gap-2 min-w-0 flex-1">

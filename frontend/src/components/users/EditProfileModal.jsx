@@ -62,7 +62,7 @@ function EditProfileModal({ onClose, currentUser, setCurrentUser, getUserInfo })
             {/* Yttre modal-wrapper */}
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
 
-                <div className="w-full max-w-md bg-white rounded-xl p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
+                <div className="w-full max-w-md bg-white rounded-lg p-5 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
 
                     <h3 className="text-sm font-bold text-gray-900 mb-4 text-left">Edit Profile</h3>
 

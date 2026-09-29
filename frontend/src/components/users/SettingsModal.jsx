@@ -38,7 +38,7 @@ function SettingsModal({ onClose, currentUser, setCurrentUser }) {
   return createPortal(
     <div className={backdropClasses} onClick={onClose}>
       <div
-        className="w-full max-w-sm bg-white rounded-3xl p-6 text-gray-800 relative animate-in zoom-in-95 duration-150"
+        className="w-full max-w-sm bg-white rounded-lg p-6 text-gray-800 relative animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header som ändras dynamiskt */}
