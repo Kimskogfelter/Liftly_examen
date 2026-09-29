@@ -66,7 +66,6 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
     }));
 
     // --- SUBMIT ---
-    // 1. Skickar ändringarna till backend
     const editWorkout = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -74,11 +73,8 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
 
         try {
             const response = await api.patch(`/workouts/${workoutId}/update`, { title, day, exercises: sanitizedExercises });
-
-            // console.log("Workout updated:", response.data);
             const updatedWorkout = response.data.workout;
 
-            // 2. Anropar förälderns funktion med det nya passet
             handleEditWorkout(updatedWorkout);
             onClose();
         } catch (err) {
@@ -89,8 +85,8 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
     };
 
     return (
-        <div className="w-full max-w-lg bg-white rounded-lg p-5 shadow-2xl border border-gray-100 text-left max-h-[85vh] overflow-y-auto">
-            <h3 className="text-sm font-bold text-gray-900 mb-3">Edit Workout Routine</h3>
+        <div className="w-full max-w-lg bg-white rounded-lg p-3 sm:p-5 shadow-xl border border-gray-100 text-left max-h-[85vh] overflow-y-auto">
+            <h3 className="text-sm font-bold text-gray-900 mb-3 px-1">Edit Workout Routine</h3>
 
             <form onSubmit={editWorkout} className="space-y-4">
                 {/* Title */}
@@ -105,7 +101,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                     />
                 </div>
 
-                {/* Day Dropdown (Matchar din Mongoose Enum) */}
+                {/* Day Dropdown */}
                 <div>
                     <label className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Day</label>
                     <select
@@ -128,55 +124,60 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                             <div key={ex._id || exIndex} className="p-3 bg-zinc-50 rounded-xl border border-zinc-200/60">
 
                                 {/* Exercise Header */}
-                                <div className="flex items-center justify-between gap-2 mb-2">
+                                <div className="flex items-center justify-between gap-2 mb-2.5">
                                     <input
                                         type="text"
                                         placeholder="Exercise Name (e.g. Bench Press)"
                                         value={ex.name}
                                         onChange={(e) => handleExerciseNameChange(exIndex, e.target.value)}
-                                        className="flex-1 text-xs font-semibold bg-white border border-zinc-200 rounded-md p-1.5 focus:outline-none"
+                                        className="flex-1 text-xs font-semibold bg-white border border-zinc-200 rounded-lg p-2 focus:outline-none"
                                         required
                                     />
                                     <button
                                         type="button"
                                         onClick={() => removeExercise(exIndex)}
-                                        className="text-zinc-400 hover:text-red-500 p-1 rounded-md"
+                                        className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0"
                                     >
-                                        <FiTrash2 size={13} />
+                                        <FiTrash2 size={15} />
                                     </button>
                                 </div>
 
                                 {/* Sets List */}
-                                <div className="space-y-1.5 pl-2">
+                                <div className="space-y-2 pl-1">
                                     {ex.sets?.map((set, setIndex) => (
                                         <div key={set._id || setIndex} className="flex items-center gap-2 text-xs">
-                                            <span className="text-zinc-400 font-medium w-10">Set {setIndex + 1}</span>
+                                            <span className="text-zinc-400 font-medium w-10 shrink-0">Set {setIndex + 1}</span>
 
                                             {/* Reps */}
-                                            <input
-                                                type="number"
-                                                value={set.reps ?? ""}
-                                                onChange={(e) => handleSetChange(exIndex, setIndex, "reps", e.target.value)}
-                                                className="w-16 bg-white border border-zinc-200 rounded p-1 text-center"
-                                            />
-                                            <span className="text-zinc-400 text-[10px]">reps</span>
+                                            <div className="flex items-center gap-1">
+                                                <input
+                                                    type="number"
+                                                    value={set.reps ?? ""}
+                                                    onChange={(e) => handleSetChange(exIndex, setIndex, "reps", e.target.value)}
+                                                    className="w-14 bg-white border border-zinc-200 rounded-md py-1.5 px-1 text-center font-medium"
+                                                />
+                                                <span className="text-zinc-400 text-[10px]">reps</span>
+                                            </div>
 
                                             {/* Weight (kgs) */}
-                                            <input
-                                                type="number"
-                                                step="0.5"
-                                                value={set.kgs ?? ""}
-                                                onChange={(e) => handleSetChange(exIndex, setIndex, "kgs", e.target.value)}
-                                                className="w-16 bg-white border border-zinc-200 rounded p-1 text-center"
-                                            />
-                                            <span className="text-zinc-400 text-[10px]">kg</span>
+                                            <div className="flex items-center gap-1">
+                                                <input
+                                                    type="number"
+                                                    step="0.5"
+                                                    value={set.kgs ?? ""}
+                                                    onChange={(e) => handleSetChange(exIndex, setIndex, "kgs", e.target.value)}
+                                                    className="w-14 bg-white border border-zinc-200 rounded-md py-1.5 px-1 text-center font-medium"
+                                                />
+                                                <span className="text-zinc-400 text-[10px]">kg</span>
+                                            </div>
 
-                                            {/* Remove Set */}
+                                            {/* Remove Set - Förstorad kiddyta för mobiltryck */}
                                             {ex.sets.length > 1 && (
                                                 <button
                                                     type="button"
                                                     onClick={() => removeSet(exIndex, setIndex)}
-                                                    className="text-zinc-300 hover:text-red-500 ml-auto"
+                                                    className="w-7 h-7 flex items-center justify-center bg-zinc-200/60 hover:bg-red-100 text-zinc-500 hover:text-red-600 rounded-md transition-colors ml-auto shrink-0 text-sm font-bold"
+                                                    title="Ta bort set"
                                                 >
                                                     ×
                                                 </button>
@@ -189,9 +190,9 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                                 <button
                                     type="button"
                                     onClick={() => addSet(exIndex)}
-                                    className="mt-2 text-[10px] text-zinc-600 font-semibold hover:text-black flex items-center gap-1"
+                                    className="mt-2.5 text-xs text-zinc-600 font-semibold hover:text-black flex items-center gap-1 py-1"
                                 >
-                                    <FiPlus size={11} /> Add Set
+                                    <FiPlus size={12} /> Add Set
                                 </button>
                             </div>
                         ))}
@@ -201,15 +202,15 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                     <button
                         type="button"
                         onClick={addExercise}
-                        className="mt-3 w-full py-2 border border-dashed border-zinc-300 text-zinc-600 hover:border-zinc-400 hover:text-black rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                        className="mt-3 w-full py-2.5 border border-dashed border-zinc-300 text-zinc-600 hover:border-zinc-400 hover:text-black rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                     >
-                        <FiPlus size={13} /> Add Exercise
+                        <FiPlus size={14} /> Add Exercise
                     </button>
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                    <div className="bg-red-50 text-red-600 text-[11px] p-2 rounded-lg font-medium border border-red-100">
+                    <div className="bg-red-50 text-red-600 text-[11px] p-2.5 rounded-lg font-medium border border-red-100">
                         {error}
                     </div>
                 )}
@@ -219,14 +220,14 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                     <button
                         type="button"
                         onClick={onClose}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-1.5 px-3 rounded-lg text-xs"
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-3.5 rounded-lg text-xs"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-3.5 rounded-lg text-xs shadow-sm disabled:opacity-50"
+                        className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-2 px-4 rounded-lg text-xs shadow-sm disabled:opacity-50"
                     >
                         {isSubmitting ? "Updating..." : "Update Workout"}
                     </button>

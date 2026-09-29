@@ -78,8 +78,6 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
     try {
       const response = await api.post(`/workouts/create`, { day, title, exercises: formattedExercises });
 
-      // console.log("Workout created successfully:", response.data);
-
       if (onWorkoutCreated) {
         onWorkoutCreated(response.data.workout);
       }
@@ -96,23 +94,23 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-sans">
-      {/* Container - Samma vita modal-box som CreatePostForm */}
-      <div className="w-full max-w-md bg-white rounded-lg p-5 shadow-2xl border border-gray-100 text-left max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-3 font-sans">
+      {/* Container - Uppdaterad med rounded-xl för att matcha resten av systemet */}
+      <div className="w-full max-w-md bg-white rounded-lg p-4 sm:p-5 shadow-xl border border-gray-100 text-left max-h-[90vh] flex flex-col">
 
         {/* Header */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3">
           <div className="p-1.5 bg-black text-white rounded-lg">
             <LuDumbbell size={16} />
           </div>
           <h3 className="text-sm font-bold text-gray-900">Create Workout Routine</h3>
         </div>
 
-        <form onSubmit={createWorkout} className="space-y-4 overflow-y-auto pr-1">
+        <form onSubmit={createWorkout} className="space-y-3.5 overflow-y-auto pr-1">
 
           {/* DAY & TITLE Input-rad */}
-          <div className="grid grid-cols-3 gap-2">
-            <div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="sm:col-span-1">
               <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Day</label>
               <select
                 value={day}
@@ -129,7 +127,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
               </select>
             </div>
 
-            <div className="col-span-2">
+            <div className="col-span-1 sm:col-span-2">
               <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Routine Title</label>
               <input
                 type="text"
@@ -143,30 +141,30 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
           </div>
 
           {/* EXERCISES LIST */}
-          <div className="space-y-2 pt-1">
+          <div className="space-y-2.5 pt-1">
             <label className="block text-[10px] font-bold text-gray-500 uppercase">Exercises</label>
 
             {exercises.map((exercise, index) => (
-              <div key={index} className="flex flex-col gap-2 p-2.5 bg-zinc-50/80 rounded-xl border border-zinc-200/60 relative group">
+              <div key={index} className="flex flex-col gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200/60 relative group">
 
-                {/* Övningsnamn + Radera-knapp */}
+                {/* Övningsnamn + Förstorad soptunna för touch */}
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     placeholder="Exercise name (e.g. Bench Press)"
                     value={exercise.name}
                     onChange={(e) => handleExerciseChange(index, "name", e.target.value)}
-                    className="flex-1 text-xs font-semibold text-gray-800 placeholder-gray-400 bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-zinc-400"
+                    className="flex-1 text-xs font-semibold text-gray-800 placeholder-gray-400 bg-white border border-zinc-200 rounded-lg px-2.5 py-2 outline-none focus:border-zinc-400"
                   />
 
                   {exercises.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeExerciseRow(index)}
-                      className="text-zinc-400 hover:text-red-500 p-1 transition-colors cursor-pointer"
+                      className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0 cursor-pointer"
                       title="Remove exercise"
                     >
-                      <FiTrash2 size={14} />
+                      <FiTrash2 size={15} />
                     </button>
                   )}
                 </div>
@@ -180,7 +178,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
                       value={exercise.sets}
                       placeholder="3"
                       onChange={(e) => handleExerciseChange(index, "sets", e.target.value)}
-                      className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1 text-gray-800 font-medium outline-none focus:border-zinc-400"
+                      className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1.5 text-gray-800 font-medium outline-none focus:border-zinc-400"
                     />
                   </div>
                   <div>
@@ -190,7 +188,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
                       value={exercise.reps}
                       placeholder="10"
                       onChange={(e) => handleExerciseChange(index, "reps", e.target.value)}
-                      className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1 text-gray-800 font-medium outline-none focus:border-zinc-400"
+                      className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1.5 text-gray-800 font-medium outline-none focus:border-zinc-400"
                     />
                   </div>
                   <div>
@@ -200,7 +198,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
                       value={exercise.kgs}
                       placeholder="0"
                       onChange={(e) => handleExerciseChange(index, "kgs", e.target.value)}
-                      className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1 text-gray-800 font-medium outline-none focus:border-zinc-400"
+                      className="w-full text-xs text-center bg-white border border-zinc-200 rounded-md py-1.5 text-gray-800 font-medium outline-none focus:border-zinc-400"
                     />
                   </div>
                 </div>
@@ -212,7 +210,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
             <button
               type="button"
               onClick={addExerciseRow}
-              className="w-full py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer mt-2"
+              className="w-full py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer mt-2"
             >
               <FiPlus size={14} />
               <span>Add Exercise</span>
@@ -221,7 +219,7 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 text-red-600 text-[11px] p-2 rounded-lg font-medium border border-red-100">
+            <div className="bg-red-50 text-red-600 text-[11px] p-2.5 rounded-lg font-medium border border-red-100">
               {error}
             </div>
           )}
@@ -231,14 +229,14 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
             <button
               type="button"
               onClick={onClose}
-              className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-1.5 px-3.5 rounded-lg transition-colors cursor-pointer text-xs"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-3.5 rounded-lg transition-colors cursor-pointer text-xs"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-4 rounded-lg transition-colors cursor-pointer text-xs shadow-sm disabled:opacity-50"
+              className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors cursor-pointer text-xs shadow-sm disabled:opacity-50"
             >
               {isSubmitting ? "Creating..." : "Save Routine"}
             </button>
