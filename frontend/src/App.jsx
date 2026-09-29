@@ -13,6 +13,7 @@ import WorkoutPage from './pages/WorkoutPage';
 import SingleWorkoutPage from './pages/SingleWorkoutPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import TrainingPage from './pages/TrainingPage';
 import AppLayout from './components/layout/AppLayout';
 import api from './api/axios';
 
@@ -26,29 +27,29 @@ function App() {
 
   // check if the user(token) is still valid when the app loads, if not, log out the user
   useEffect(() => {
-  const verifyToken = async () => {
-    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+    const verifyToken = async () => {
+      const storedUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (storedUser?.token) {
-      try {
-        const response = await api.get("/users/verify");
-        
-        // Om backend returnerar den uppdaterade användaren vid verify (t.ex. response.data.user eller response.data):
-        if (response.data) {
-          const freshUser = { ...storedUser, ...response.data };
-          setCurrentUser(freshUser);
-          localStorage.setItem("currentUser", JSON.stringify(freshUser));
+      if (storedUser?.token) {
+        try {
+          const response = await api.get("/users/verify");
+
+          // Om backend returnerar den uppdaterade användaren vid verify (t.ex. response.data.user eller response.data):
+          if (response.data) {
+            const freshUser = { ...storedUser, ...response.data };
+            setCurrentUser(freshUser);
+            localStorage.setItem("currentUser", JSON.stringify(freshUser));
+          }
+        } catch (err) {
+          // console.log("Verifiering misslyckades, loggar ut", err);
+          localStorage.removeItem("currentUser");
+          setCurrentUser(null);
         }
-      } catch (err) {
-        // console.log("Verifiering misslyckades, loggar ut", err);
-        localStorage.removeItem("currentUser");
-        setCurrentUser(null);
       }
-    }
-  };
+    };
 
-  verifyToken();
-}, []);
+    verifyToken();
+  }, []);
 
   return (
     <>
@@ -71,6 +72,7 @@ function App() {
             <Route path="/search" element={currentUser ? <SearchPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/category/:categoryName" element={currentUser ? <CategoryPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/hashtag/:hashtag" element={currentUser ? <HashtagPage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/training" element={currentUser ? <TrainingPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/workouts" element={currentUser ? <WorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/workouts/:workoutId" element={currentUser ? <SingleWorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           </Route>

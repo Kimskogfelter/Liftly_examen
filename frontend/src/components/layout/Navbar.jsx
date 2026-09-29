@@ -241,7 +241,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
           <Link to="/savedPosts" className="text-zinc-400 hover:text-white p-2 transition-colors">
             <FiBookmark size={22} />
           </Link>
-          <Link to="/workouts" className="text-zinc-400 hover:text-white p-2 transition-colors">
+          <Link to="/training" className="text-zinc-400 hover:text-white p-2 transition-colors">
             <IoBarbellOutline size={22} />
           </Link>
           <button onClick={onOpenCreatePost} className="text-zinc-400 hover:text-white p-2 transition-colors cursor-pointer">
@@ -289,9 +289,9 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
             </li>
 
             <li className="w-full">
-              <Link to="/workouts" className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all">
+              <Link to="/training" className="flex items-center gap-2.5 w-full py-2 px-2 text-zinc-400 hover:text-white md:hover:bg-zinc-900/50 rounded-lg transition-all">
                 <IoBarbellOutline size={16} className="shrink-0" />
-                <span className="text-xs font-medium tracking-wide">Workouts</span>
+                <span className="text-xs font-medium tracking-wide">Training</span>
               </Link>
             </li>
 
