@@ -14,6 +14,7 @@ import SingleWorkoutPage from './pages/SingleWorkoutPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import TrainingPage from './pages/TrainingPage';
+import FoodLogPage from './pages/FoodLogPage';
 import AppLayout from './components/layout/AppLayout';
 import api from './api/axios';
 
@@ -75,6 +76,7 @@ function App() {
             <Route path="/training" element={currentUser ? <TrainingPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/workouts" element={currentUser ? <WorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/workouts/:workoutId" element={currentUser ? <SingleWorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/foodlogs" element={currentUser ? <FoodLogPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           </Route>
 
         </Routes>
