@@ -4,7 +4,7 @@ import { FoodLog } from '../models/foodLogModel.js';
 export const getFoodLog = async (req, res, next) => {
     try {
         const { date } = req.params;
-        const userId = req.user._id; // Beroende på hur din authMiddleware sätter användaren
+        const userId = req.user.id; // Beroende på hur din authMiddleware sätter användaren
 
         let foodLog = await FoodLog.findOne({ user: userId, date });
 
@@ -27,7 +27,7 @@ export const getFoodLog = async (req, res, next) => {
 export const createFoodLog = async (req, res, next) => {
     try {
         const { date } = req.params;
-        const userId = req.user._id;
+        const userId = req.user.id;
         const { mealName, calories, protein, carbs, fat } = req.body;
 
         if (!calories && calories !== 0) {
@@ -63,7 +63,7 @@ export const createFoodLog = async (req, res, next) => {
 export const deleteFoodLog = async (req, res, next) => {
     try {
         const { date, foodLogId } = req.params;
-        const userId = req.user._id;
+        const userId = req.user.id;
 
         const foodLog = await FoodLog.findOne({ user: userId, date });
 
