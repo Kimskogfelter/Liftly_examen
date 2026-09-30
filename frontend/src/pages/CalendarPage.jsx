@@ -122,7 +122,7 @@ const CalendarPage = () => {
                 </p>
             </div>
 
-            {/* Månadsväljare & Månadsvy - Mindre padding här för att rutorna ska få maximal yta */}
+            {/* Månadsväljare & Månadsvy */}
             <div className="bg-white border border-gray-100 rounded-lg p-2.5 sm:p-4 shadow-sm mb-6">
                 <div className="flex justify-between items-center mb-3">
                     <span className="text-xs font-semibold text-zinc-700">Select Month</span>
@@ -145,7 +145,6 @@ const CalendarPage = () => {
                         <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                     </div>
 
-                    {/* Ttightare gap (gap-1) gör att rutorna fyller ut mer på bredden */}
                     <div className="grid grid-cols-7 gap-1">
                         {Array.from({ length: adjustedFirstDay }).map((_, index) => (
                             <div key={`empty-${index}`} className="aspect-square bg-zinc-50/30 rounded-lg border border-transparent"></div>
@@ -162,13 +161,15 @@ const CalendarPage = () => {
                             const isSelected = selectedDate === dateString;
 
                             let boxStyles = "bg-white border-zinc-200 text-zinc-700 hover:border-zinc-300";
-                            if (isSelected) {
-                                boxStyles = "border-black ring-2 ring-black bg-zinc-50 text-zinc-900 shadow-sm";
-                            }
+                            
                             if (hasWorkout) {
                                 boxStyles = isCompleted
                                     ? "bg-black border-black text-white shadow-sm"
                                     : "bg-zinc-200 border-zinc-300 text-zinc-800 shadow-sm";
+                            }
+
+                            if (isSelected) {
+                                boxStyles += " border-black ring-2 ring-black z-10";
                             }
 
                             return (
