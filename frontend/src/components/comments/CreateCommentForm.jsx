@@ -22,6 +22,8 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
       
       setComments([newComment, ...comments]);
       setContent("");
+      // Trigga ett globalt event så att PostCard-komponenter i flödet direkt kan uppdatera sin kommentarsräknare
+      window.dispatchEvent(new Event("commentCreated"));
 
     } catch (err) {
       const errorResponse = err.response?.data;

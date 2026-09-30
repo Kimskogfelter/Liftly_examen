@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProfileImage from "../users/ProfileImage";
 import PostActionsMenu from "./PostActionsMenu";
@@ -31,6 +31,24 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
     const [likesCount, setLikesCount] = useState(post.likes?.length || 0);
     const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUser?.id) || false);
     const [isSaved, setIsSaved] = useState(currentUser?.savedPosts?.map(String).includes(String(post._id)) || false);
+
+    // State för att hålla koll på antalet kommentarer och uppdatera direkt
+    const [commentsCount, setCommentsCount] = useState(
+        post.comments?.reduce(
+            (total, comment) => total + 1 + (comment.replies?.length || 0),
+            0
+        ) || 0
+    );
+
+    // Lyssna på globalt event när en ny kommentar skapas
+    useEffect(() => {
+        const handleCommentCreated = () => {
+            setCommentsCount((prev) => prev + 1);
+        };
+
+        window.addEventListener("commentCreated", handleCommentCreated);
+        return () => window.removeEventListener("commentCreated", handleCommentCreated);
+    }, []);
 
     const [fullsizeImage, setFullsizeImage] = useState(null);
 
@@ -184,7 +202,6 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 {post.hashtags && post.hashtags.length > 0 && (
                                     <span className="inline-flex flex-wrap gap-1.5 ml-1.5 font-semibold text-gray-500">
                                         {post.hashtags.map((hashtag, index) => {
-                                            // Rensa bort # om det redan finns i strängen för URL:en
                                             const cleanTag = hashtag.startsWith('#') ? hashtag.slice(1) : hashtag;
                                             const displayTag = hashtag.startsWith('#') ? hashtag : `#${hashtag}`;
 
@@ -192,7 +209,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                                 <Link
                                                     key={index}
                                                     to={`/hashtag/${cleanTag}`}
-                                                    onClick={(e) => e.stopPropagation()} // STOPPAR klicket från att öppna post-sidan!
+                                                    onClick={(e) => e.stopPropagation()}
                                                     className="text-gray-600 hover:text-black hover:underline cursor-pointer"
                                                 >
                                                     {displayTag}
@@ -205,7 +222,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         </div>
                     </div>
 
-                    {/* 🎵 SPOTIFY EMBED (Ligger under text/hashtags) */}
+                    {/* 🎵 SPOTIFY EMBED */}
                     {spotifyEmbedUrl && (
                         <div className="mt-2 mb-2 overflow-hidden rounded-lg border border-gray-100 shadow-2xs">
                             <iframe
@@ -220,7 +237,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     )}
                 </div>
 
-                {/* FOOTER: Enbart Linje + Gilla/Kommentarer/Spara */}
+                {/* FOOTER */}
                 <div>
                     <hr className="border-gray-100 my-2" />
 
@@ -239,10 +256,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-lg">
                                 <FiMessageCircle size={18} />
                                 <span className="font-medium text-xs text-gray-700">
-                                    {post.comments?.reduce(
-                                        (total, comment) => total + 1 + (comment.replies?.length || 0),
-                                        0
-                                    ) || 0}
+                                    {commentsCount}
                                 </span>
                             </Link>
                         </div>
