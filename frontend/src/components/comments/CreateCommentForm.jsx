@@ -5,32 +5,29 @@ import api from "../../api/axios";
 
 function CreateCommentForm({ currentUser, comments, setComments, postId }) {
 
-  // states and variables
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // function to create comment
   const createComment = async (e) => {
     e.preventDefault();
+    if (!content.trim() || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setError("");
+
     try {
-
-      // send comment data to backend
       const response = await api.post(`/posts/${postId}/comments/create`, { content, postId });
-      // console.log("Comment created successfully:", response.data);
-
-      // add the new comment to the comments state to update the UI
       const newComment = response.data.newComment;
+      
       setComments([newComment, ...comments]);
-
-      // reset form fields and error message
       setContent("");
-      setError("");
 
     } catch (err) {
-
-      // handle errors and display error message to user
-      const errorResponse = err.response.data;
-      setError(errorResponse.message || "Your comment could not be created. Please try again.");
+      const errorResponse = err.response?.data;
+      setError(errorResponse?.message || "Your comment could not be created. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -40,7 +37,7 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
         action="POST"
         method="post"
         onSubmit={createComment}
-        className="w-full max-w-lg mx-auto bg-white border rounded-lg border-gray-100  p-2 flex items-center gap-2 shadow-sm font-sans my-3"
+        className="w-full max-w-lg mx-auto bg-white border rounded-lg border-gray-100 p-2 flex items-center gap-2 shadow-sm font-sans my-3 relative"
       >
         {/* Content input */}
         <input
@@ -49,16 +46,17 @@ function CreateCommentForm({ currentUser, comments, setComments, postId }) {
           placeholder="Add a comment..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="flex-1 bg-transparent text-xs text-gray-800 placeholder-gray-400 focus:outline-none px-2 py-1"
+          disabled={isSubmitting}
+          className="flex-1 bg-transparent text-xs text-gray-800 placeholder-gray-400 focus:outline-none px-2 py-1 disabled:opacity-50"
         />
 
         {/* Submit button */}
         <button
           type="submit"
           className="text-xs font-bold text-gray-800 hover:text-gray-800 disabled:text-gray-300 transition-colors cursor-pointer px-2 py-1 shrink-0"
-          disabled={!content.trim()}
+          disabled={!content.trim() || isSubmitting}
         >
-          Post
+          {isSubmitting ? "Posting..." : "Post"}
         </button>
 
         {/* Error message */}
