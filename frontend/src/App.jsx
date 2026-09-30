@@ -17,6 +17,7 @@ import TrainingPage from './pages/TrainingPage';
 import FoodLogPage from './pages/FoodLogPage';
 import AppLayout from './components/layout/AppLayout';
 import api from './api/axios';
+import CalendarPage from './pages/CalendarPage';
 
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
             <Route path="/workouts" element={currentUser ? <WorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/workouts/:workoutId" element={currentUser ? <SingleWorkoutPage currentUser={currentUser} /> : <Navigate to="/login" />} />
             <Route path="/foodlogs" element={currentUser ? <FoodLogPage currentUser={currentUser} /> : <Navigate to="/login" />} />
+            <Route path="/calendar" element={currentUser ? <CalendarPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           </Route>
 
         </Routes>
