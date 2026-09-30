@@ -15,7 +15,7 @@
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
 - dubbelkolla ifall du behöver någon del som användaren klickar i att de godkänner att deras info sparas pga GDPR när de skapar en användare ?! 
-
+- lägg till antal träffar gällande posts på söksidan, saved posts, category och hashtag. tänk på pagination !!
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
