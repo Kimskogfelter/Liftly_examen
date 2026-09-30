@@ -8,17 +8,16 @@ import mongoose from "mongoose";
 // PROTECTED
 export const createWorkout = async (req, res, next) => {
     try {
-        const { day, title, exercises } = req.body;
+        const { title, exercises } = req.body;
 
         // Validation: Check if required fields exist
-        if (!day || !title || !exercises || exercises.length === 0) {
-            return next(new HttpError("Please provide a day, title and at least one exercise.", 422));
+        if ( !title || !exercises || exercises.length === 0) {
+            return next(new HttpError("Please provide a title and at least one exercise.", 422));
         }
 
         // Create the workout document
         const newWorkout = await Workout.create({
             createdBy: req.user.id,
-            day,
             title,
             exercises
         });
@@ -93,7 +92,7 @@ export const getWorkout = async (req, res, next) => {
 export const updateWorkout = async (req, res, next) => {
     try {
         const { workoutId } = req.params;
-        const { day, title, exercises } = req.body;
+        const { title, exercises } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(workoutId)) {
             return next(new HttpError("Invalid workout ID", 400));
@@ -112,7 +111,6 @@ export const updateWorkout = async (req, res, next) => {
 
         // update only updated fields
         const updateFields = {};
-        if (day) updateFields.day = day;
         if (title) updateFields.title = title;
         if (exercises) updateFields.exercises = exercises;
 

@@ -6,7 +6,6 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
 
     const workoutId = workout._id;
     const [title, setTitle] = useState(workout.title || "");
-    const [day, setDay] = useState(workout.day || "Monday");
     // Djuplokal kopia av exercises-arrayen för att undvika mutate-buggar
     const [exercises, setExercises] = useState(
         workout.exercises ? JSON.parse(JSON.stringify(workout.exercises)) : []
@@ -72,7 +71,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
         setError("");
 
         try {
-            const response = await api.patch(`/workouts/${workoutId}/update`, { title, day, exercises: sanitizedExercises });
+            const response = await api.patch(`/workouts/${workoutId}/update`, { title, exercises: sanitizedExercises });
             const updatedWorkout = response.data.workout;
 
             handleEditWorkout(updatedWorkout);
@@ -99,20 +98,6 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                         className="w-full text-xs text-gray-800 border border-zinc-200 rounded-lg p-2.5 bg-gray-50/30 focus:outline-none focus:border-zinc-400"
                         required
                     />
-                </div>
-
-                {/* Day Dropdown */}
-                <div>
-                    <label className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">Day</label>
-                    <select
-                        value={day}
-                        onChange={(e) => setDay(e.target.value)}
-                        className="w-full text-xs text-gray-800 border border-zinc-200 rounded-lg p-2.5 bg-gray-50/30 focus:outline-none focus:border-zinc-400"
-                    >
-                        {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((d) => (
-                            <option key={d} value={d}>{d}</option>
-                        ))}
-                    </select>
                 </div>
 
                 {/* Exercises Section */}
@@ -171,7 +156,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                                                 <span className="text-zinc-400 text-[10px]">kg</span>
                                             </div>
 
-                                            {/* Remove Set - Förstorad kiddyta för mobiltryck */}
+                                            {/* Remove Set */}
                                             {ex.sets.length > 1 && (
                                                 <button
                                                     type="button"
@@ -229,7 +214,7 @@ function EditWorkoutModal({ onClose, handleEditWorkout, workout, currentUser }) 
                         disabled={isSubmitting}
                         className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-2 px-4 rounded-lg text-xs shadow-sm disabled:opacity-50"
                     >
-                        {isSubmitting ? "Updating..." : "Update Workout"}
+                        {isSubmitting ? "Updating..." : "Update Workout Routine"}
                     </button>
                 </div>
             </form>

@@ -5,7 +5,6 @@ import { LuDumbbell } from "react-icons/lu";
 
 function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
 
-  const [day, setDay] = useState("Monday");
   const [title, setTitle] = useState("");
   const [exercises, setExercises] = useState([
     { name: "", sets: 3, reps: "", kgs: "" }]);
@@ -17,8 +16,6 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
   const handleExerciseChange = (index, field, value) => {
     const updatedExercises = [...exercises];
 
-    // Om fältet är numeriskt, låt det vara tom sträng "" om användaren rensat rutan,
-    // annars gör om till Number.
     if (field === "sets" || field === "reps" || field === "kgs") {
       updatedExercises[index][field] = value === "" ? "" : Number(value);
     } else {
@@ -57,13 +54,12 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
       return;
     }
 
-    // 1. OMVANDLA DATAN TILL BACKEND-FORMATET HÄR:
+    // OMVANDLA DATAN TILL BACKEND-FORMATET:
     const formattedExercises = exercises.map((ex) => {
       const numSets = Number(ex.sets) || 1;
       const numReps = Number(ex.reps) || 10;
       const numKgs = Number(ex.kgs) || 0;
 
-      // Skapa arrayen av set-objekt utifrån siffran i "Sets"
       const setsArray = Array.from({ length: numSets }, () => ({
         reps: numReps,
         kgs: numKgs
@@ -71,12 +67,12 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
 
       return {
         name: ex.name,
-        sets: setsArray // <-- Nu blir backend nöjd!
+        sets: setsArray
       };
     });
 
     try {
-      const response = await api.post(`/workouts/create`, { day, title, exercises: formattedExercises });
+      const response = await api.post(`/workouts/create`, { title, exercises: formattedExercises });
 
       if (onWorkoutCreated) {
         onWorkoutCreated(response.data.workout);
@@ -95,7 +91,6 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-3 font-sans">
-      {/* Container - Uppdaterad med rounded-xl för att matcha resten av systemet */}
       <div className="w-full max-w-md bg-white rounded-lg p-4 sm:p-5 shadow-xl border border-gray-100 text-left max-h-[90vh] flex flex-col">
 
         {/* Header */}
@@ -108,36 +103,17 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
 
         <form onSubmit={createWorkout} className="space-y-3.5 overflow-y-auto pr-1">
 
-          {/* DAY & TITLE Input-rad */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <div className="sm:col-span-1">
-              <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Day</label>
-              <select
-                value={day}
-                onChange={(e) => setDay(e.target.value)}
-                className="w-full text-xs text-gray-800 bg-gray-50/50 border border-zinc-200 rounded-lg p-2 outline-none focus:border-zinc-400 font-medium cursor-pointer"
-              >
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-                <option value="Saturday">Saturday</option>
-                <option value="Sunday">Sunday</option>
-              </select>
-            </div>
-
-            <div className="col-span-1 sm:col-span-2">
-              <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Routine Title</label>
-              <input
-                type="text"
-                placeholder="e.g. Chest & Triceps Focus"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                className="w-full text-xs text-gray-800 placeholder-gray-400 bg-gray-50/50 border border-zinc-200 rounded-lg p-2 outline-none focus:border-zinc-400 transition-colors"
-              />
-            </div>
+          {/* ROUTINE TITLE (Full width now that Day is removed) */}
+          <div>
+            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Routine Title</label>
+            <input
+              type="text"
+              placeholder="e.g. Chest & Triceps Focus"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              className="w-full text-xs text-gray-800 placeholder-gray-400 bg-gray-50/50 border border-zinc-200 rounded-lg p-2 outline-none focus:border-zinc-400 transition-colors"
+            />
           </div>
 
           {/* EXERCISES LIST */}
@@ -147,7 +123,6 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
             {exercises.map((exercise, index) => (
               <div key={index} className="flex flex-col gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200/60 relative group">
 
-                {/* Övningsnamn + Förstorad soptunna för touch */}
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
@@ -169,7 +144,6 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
                   )}
                 </div>
 
-                {/* Sets, Reps, Kgs */}
                 <div className="grid grid-cols-3 gap-2">
                   <div>
                     <span className="text-[9px] font-semibold text-zinc-400 block mb-0.5">Sets</span>
@@ -206,7 +180,6 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
               </div>
             ))}
 
-            {/* Knapp för att lägga till ännu en övning */}
             <button
               type="button"
               onClick={addExerciseRow}
@@ -217,14 +190,12 @@ function CreateWorkoutModal({ currentUser, onClose, onWorkoutCreated }) {
             </button>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="bg-red-50 text-red-600 text-[11px] p-2.5 rounded-lg font-medium border border-red-100">
               {error}
             </div>
           )}
 
-          {/* Action buttons (Cancel / Create) */}
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100 mt-3">
             <button
               type="button"

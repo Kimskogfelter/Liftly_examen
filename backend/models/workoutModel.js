@@ -12,11 +12,6 @@ const exerciseSchema = new Schema({
 
 const workoutSchema = new Schema({
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    day: { 
-        type: String, 
-        required: true,
-        enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    },
     title: { type: String, required: true },
     exercises: [exerciseSchema]
 }, { timestamps: true });
