@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // <-- Importera useLocation
 import api from "../../api/axios";
-import { FiImage, FiChevronDown, FiChevronRight } from "react-icons/fi";
+import { FiImage, FiChevronDown } from "react-icons/fi";
 import { IoCloseCircle } from "react-icons/io5";
 import { BsSpotify } from "react-icons/bs";
 import { TagsInput } from "react-tag-input-component";
@@ -17,12 +17,13 @@ function CreatePostModal({ currentUser, onClose }) {
   const [subCategory, setSubCategory] = useState("");
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // Håller koll på vilken kategori som är expanderad vid klick (perfekt för mobil)
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dropdownRef = useRef(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation(); // <-- Håll koll på var användaren befinner sig
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,6 +42,9 @@ function CreatePostModal({ currentUser, onClose }) {
 
   const createPost = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+
     try {
       const formData = new FormData();
       formData.append('content', content);
@@ -57,22 +61,20 @@ function CreatePostModal({ currentUser, onClose }) {
 
       const response = await api.post(`/posts/create`, formData);
 
-      setContent("");
-      setSpotifyUrl(null);
-      setMedia([]);
-      setHashtags([]);
-      setCategory("General");
-      setSubCategory("");
-      setError("");
-
       if (response.status === 201) {
         window.dispatchEvent(new Event("postCreated"));
         onClose();
+
+        // Om vi INTE är på startsidan, navigera dit så inlägget syns direkt i flödet
+        if (location.pathname !== "/") {
+          navigate("/");
+        }
       }
 
     } catch (err) {
       const errorResponse = err.response?.data;
       setError(errorResponse?.message || "Your post could not be created. Please try again.");
+      setIsSubmitting(false); // Återställ endast vid fel
     }
   };
 
@@ -182,7 +184,6 @@ function CreatePostModal({ currentUser, onClose }) {
 
             {/* MEDIA & CUSTOM DROPDOWN OPTIONS ROW */}
             <div className="flex flex-wrap items-center gap-2 pt-2">
-              {/* Media upload button */}
               <label htmlFor="media" className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
                 <FiImage size={15} className="text-zinc-800" />
                 <span>Media</span>
@@ -203,7 +204,6 @@ function CreatePostModal({ currentUser, onClose }) {
                 />
               </label>
 
-              {/* Spotify Toggle Button */}
               <button
                 type="button"
                 onClick={() => setShowSpotifyInput((prev) => !prev)}
@@ -228,11 +228,9 @@ function CreatePostModal({ currentUser, onClose }) {
                   <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500" size={12} />
                 </button>
 
-                {/* Dropdown Box */}
                 {isDropdownOpen && (
                   <div className="absolute left-0 bottom-full mb-1 w-56 bg-white rounded-xl shadow-xl border border-zinc-100 py-1.5 z-50 text-xs font-medium text-zinc-700 max-h-64 overflow-y-auto">
                     
-                    {/* General */}
                     <button
                       type="button"
                       onClick={() => { setCategory("General"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
@@ -241,7 +239,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       General
                     </button>
 
-                    {/* FOOD MED EXPAND */}
                     <div>
                       <div 
                         onClick={() => setExpandedCategory(expandedCategory === "Food" ? null : "Food")}
@@ -267,7 +264,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       )}
                     </div>
 
-                    {/* Supplements */}
                     <button
                       type="button"
                       onClick={() => { setCategory("Supplements"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
@@ -276,7 +272,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       Supplements
                     </button>
 
-                    {/* TRAINING MED EXPAND */}
                     <div>
                       <div 
                         onClick={() => setExpandedCategory(expandedCategory === "Training" ? null : "Training")}
@@ -302,7 +297,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       )}
                     </div>
 
-                    {/* MUSIC MED EXPAND */}
                     <div>
                       <div 
                         onClick={() => setExpandedCategory(expandedCategory === "Music" ? null : "Music")}
@@ -328,7 +322,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       )}
                     </div>
 
-                    {/* Activewear */}
                     <button
                       type="button"
                       onClick={() => { setCategory("Activewear"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
@@ -337,7 +330,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       Activewear
                     </button>
 
-                    {/* Mindset & Recovery */}
                     <button
                       type="button"
                       onClick={() => { setCategory("Mindset & Recovery"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
@@ -346,7 +338,6 @@ function CreatePostModal({ currentUser, onClose }) {
                       Mindset & Recovery
                     </button>
 
-                    {/* Helpme */}
                     <button
                       type="button"
                       onClick={() => { setCategory("Helpme"); setSubCategory(""); setIsDropdownOpen(false); setExpandedCategory(null); }}
@@ -365,15 +356,17 @@ function CreatePostModal({ currentUser, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-1.5 px-3.5 rounded-lg transition-colors cursor-pointer text-xs"
+                disabled={isSubmitting}
+                className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-1.5 px-3.5 rounded-lg transition-colors cursor-pointer text-xs disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-4 rounded-lg transition-colors cursor-pointer text-xs shadow-sm"
+                disabled={isSubmitting}
+                className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-4 rounded-lg transition-colors cursor-pointer text-xs shadow-sm disabled:opacity-50"
               >
-                Post
+                {isSubmitting ? "Posting..." : "Post"}
               </button>
             </div>
 
