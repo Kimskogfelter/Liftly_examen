@@ -122,9 +122,9 @@ const CalendarPage = () => {
                 </p>
             </div>
 
-            {/* Månadsväljare & Månadsvy */}
-            <div className="bg-white border border-gray-100 rounded-lg p-2.5 sm:p-4 shadow-sm mb-6">
-                <div className="flex justify-between items-center mb-3">
+            {/* Månadsväljare & Månadsvy: Ingen bakgrund/border på mobil (flödar ut), men snyggt kort på desktop (sm:) */}
+            <div className="bg-transparent sm:bg-white sm:border sm:border-gray-100 sm:rounded-lg p-0 sm:p-5 sm:shadow-sm mb-6">
+                <div className="flex justify-between items-center mb-3 sm:mb-4 px-1 sm:px-0">
                     <span className="text-xs font-semibold text-zinc-700">Select Month</span>
                     <div className="flex items-center gap-3 bg-zinc-50 px-3 py-1.5 rounded-xl border border-zinc-200">
                         <button onClick={handlePrevMonth} className="text-xs font-bold text-zinc-600 hover:text-black cursor-pointer">
@@ -140,7 +140,7 @@ const CalendarPage = () => {
                 </div>
 
                 {/* Rutnät för kalendern */}
-                <div className="pt-2 border-t border-zinc-100">
+                <div className="pt-2 sm:pt-3 border-t border-zinc-100">
                     <div className="grid grid-cols-7 gap-1 mb-1.5 text-center text-[10px] font-bold text-zinc-400 uppercase">
                         <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                     </div>
