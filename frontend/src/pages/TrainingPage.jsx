@@ -14,7 +14,7 @@ function TrainingPage({ currentUser }) {
         },
         {
             title: "Activity Calendar",
-            description: "Check off today's workout, build your monthly streak, and view history.",
+            description: "Build your monthly workout schedule, check off sessions, and jump straight into workouts.",
             icon: <LuCalendar size={18} className="text-white" />,
             path: "/calendar",
         },
