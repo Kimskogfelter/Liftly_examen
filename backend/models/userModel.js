@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         createdAt: { type: Date, default: Date.now }
     }],
     gdprConsent: {
-        accepted: { type: Boolean, required: true },
+        accepted: { type: Boolean, required: true, default: true },
         date: { type: Date, default: Date.now }
     }
 
