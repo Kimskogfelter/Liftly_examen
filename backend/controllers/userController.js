@@ -26,12 +26,17 @@ export const registerUser = async (req, res, next) => {
     try {
 
         // get input from frontend
-        const { username, email, password, confirmPassword } = req.body;
+        const { username, email, password, confirmPassword, gdprConsent } = req.body;
 
         // validate required fields
         if (!username || !email || !password || !confirmPassword) {
 
             return next(new HttpError("Fill in all fields", 422))
+        }
+
+        // Validera att användaren har godkänt GDPR
+        if (!gdprConsent || !gdprConsent.accepted) {
+            return next(new HttpError("You must accept the GDPR terms to register", 422));
         }
 
         // --------- username ----------
@@ -93,7 +98,10 @@ export const registerUser = async (req, res, next) => {
 
 
         // --------- create new user to database ----------
-        await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword })
+        await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword, gdprConsent: {
+                accepted: gdprConsent.accepted,
+                date: new Date()
+            } })
         return res.status(201).json({
             message: "User registered successfully!"
         });

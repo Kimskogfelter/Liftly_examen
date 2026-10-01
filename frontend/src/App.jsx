@@ -16,8 +16,10 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import TrainingPage from './pages/TrainingPage';
 import FoodLogPage from './pages/FoodLogPage';
 import AppLayout from './components/layout/AppLayout';
-import api from './api/axios';
 import CalendarPage from './pages/CalendarPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import api from './api/axios';
+
 
 
 function App() {
@@ -63,6 +65,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
 
           {/* Protected Routes */}

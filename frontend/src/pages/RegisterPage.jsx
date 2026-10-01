@@ -12,16 +12,24 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [acceptedGDPR, setAcceptedGDPR] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   // function to handle user registration
   const registerUser = async (e) => {
     e.preventDefault();
+
+    if (!acceptedGDPR) {
+      // Visa ett felmeddelande i din UI om man försöker registrera utan att kryssa i
+      setError("You must accept the GDPR terms to register.");
+      return;
+    }
+
     try {
 
       // send registration data to backend
-      const response = await api.post(`/users/register`, { username, email, password, confirmPassword });
+      const response = await api.post(`/users/register`, { username, email, password, confirmPassword, gdprConsent: { accepted: acceptedGDPR } });
       // console.log("Registration successful:", response.data);
       // redirect to login page after successful registration
       if (response.status === 201) {
@@ -115,10 +123,28 @@ function RegisterPage() {
               {showPassword ? <FaEye size={14} /> : <FaEyeSlash size={14} />}
             </button>
           </div>
+          {/* GDPR Checkbox */}
+          <div className="flex items-start gap-2.5 my-3">
+            <input
+              type="checkbox"
+              id="gdpr"
+              checked={acceptedGDPR}
+              onChange={(e) => setAcceptedGDPR(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-black focus:ring-black cursor-pointer"
+            />
+            <label htmlFor="gdpr" className="text-xs text-zinc-600 select-none  leading-tight">
+              I agree that my personal data and workout information can be stored in accordance with the{' '}
+              <Link to="/privacy" className="underline font-medium text-zinc-900 hover:text-black cursor-pointer">
+                Privacy Policy
+              </Link>{' '}
+              and GDPR.
+            </label>
+          </div>
 
           {/* Sign up button */}
           <button
             type="submit"
+            disabled={!acceptedGDPR}
             className="mt-1 w-full rounded bg-[#4A4545] py-2 text-xs font-medium text-white transition-colors hover:bg-[#575151] focus:outline-none focus:ring-1 focus:ring-gray-400"
           >
             Sign up
@@ -137,7 +163,7 @@ function RegisterPage() {
           <p className="text-xs text-gray-300">
             Already have an account?{/* {" "} renders space between the paragraph and link */}
             {" "}
-           <Link to="/login" className="font-semibold text-white hover:underline">
+            <Link to="/login" className="font-semibold text-white hover:underline">
               Login
             </Link>
           </p>
