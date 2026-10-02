@@ -55,7 +55,7 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold text-gray-800">Edit Post</p>
-                                        <p className="text-[10px] text-gray-400">Update caption</p>
+                                        <p className="text-[10px] text-gray-400">Update caption & recipe</p>
                                     </div>
                                 </div>
                             </button>

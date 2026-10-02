@@ -20,12 +20,11 @@ export const createPost = async (req, res, next) => {
         const user = await User.findById(req.user.id);
 
         if (!user) {
-            
             return next(new HttpError("User not found", 404));
         }
 
-        // get inputs from frontend
-        const { content, hashtags, category, subCategory, spotifyUrl } = req.body;
+        // get inputs from frontend (including optional recipe)
+        const { content, hashtags, category, subCategory, spotifyUrl, recipe } = req.body;
 
         // --------- media -----------
         let mediaFiles = req.files ? req.files.map(file => file.path) : [];
@@ -34,35 +33,42 @@ export const createPost = async (req, res, next) => {
             return next(new HttpError("You can't create an empty post. Add some text or an image!", 422));
         }
 
-        // 1. Remake HASHTAGS from JSON-string to real array (because its sent via FormData)
+        // 1. Remake HASHTAGS from JSON-string to real array
         let parsedHashtags = [];
         if (hashtags) {
             parsedHashtags = JSON.parse(hashtags);
         }
 
-        // 2. Build post object with fields that ALWAYS should be there
+        // 2. Remake RECIPE from JSON-string to object (if provided)
+        let parsedRecipe = null;
+        if (recipe) {
+            parsedRecipe = JSON.parse(recipe);
+        }
+
+        // 3. Build post object with fields that ALWAYS should be there
         const postObject = {
             createdBy: user._id,
             hashtags: parsedHashtags,
             category: category || "General",
             subCategory: subCategory || "",
-            spotifyUrl: spotifyUrl || ""
+            spotifyUrl: spotifyUrl || "",
+            recipe: parsedRecipe // Lägg till receptet här (blir null om det saknas)
         };
 
-        // 3. Add CONTENT only if user have written text
+        // 4. Add CONTENT only if user have written text
         if (content && content.trim().length > 0) {
             postObject.content = content;
         }
 
-        // 4. Add MEDIA only if user have chosen an image/video
+        // 5. Add MEDIA only if user have chosen an image/video
         if (mediaFiles.length > 0) {
             postObject.media = mediaFiles;
         }
 
-        // 5. Create post once in database with finished post object
+        // 6. Create post once in database with finished post object
         const newPost = await Post.create(postObject);
 
-        // 6. Update users database information with new post
+        // 7. Update users database information with new post
         await User.findByIdAndUpdate(newPost.createdBy, { $push: { posts: newPost._id } });
 
         return res.status(201).json({ message: 'Post created successfully', newPost });
@@ -605,7 +611,6 @@ export const unlikePost = async (req, res, next) => {
 }
 
 
-
 // ---------------------------- UPDATE POST --------------------------- 
 // PATCH req: api/posts/:postId/update
 // PROTECTED
@@ -625,32 +630,32 @@ export const updatePost = async (req, res, next) => {
         // fecth post from db
         const fetchPost = await Post.findById(postId);
 
-
         // if post not found
         if (!fetchPost) {
-
             return next(new HttpError("Post not found", 404))
         }
 
-
         // check if post is created by req user
-        // with mongoDB method "equals" that compare objectId with string
-        // no need to convert
         if (!fetchPost.createdBy.equals(req.user.id)) {
-
             return res.status(403).json({ message: "You are not allowed to edit this post" })
         }
 
-        // fetch content from frontend
-        const { content } = req.body;
+        // fetch content and recipe from frontend
+        const { content, recipe } = req.body;
 
         // Check if content is empty or only contains spaces
         if (!content || content.trim() === '') {
             return res.status(400).json({ message: "Post content cannot be empty" });
         }
 
-        // PREPARE UPDATE OBJECT: Start with updating the text content
+        // PREPARE UPDATE OBJECT
         const updateData = { content };
+
+        // Handle recipe update if sent from frontend
+        if (recipe !== undefined) {
+            // Om recipe redan är ett objekt skickar vi det direkt, annars parsar vi om det mot förmodan skulle vara en sträng
+            updateData.recipe = recipe ? (typeof recipe === 'string' ? JSON.parse(recipe) : recipe) : null;
+        }
 
         // update post and populate user info
         const updatedPost = await Post.findByIdAndUpdate(
@@ -659,10 +664,8 @@ export const updatePost = async (req, res, next) => {
             { new: true, runValidators: true }
         ).populate("createdBy", "username profileImage");
 
-
         // success message
         return res.status(200).json({ message: "Post updated: ", updatedPost })
-
 
     } catch (error) {
 
@@ -670,7 +673,6 @@ export const updatePost = async (req, res, next) => {
     }
 
 }
-
 
 
 

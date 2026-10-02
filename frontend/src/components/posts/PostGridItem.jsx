@@ -20,6 +20,15 @@ function PostGridItem({ post }) {
       to={`/posts/${post._id}`}
       className="relative aspect-square rounded-lg overflow-hidden group shadow-sm border border-gray-100 block bg-zinc-900"
     >
+      {/* Liten diskret recipe-badge i övre vänstra hörnet */}
+      {post.recipe && (
+        <div className="absolute top-2 left-2 z-20 pointer-events-none">
+          <span className="bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm">
+            Recipe
+          </span>
+        </div>
+      )}
+
       {hasMedia ? (
         <>
           <img

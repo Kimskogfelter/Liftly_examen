@@ -132,8 +132,11 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         </div>
                     </div>
 
-                    {/* POST INNEHÅLL */}
-                    <div onClick={handleCardClick} className="block group text-left cursor-pointer transition-opacity hover:opacity-95">
+                    {/* POST INNEHÅLL (Klickbart i flödet, vanligt statiskt block på detaljsidan) */}
+                    <div
+                        onClick={!isDetailView ? handleCardClick : undefined}
+                        className={`block group text-left ${!isDetailView ? "cursor-pointer transition-opacity hover:opacity-95" : ""}`}
+                    >
 
                         {/* 🔴 1. MEDIA HÖGST UPP (Om det finns) */}
                         {hasMedia && (
@@ -220,6 +223,69 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 )}
                             </p>
                         </div>
+
+
+                        {/* --- RECEPT-KORT (Kompakt i flödet, helt i detaljvyn) --- */}
+                        {post.recipe && (
+                            <div className="mt-3 mb-2 bg-zinc-50 border border-zinc-200/80 rounded-xl p-3.5 text-xs space-y-3">
+
+                                {/* Rubrik & Tid/Makros (Visas alltid) */}
+                                <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${isDetailView ? "border-b border-zinc-200/60 pb-3" : ""}`}>
+                                    <div className="flex items-center gap-2">
+                                        <h4 className="font-bold text-zinc-900 text-sm">{post.recipe.title}</h4>
+
+                                    </div>
+
+                                    {/* Tid och Makros */}
+                                    <div className="flex items-center gap-2 flex-wrap text-zinc-600 font-medium text-[11px]">
+                                        {post.recipe.prepTimeMinutes > 0 && (
+                                            <span className="bg-white border border-zinc-200 px-2 py-1 rounded-lg">
+                                                {post.recipe.prepTimeMinutes} min
+                                            </span>
+                                        )}
+                                        {post.recipe.nutrition?.calories > 0 && (
+                                            <span className="bg-white border border-zinc-200 px-2 py-1 rounded-lg">
+                                                {post.recipe.nutrition.calories} kcal
+                                            </span>
+                                        )}
+                                        {post.recipe.nutrition?.protein > 0 && (
+                                            <span className="bg-white border border-zinc-200 px-2 py-1 rounded-lg">
+                                                {post.recipe.nutrition.protein}g protein
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Ingredienser & Instruktioner (Visas ENDAST om isDetailView är true) */}
+                                {isDetailView && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1 text-[11px]">
+                                        <div>
+                                            <h5 className="font-bold text-zinc-800 mb-1.5">Ingredients</h5>
+                                            <ul className="space-y-1 text-zinc-600">
+                                                {post.recipe.ingredients?.map((ing, idx) => (
+                                                    <li key={idx} className="flex items-start gap-1.5">
+                                                        <span className="text-zinc-400">•</span>
+                                                        <span>{ing.name}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                        <div>
+                                            <h5 className="font-bold text-zinc-800 mb-1.5">Instructions</h5>
+                                            <ul className="space-y-1 text-zinc-600">
+                                                {post.recipe.instructions?.map((step, idx) => (
+                                                    <li key={idx} className="flex items-start gap-1.5">
+                                                        <span className="font-semibold text-zinc-400 shrink-0">{idx + 1}.</span>
+                                                        <span>{step}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {/* 🎵 SPOTIFY EMBED */}
