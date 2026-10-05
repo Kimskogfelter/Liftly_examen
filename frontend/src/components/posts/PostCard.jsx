@@ -79,11 +79,14 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
         }
     };
 
+    // Visar enbart underkategorin (eller kategorin om subCategory saknas)
+    const displayCategory = post.subCategory || post.category || "General";
+
     return (
         <>
             <section className="w-full max-w-lg mx-auto bg-white rounded-lg shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
-                    {/* HEADER: Användare, Tidsstämpel, Kategori och Meny */}
+                    {/* HEADER: Användare, Tid, Kategori och Meny */}
                     <div className="flex items-center justify-between mb-3 gap-2">
                         <div className="flex items-center gap-2 min-w-0 flex-1">
                             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
@@ -101,10 +104,9 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
+                            {/* Kategoritagg med endast underkategori */}
                             <span className="bg-zinc-100 text-zinc-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
-                                {post.subCategory && post.subCategory !== post.category
-                                    ? `${post.category} / ${post.subCategory}`
-                                    : post.category || "General"}
+                                {displayCategory}
                             </span>
 
                             {post.createdBy?._id === currentUser?.id && (
@@ -132,13 +134,13 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         </div>
                     </div>
 
-                    {/* POST INNEHÅLL (Klickbart i flödet, vanligt statiskt block på detaljsidan) */}
+                    {/* POST INNEHÅLL */}
                     <div
                         onClick={!isDetailView ? handleCardClick : undefined}
                         className={`block group text-left ${!isDetailView ? "cursor-pointer transition-opacity hover:opacity-95" : ""}`}
                     >
 
-                        {/* 🔴 1. MEDIA HÖGST UPP (Om det finns) */}
+                        {/* MEDIA HÖGST UPP */}
                         {hasMedia && (
                             <div className="relative w-[calc(100%+2rem)] -mx-4 -mt-1 mb-3 bg-black/90 flex items-center justify-center overflow-hidden">
                                 {isVideo ? (
@@ -200,12 +202,10 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
                         {/* TEXT & HASHTAGS */}
                         <div className="mb-2 px-0.5 space-y-1">
-                            {/* Själva texten som klipper sig på 2 rader */}
                             <p className={`${isDetailView ? "" : "line-clamp-2 overflow-hidden"} text-xs text-gray-800 font-normal leading-relaxed`}>
                                 {post.content}
                             </p>
 
-                            {/* Hashtaggar hamnar på en egen rad under, så de slipper klipper av konstigt */}
                             {post.hashtags && post.hashtags.length > 0 && (
                                 <div className="flex flex-wrap gap-1.5 pt-0.5">
                                     {post.hashtags.map((hashtag, index) => {
@@ -227,19 +227,13 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             )}
                         </div>
 
-
-                        {/* --- RECEPT-KORT (Kompakt i flödet, helt i detaljvyn) --- */}
+                        {/* RECEPT-KORT */}
                         {post.recipe && (
                             <div className="mt-3 mb-2 bg-zinc-50 border border-zinc-200/80 rounded-xl p-3.5 text-xs space-y-3">
-
-                                {/* Rubrik & Tid/Makros (Visas alltid) */}
                                 <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${isDetailView ? "border-b border-zinc-200/60 pb-3" : ""}`}>
                                     <div className="flex items-center gap-2">
                                         <h4 className="font-bold text-zinc-900 text-sm">{post.recipe.title}</h4>
-
                                     </div>
-
-                                    {/* Tid och Makros */}
                                     <div className="flex items-center gap-2 flex-wrap text-zinc-600 font-medium text-[11px]">
                                         {post.recipe.prepTimeMinutes > 0 && (
                                             <span className="bg-white border border-zinc-200 px-2 py-1 rounded-lg">
@@ -259,7 +253,6 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                     </div>
                                 </div>
 
-                                {/* Ingredienser & Instruktioner (Visas ENDAST om isDetailView är true) */}
                                 {isDetailView && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1 text-[11px]">
                                         <div>
@@ -291,7 +284,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         )}
                     </div>
 
-                    {/* 🎵 SPOTIFY EMBED */}
+                    {/* SPOTIFY EMBED */}
                     {spotifyEmbedUrl && (
                         <div className="mt-2 mb-2 overflow-hidden rounded-lg border border-gray-100 shadow-2xs">
                             <iframe
