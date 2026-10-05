@@ -205,9 +205,9 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
           ========================================================================= */}
       <div className="block xl:hidden">
         <header className="fixed top-0 left-0 w-full h-14 bg-[#0D0D0E] border-b border-zinc-800 flex items-center justify-between px-4 z-50">
-          <Link to="/home">
+          {/* <Link to="/home">
             <img className="h-5 w-auto object-contain" src={logo} alt="Liftly logo" />
-          </Link>
+          </Link> */}
 
           <div className="relative" ref={dropdownRef}>
             <button
