@@ -179,7 +179,7 @@ const FoodLogPage = () => {
                         <p className="text-zinc-500 text-xs font-medium">No food logged for this date yet.</p>
                     </div>
                 ) : (
-                    foodLog.entries?.map((entry) => (
+                    [...foodLog.entries].reverse().map((entry) => (
                         <div key={entry._id} className="border border-gray-100 p-4 rounded-lg flex justify-between items-center bg-white shadow-sm">
                             <div>
                                 <p className="font-semibold text-zinc-900 text-xs">{entry.mealName}</p>
