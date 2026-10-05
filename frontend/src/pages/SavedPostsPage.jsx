@@ -163,7 +163,6 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
           <h1 className="text-xl font-bold text-gray-900 tracking-wide">Saved Posts</h1>
         </div>
 
-        {/* MOBIL & IPAD: Snygg dropdown-meny */}
         {/* MOBIL & IPAD: Diskret kategori-knapp */}
         {posts.length > 0 && (
           <div className="xl:hidden flex justify-center mt-3 relative" ref={mobileDropdownRef}>
@@ -203,7 +202,7 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
                         className={`w-full text-left px-3.5 py-1.5 hover:bg-zinc-100 transition-colors flex items-center justify-between cursor-pointer ${isCatActive ? "font-bold text-black bg-zinc-50" : ""}`}
                       >
                         <span onClick={(e) => { e.stopPropagation(); handleMobileSelect(cat.id); }}>
-                          {cat.label}
+                          {cat.label} {cat.subcategories && <span className="text-xs text-zinc-400 font-normal">(All)</span>}
                         </span>
                         {cat.subcategories && (
                           <FiChevronDown size={11} className={`text-zinc-400 transition-transform ${isExp ? "rotate-180" : ""}`} />
@@ -292,16 +291,29 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
 
             {categoriesData.filter(c => c.id !== "All").map((cat) => {
               const isActive = selectedCategory === cat.id && !selectedSubCategory;
-              const isExpanded = expandedCategory === cat.id || selectedCategory === cat.id;
+              const isExpanded = expandedCategory === cat.id;
 
               return (
                 <div key={cat.id} className="w-full">
                   <div
-                    onClick={() => handleCategoryClick(cat.id)}
-                    className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${isActive ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
-                      }`}
+                    onClick={() => {
+                      if (cat.subcategories) {
+                        setExpandedCategory(expandedCategory === cat.id ? null : cat.id);
+                      } else {
+                        setSelectedCategory(cat.id);
+                        setSelectedSubCategory(null);
+                      }
+                    }}
+                    className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${isActive ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"}`}
                   >
-                    <span>{cat.label}</span>
+                    <span onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedCategory(cat.id);
+                      setSelectedSubCategory(null);
+                      if (cat.subcategories) setExpandedCategory(cat.id);
+                    }}>
+                      {cat.label} {cat.subcategories && <span className="text-xs text-zinc-400 font-normal">(All)</span>}
+                    </span>
                     {cat.subcategories && (
                       <FiChevronDown size={11} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                     )}

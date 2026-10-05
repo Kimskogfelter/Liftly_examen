@@ -51,11 +51,16 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
       navigate(`/category/${category}`);
     }
   };
-
-  // Återanvändbar meny med full läsbar textstorlek (text-xs)
+// Återanvändbar meny där ALLA rader har hover, pekhand och ren text utan streck
   const renderCategoryMenu = (isDesktop = false) => {
     const setExp = isDesktop ? setExpandedDesktopCategory : setExpandedCategory;
     const expVal = isDesktop ? expandedDesktopCategory : expandedCategory;
+
+    // Gemensam stil för vanliga knappar (All, General, Supplements, Activewear etc.)
+    const standardButtonStyle = "w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors text-zinc-300 hover:text-white cursor-pointer";
+    
+    // Gemensam stil för huvudkategorier med underkategorier (Food, Training, Music)
+    const accordionStyle = "w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors flex items-center justify-between cursor-pointer text-zinc-300 hover:text-white";
 
     return (
       <div className="absolute left-0 top-full mt-1 w-52 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl py-1 z-50 text-xs text-zinc-300 max-h-72 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-700 [&::-webkit-scrollbar-thumb]:rounded-full">
@@ -63,7 +68,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <button
           type="button"
           onClick={() => handleSelect("All", null, isDesktop)}
-          className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors font-semibold"
+          className={`${standardButtonStyle} font-semibold`}
         >
           All
         </button>
@@ -71,7 +76,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <button
           type="button"
           onClick={() => handleSelect("General", null, isDesktop)}
-          className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors"
+          className={standardButtonStyle}
         >
           General
         </button>
@@ -80,9 +85,11 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <div>
           <div 
             onClick={() => setExp(expVal === "Food" ? null : "Food")}
-            className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors flex items-center justify-between cursor-pointer"
+            className={accordionStyle}
           >
-            <span onClick={(e) => { e.stopPropagation(); handleSelect("Food", null, isDesktop); }}>Food</span>
+            <span onClick={(e) => { e.stopPropagation(); handleSelect("Food", null, isDesktop); }}>
+              Food <span className="text-xs text-zinc-400 font-normal">(All)</span>
+            </span>
             <FiChevronDown size={11} className={`text-zinc-500 transition-transform ${expVal === "Food" ? "rotate-180" : ""}`} />
           </div>
           {expVal === "Food" && (
@@ -92,7 +99,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
                   key={sub}
                   type="button"
                   onClick={() => handleSelect("Food", sub, isDesktop)}
-                  className="w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-800 text-zinc-400 text-xs"
+                  className="w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer"
                 >
                   └ {sub}
                 </button>
@@ -104,7 +111,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <button
           type="button"
           onClick={() => handleSelect("Supplements", null, isDesktop)}
-          className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors"
+          className={standardButtonStyle}
         >
           Supplements
         </button>
@@ -113,9 +120,11 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <div>
           <div 
             onClick={() => setExp(expVal === "Training" ? null : "Training")}
-            className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors flex items-center justify-between cursor-pointer"
+            className={accordionStyle}
           >
-            <span onClick={(e) => { e.stopPropagation(); handleSelect("Training", null, isDesktop); }}>Training</span>
+            <span onClick={(e) => { e.stopPropagation(); handleSelect("Training", null, isDesktop); }}>
+              Training <span className="text-xs text-zinc-400 font-normal">(All)</span>
+            </span>
             <FiChevronDown size={11} className={`text-zinc-500 transition-transform ${expVal === "Training" ? "rotate-180" : ""}`} />
           </div>
           {expVal === "Training" && (
@@ -125,7 +134,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
                   key={sub}
                   type="button"
                   onClick={() => handleSelect("Training", sub, isDesktop)}
-                  className="w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-800 text-zinc-400 text-xs"
+                  className="w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer"
                 >
                   └ {sub}
                 </button>
@@ -138,9 +147,11 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <div>
           <div 
             onClick={() => setExp(expVal === "Music" ? null : "Music")}
-            className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors flex items-center justify-between cursor-pointer"
+            className={accordionStyle}
           >
-            <span onClick={(e) => { e.stopPropagation(); handleSelect("Music", null, isDesktop); }}>Music</span>
+            <span onClick={(e) => { e.stopPropagation(); handleSelect("Music", null, isDesktop); }}>
+              Music <span className="text-xs text-zinc-400 font-normal">(All)</span>
+            </span>
             <FiChevronDown size={11} className={`text-zinc-500 transition-transform ${expVal === "Music" ? "rotate-180" : ""}`} />
           </div>
           {expVal === "Music" && (
@@ -150,7 +161,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
                   key={sub}
                   type="button"
                   onClick={() => handleSelect("Music", sub, isDesktop)}
-                  className="w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-800 text-zinc-400 text-xs"
+                  className="w-full text-left pl-7 pr-3.5 py-1.5 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer"
                 >
                   └ {sub}
                 </button>
@@ -162,7 +173,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <button
           type="button"
           onClick={() => handleSelect("Activewear", null, isDesktop)}
-          className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors"
+          className={standardButtonStyle}
         >
           Activewear
         </button>
@@ -170,7 +181,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <button
           type="button"
           onClick={() => handleSelect("Mindset & Recovery", null, isDesktop)}
-          className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors"
+          className={standardButtonStyle}
         >
           Mindset & Recovery
         </button>
@@ -178,7 +189,7 @@ function Navbar({ currentUser, setCurrentUser, onOpenCreatePost }) {
         <button
           type="button"
           onClick={() => handleSelect("Helpme", null, isDesktop)}
-          className="w-full text-left px-3.5 py-1.5 hover:bg-zinc-800 transition-colors"
+          className={standardButtonStyle}
         >
           Helpme
         </button>
