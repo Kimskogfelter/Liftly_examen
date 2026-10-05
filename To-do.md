@@ -6,22 +6,20 @@
 - dubbelkolla att ingen del i backend skickar med känslig information till frontend!!
 
 ## Nya Funktioner
-- [ ] **Recept & Mat**
-  - [ ] Skapa struktur och gränssnitt för att bygga egna recept (ingredienser, instruktioner, tillagningstid och makronätring).
-- [ ] **Tränings- & Matdagbok**
-  - [ ] Utveckla loggbok där användare kan registrera daglig träning och kost/kcal/protein intag i samma vy.
-- fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - skönhetsfilter till bild/video
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
-- dubbelkolla ifall du behöver någon del som användaren klickar i att de godkänner att deras info sparas pga GDPR när de skapar en användare ?! 
 - lägg till antal träffar gällande posts på söksidan, saved posts, category och hashtag. tänk på pagination !!
+- fixa så man kan posta sina träningspass och dela kalender så folk ser hur många pass man gjort så det delas i ett inlägg?
+
+- fixa betalplan för server så den alltid är uppe??
+- fixa så appen kan lanseras hos app store och andriod för att lätt laddas ner
 
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
 - [x] Standardisera toppmarginaler och layout på Search, Saved, Category och Profile.
 - [x] **All / Following Tab-meny (`Home.jsx`)**
-  Fixa sticky-positionering så att flikarna inte hamnar ovanpå eller täcker inläggen vid scroll.
+  Fixa sticky-positionering så att flikarna inte hamnar ovanpå eller täcker inläggen vid scroll.
 - [x] **Skapa inlägg (`CreatePostForm.jsx`)**
 Gör "Add photo/video"-knappen mer framträdande och centrerad överst i rutan med text.
 - [x] **Bildbeskäring (`PostCard.jsx`)**
@@ -29,23 +27,31 @@ Justera bild-höjd och `object-cover` så att vertikala bilder/videos inte besk�
 - [x] **Egen Hashtag-sida**
 Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när man klickar på den.
 - [x] **Träningspass & Mallar**
-  - [x] Bygga funktion för att skapa och spara egna träningspass som enkelt kan plockas fram och loggas under gympasset. Namnge som "Workouts" i navmeny
+  - [x] Bygga funktion för att skapa och spara egna träningspass som enkelt kan plockas fram och loggas under gympasset. Namnge som "Workouts" i navmeny
 - [x] **Glömt Lösenord**
-  - [x] Skapa återställningsflöde med e-post/tillfällig token för lösenordsåterställning.
+  - [x] Skapa återställningsflöde med e-post/tillfällig token för lösenordsåterställning.
 - [x] skapa reply schema, controller etc för kommentarer så användare kan svara på varandras kommentarer på inlägg
 - [x] Lägg till en following sida som ska visa alla man följer så man lätt kan avfölja personer
 - [x] Pagination & Infinite Scroll (Flöde, Profil, Kategori, Hashtag, Sparade & Sök)
-  - [x] Backend: Uppdaterat samtliga post-endpoints (/posts, /posts/following, /posts/users/:userId, /posts/category, /posts/hashtag, /users/savedposts, /search) till att hantera page och limit samt returnera en enhetlig paginerad datastruktur (posts, hasMore, currentPage, totalPosts).
-  - [x] Frontend: Implementerat Infinite Scroll med IntersectionObserver i PostFeed och alla tillhörande vyer (HomePage, ProfilePage, CategoryPage, HashtagPage, SavedPostsPage, SearchPage) för sömlös och prestandaoptimerad laddning på mobil och desktop.
+  - [x] Backend: Uppdaterat samtliga post-endpoints (/posts, /posts/following, /posts/users/:userId, /posts/category, /posts/hashtag, /users/savedposts, /search) till att hantera page och limit samt returnera en enhetlig paginerad datastruktur (posts, hasMore, currentPage, totalPosts).
+  - [x] Frontend: Implementerat Infinite Scroll med IntersectionObserver i PostFeed och alla tillhörande vyer (HomePage, ProfilePage, CategoryPage, HashtagPage, SavedPostsPage, SearchPage) för sömlös och prestandaoptimerad laddning på mobil och desktop.
 - [x] **Backend: Refresh Tokens & Cookies**
-  - [x] Installera och konfigurera `cookie-parser` i Express.
-  - [x] Uppdatera `/login`-controllern att skapa `accessToken` (15m) och `refreshToken` (30d) i en `httpOnly` cookie.
-  - [x] Skapa endpoint `/api/v1/users/refresh` som validerar cookien och skickar en ny `accessToken`.
+  - [x] Installera och konfigurera `cookie-parser` i Express.
+  - [x] Uppdatera `/login`-controllern att skapa `accessToken` (15m) och `refreshToken` (30d) i en `httpOnly` cookie.
+  - [x] Skapa endpoint `/api/v1/users/refresh` som validerar cookien och skickar en ny `accessToken`.
 - [x] **Frontend: Silent Token Refresh**
-  - [x] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
-  - [x] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
+  - [x] Skapa en Axios Interceptor som fångar 401-svar i bakgrunden.
+  - [x] Förnya `accessToken` automatiskt utan att användaren märker det eller blir utloggad.
 - [x] Lägg till länk till instagram/tiktok/youtube ifall man vill på en användares profilsida 
 - [x] RENSA bort alla console.logs
 - [x] fixa problemet med att man loggas ut från mobilen, har med refresh token i user controllern att göra (egen domän!!)
 - [x] ordna fler under kategorier på musik, mat, träning
 - [x] ändra sido scroll menyn på saved posts för mobil vyn till en drop down lista? 
+- [x] **Tränings- & Matdagbok**
+  - [x] Utveckla loggbok där användare kan registrera daglig träning och kost/kcal/protein intag i samma vy.
+- ta bort ljudet som spelas upp när ett set är klart under träningspass samt ändra till vibration istället?! 
+- dubbelkolla ifall du behöver någon del som användaren klickar i att de godkänner att deras info sparas pga GDPR när de skapar en användare ?! FIXAT med checkbox vid reg samt länk till privacy policy sida
+- [x] **Recept & Mat**
+  - [x] Skapa struktur och gränssnitt för att bygga egna recept (ingredienser, instruktioner, tillagningstid och makronätring).
+- [x] fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
+- [x] fixa kontakta oss sida så folk kan skicka in förbättringar, buggar etc till min email/egen mejl till lifly?!
