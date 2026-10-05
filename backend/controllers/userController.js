@@ -742,16 +742,18 @@ export const forgotPassword = async (req, res, next) => {
         const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
         // SKICKA E-POST MED RESEND
-        await resend.emails.send({
-            from: "Liftly <onboarding@resend.dev>", // Standard avsändare under testfasen
+       await resend.emails.send({
+            from: "Liftly <noreply@liftlyfit.com>",
             to: user.email,
             subject: "Reset your Liftly Password",
             html: `
-        <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #e4e4e7; rounded: 12px;">
+        <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #e4e4e7; border-radius: 12px;">
           <h2 style="color: #09090b;">Reset your password</h2>
           <p style="color: #52525b; font-size: 14px;">You requested a password reset for your Liftly account. Click the button below to set a new password:</p>
           <a href="${resetUrl}" style="display: inline-block; background-color: #000; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; margin: 15px 0;">Reset Password</a>
           <p style="color: #a1a1aa; font-size: 12px; margin-top: 20px;">This link will expire in 1 hour. If you didn't request this, you can safely ignore this email.</p>
+          <hr style="border: none; border-top: 1px solid #e4e4e7; margin: 20px 0;" />
+          <p style="color: #a1a1aa; font-size: 11px; text-align: center;">This is an automated message, please do not reply to this email.</p>
         </div>
       `,
         });
