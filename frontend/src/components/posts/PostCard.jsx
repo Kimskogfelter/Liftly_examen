@@ -200,7 +200,7 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
 
                         {/* TEXT & HASHTAGS INTEGRERADE I SAMMA PARAGRAF */}
                         <div className="mb-2 px-0.5">
-                            <p className={`${isDetailView ? "" : "line-clamp-3"} text-xs text-gray-800 font-normal leading-relaxed`}>
+                            <p className={`${isDetailView ? "" : "line-clamp-2 overflow-hidden"} text-xs text-gray-800 font-normal leading-relaxed`}>
                                 {post.content}
                                 {post.hashtags && post.hashtags.length > 0 && (
                                     <span className="inline-flex flex-wrap gap-1.5 ml-1.5 font-semibold text-gray-500">
