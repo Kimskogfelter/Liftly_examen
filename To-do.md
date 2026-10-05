@@ -11,6 +11,8 @@
 - fixa ett språk filter mot fula ord?! 
 - lägg till antal träffar gällande posts på söksidan, saved posts, category och hashtag. tänk på pagination !!
 - fixa så man kan posta sina träningspass och dela kalender så folk ser hur många pass man gjort så det delas i ett inlägg?
+- fixa så man kan hur man tränat i en årsvy på kalendern för att sen dela om man vill
+- ändra så man kan skriva direkt i sökfältet istället för att slussas till söksidan och SEN börja skriva
 
 - fixa betalplan för server så den alltid är uppe??
 - fixa så appen kan lanseras hos app store och andriod för att lätt laddas ner
