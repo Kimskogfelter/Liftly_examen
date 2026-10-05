@@ -198,30 +198,33 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                             </div>
                         )}
 
-                        {/* TEXT & HASHTAGS INTEGRERADE I SAMMA PARAGRAF */}
-                        <div className="mb-2 px-0.5">
+                        {/* TEXT & HASHTAGS */}
+                        <div className="mb-2 px-0.5 space-y-1">
+                            {/* Själva texten som klipper sig på 2 rader */}
                             <p className={`${isDetailView ? "" : "line-clamp-2 overflow-hidden"} text-xs text-gray-800 font-normal leading-relaxed`}>
                                 {post.content}
-                                {post.hashtags && post.hashtags.length > 0 && (
-                                    <span className="inline-flex flex-wrap gap-1.5 ml-1.5 font-semibold text-gray-500">
-                                        {post.hashtags.map((hashtag, index) => {
-                                            const cleanTag = hashtag.startsWith('#') ? hashtag.slice(1) : hashtag;
-                                            const displayTag = hashtag.startsWith('#') ? hashtag : `#${hashtag}`;
-
-                                            return (
-                                                <Link
-                                                    key={index}
-                                                    to={`/hashtag/${cleanTag}`}
-                                                    onClick={(e) => e.stopPropagation()}
-                                                    className="text-gray-600 hover:text-black hover:underline cursor-pointer"
-                                                >
-                                                    {displayTag}
-                                                </Link>
-                                            );
-                                        })}
-                                    </span>
-                                )}
                             </p>
+
+                            {/* Hashtaggar hamnar på en egen rad under, så de slipper klipper av konstigt */}
+                            {post.hashtags && post.hashtags.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                                    {post.hashtags.map((hashtag, index) => {
+                                        const cleanTag = hashtag.startsWith('#') ? hashtag.slice(1) : hashtag;
+                                        const displayTag = hashtag.startsWith('#') ? hashtag : `#${hashtag}`;
+
+                                        return (
+                                            <Link
+                                                key={index}
+                                                to={`/hashtag/${cleanTag}`}
+                                                onClick={(e) => e.stopPropagation()}
+                                                className="text-xs font-semibold text-gray-500 hover:text-black hover:underline cursor-pointer"
+                                            >
+                                                {displayTag}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
 
 
