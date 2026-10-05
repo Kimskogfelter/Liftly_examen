@@ -16,6 +16,7 @@ import { searchRouter } from './routes/searchRoutes.js';
 import { workoutRouter } from './routes/workoutRoutes.js';
 import { foodLogRouter } from './routes/foodLogRoutes.js';
 import { calendarRouter } from './routes/calendarRoutes.js';
+import { contactRouter } from './routes/contactRoutes.js';
 
 // skapa express server
 const server = express();
@@ -39,6 +40,7 @@ server.use('/api/search', searchRouter);
 server.use('/api/foodlogs', foodLogRouter);
 server.use('/api/workouts', workoutRouter);
 server.use('/api/calendar', calendarRouter);
+server.use('/api/contact', contactRouter);
 
 // fallback middleware, for route not found and error handler
 server.use(notFoundEndpoint);

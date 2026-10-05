@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import api from "../../api/axios";
 import { FiMail, FiSend, FiCheckCircle, FiX } from "react-icons/fi";
 
 function ContactModal({ onClose }) {
@@ -27,30 +28,21 @@ function ContactModal({ onClose }) {
         setError("");
 
         try {
-            // Exempel med Web3Forms (eller din egen backend-lösning)
-            const response = await fetch("https://api.web3forms.com/submit", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-                body: JSON.stringify({
-                    access_key: "DIN_ACCESS_KEY_HÄR", 
-                    subject: `Liftly Contact: ${formData.category}`,
-                    name: formData.name,
-                    email: formData.email,
-                    message: formData.message,
-                }),
+            // Anropar din egna backend-route via din axios-instans
+            const response = await api.post("/contact", {
+                name: formData.name,
+                email: formData.email,
+                category: formData.category,
+                message: formData.message,
             });
 
-            const result = await response.json();
-            if (result.success) {
+            if (response.data.success) {
                 setSubmitted(true);
             } else {
                 setError("Something went wrong. Please try again later.");
             }
         } catch (err) {
-            setError("Could not send message. Check your connection.");
+            setError(err.response?.data?.message || "Could not send message. Check your connection.");
         } finally {
             setIsSubmitting(false);
         }
