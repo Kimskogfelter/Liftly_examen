@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
-import { FiTrash2, FiX, FiAlertTriangle } from "react-icons/fi";
+import ContactModal from "./ContactModal";
+import { FiTrash2, FiX, FiAlertTriangle, FiMail } from "react-icons/fi";
 import api from "../../api/axios";
 
 function SettingsModal({ onClose, currentUser, setCurrentUser }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const backdropClasses =
     "fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in duration-200";
@@ -25,7 +25,6 @@ function SettingsModal({ onClose, currentUser, setCurrentUser }) {
       onClose();
       navigate("/login");
     } catch (err) {
-      // console.error("Failed to delete account:", err);
       setError(
         err.response?.data?.message ||
           "Could not delete your account. Please try again."
@@ -57,8 +56,16 @@ function SettingsModal({ onClose, currentUser, setCurrentUser }) {
                 : "Manage your preferences"}
             </p>
           </div>
+          
+          {/* X-knapp som backar om man står i delete-vyn, annars stänger */}
           <button
-            onClick={onClose}
+            onClick={() => {
+              if (showDeleteConfirm) {
+                setShowDeleteConfirm(false);
+              } else {
+                onClose();
+              }
+            }}
             className="p-1.5 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
           >
             <FiX size={18} />
@@ -74,6 +81,28 @@ function SettingsModal({ onClose, currentUser, setCurrentUser }) {
         {!showDeleteConfirm ? (
           /* Huvudmeny */
           <div className="flex flex-col gap-2 my-2">
+            {/* Kontakt / Feedback-alternativ */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowContactModal(true);
+              }}
+              className="w-full flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left cursor-pointer group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white rounded-xl shadow-xs text-gray-700 group-hover:scale-105 transition-transform">
+                  <FiMail size={16} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-900">Contact & Feedback</p>
+                  <p className="text-[10px] text-gray-500">
+                    Report bugs, share ideas or collaborations
+                  </p>
+                </div>
+              </div>
+            </button>
+
+            {/* Rad för att ta bort konto */}
             <button
               type="button"
               onClick={() => setShowDeleteConfirm(true)}
@@ -123,6 +152,10 @@ function SettingsModal({ onClose, currentUser, setCurrentUser }) {
           </div>
         )}
       </div>
+      {/* Rendera ContactModal när den är aktiverad */}
+      {showContactModal && (
+        <ContactModal onClose={() => setShowContactModal(false)} />
+      )}
     </div>,
     document.body
   );
