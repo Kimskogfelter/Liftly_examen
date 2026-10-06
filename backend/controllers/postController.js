@@ -293,8 +293,6 @@ export const getCategoryPosts = async (req, res, next) => {
             queryFilter.subCategory = { $regex: new RegExp(`^${subCategory}$`, "i") };
         }
 
-        console.log("query filter:", queryFilter);
-
         const { page, limit, skip } = getPagination(req.query, 10);
 
         const [posts, totalPosts] = await Promise.all([
