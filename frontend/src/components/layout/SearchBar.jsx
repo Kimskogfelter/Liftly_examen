@@ -20,6 +20,7 @@ function SearchBar() {
     <form onSubmit={handleSearch} className="w-full">
       <div className="relative w-full">
         <input
+          autoFocus
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
