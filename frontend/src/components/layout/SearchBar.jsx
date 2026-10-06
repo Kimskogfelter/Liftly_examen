@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 
-function SearchBar() {
+function SearchBar({ autoFocus = true }) {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("query") || "");
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      // setTimeout lurar iOS Safari att släppa igenom fokusen direkt vid sidladdning
+      const timer = setTimeout(() => {
+        inputRef.current.focus();
+      }, 50);
+
+      return () => clearTimeout(timer);
+    }
+  }, [autoFocus]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -20,7 +32,7 @@ function SearchBar() {
     <form onSubmit={handleSearch} className="w-full">
       <div className="relative w-full">
         <input
-          autoFocus
+          ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
