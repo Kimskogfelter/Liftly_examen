@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FiHeart, FiMessageCircle } from "react-icons/fi";
+import { FiHeart, FiMessageCircle, FiMusic } from "react-icons/fi";
 
 function PostGridItem({ post }) {
   const hasMedia = post.media && post.media.length > 0;
@@ -10,24 +10,27 @@ function PostGridItem({ post }) {
     0
   ) || 0;
 
-  // Formatera kategorietiketten (visar underkategori om den finns)
-  const displayCategory = post.subCategory && post.subCategory !== post.category 
-    ? `${post.category} / ${post.subCategory}` 
-    : post.category || "General";
+  // kategorietiketten (visar underkategori om den finns)
+  const displayCategory = post.subCategory || post.category || "General";
 
   return (
     <Link
       to={`/posts/${post._id}`}
       className="relative aspect-square rounded-lg overflow-hidden group shadow-sm border border-gray-100 block bg-zinc-900"
     >
-      {/* Liten diskret recipe-badge i övre vänstra hörnet */}
-      {post.recipe && (
-        <div className="absolute top-2 left-2 z-20 pointer-events-none">
+      {/* Badges i övre vänstra hörnet (Recipe och/eller Music) */}
+      <div className="absolute top-2 left-2 z-20 pointer-events-none flex flex-col gap-1">
+        {post.recipe && (
           <span className="bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm">
             Recipe
           </span>
-        </div>
-      )}
+        )}
+        {post.spotifyUrl && (
+          <span className="bg-[#1DB954]/90 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm flex items-center gap-1 w-fit">
+            <FiMusic size={10} /> Music
+          </span>
+        )}
+      </div>
 
       {hasMedia ? (
         <>
