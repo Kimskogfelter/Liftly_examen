@@ -7,6 +7,7 @@ import { FiHash, FiGrid } from "react-icons/fi";
 function HashtagPage({ currentUser }) {
   const { hashtag } = useParams();
   const [posts, setPosts] = useState([]);
+  const [totalPosts, setTotalPosts] = useState(0); // <--- 1. State för totala antalet inlägg för hashtagen
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -28,9 +29,12 @@ function HashtagPage({ currentUser }) {
 
     try {
       const res = await api.get(`/posts/hashtag?hashtag=${hashtag}&page=${currentPage}&limit=10`);
-      const { posts: newPosts, hasMore } = res.data;
+      const { posts: newPosts, hasMore, totalPosts: total } = res.data; // <--- 2. Fånga upp totalPosts från backend
 
       setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
+      if (total !== undefined) {
+        setTotalPosts(total);
+      }
       setHasMorePosts(hasMore);
     } catch (err) {
       if (err.response?.status === 404) {
@@ -94,6 +98,13 @@ function HashtagPage({ currentUser }) {
             Hashtag: <span className="text-zinc-500 font-normal">{hashtag}</span>
           </h1>
         </div>
+
+        {/* Diskret undertitel med totalt antal inlägg */}
+        {totalPosts > 0 && (
+          <p className="text-xs text-zinc-400 font-medium mt-1">
+            {totalPosts} {totalPosts === 1 ? "post" : "posts"} found
+          </p>
+        )}
       </div>
 
       {error && (
