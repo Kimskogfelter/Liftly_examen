@@ -157,7 +157,7 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
   };
 
   return (
-    <section className="flex-1 w-full max-w-4xl mx-auto px-2 md:px-6 pb-10 pt-20 xl:pt-6 font-sans text-gray-800 relative">
+    <section className="flex-1 w-full max-w-4xl mx-auto md:px-6 pb-10 pt-20 xl:pt-6 font-sans text-gray-800 relative">
       {/* Header */}
       <div className="w-full text-center mb-4 border-b border-zinc-200 pb-4">
         <div className="flex items-center justify-center gap-2 mb-1">

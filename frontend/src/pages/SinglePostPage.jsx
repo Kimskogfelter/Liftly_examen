@@ -59,7 +59,7 @@ function SinglePostPage({ currentUser, setCurrentUser }) {
 
             {/* if post exist execute below code */}
             {post && (
-                <section className="flex-1 max-w-2xl mx-auto px-4 pt-16 xl:pt-6 pb-24 font-sans text-gray-800">
+                <section className="flex-1 max-w-2xl mx-auto pt-16 xl:pt-6 pb-24 font-sans text-gray-800">
                     <PostCard 
                         post={post} 
                         currentUser={currentUser} 

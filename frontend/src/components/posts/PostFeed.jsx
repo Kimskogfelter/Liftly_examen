@@ -18,8 +18,8 @@ function PostFeed({
     const isGrid = layout?.includes("grid-3x3");
 
     const feedLayout = isGrid
-        ? "grid grid-cols-3 gap-1 md:gap-3 max-w-[1000px] mx-auto w-full" 
-        : "flex flex-col gap-4 w-full max-w-2xl mx-auto";
+        ? "grid grid-cols-3 gap-0.5 max-w-[1000px] mx-auto w-full" 
+        : "flex flex-col gap-2 w-full max-w-2xl mx-auto";
 
     if (posts.length === 0 && !loadingMorePosts) {
         return <p className="text-center text-gray-500 my-8 text-sm">No posts available.</p>;

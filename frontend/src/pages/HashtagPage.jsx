@@ -89,7 +89,7 @@ function HashtagPage({ currentUser }) {
   }
 
   return (
-    <section className="flex-1 px-2 md:px-6 max-w-4xl mx-auto pt-20 xl:pt-6 pb-10 font-sans text-gray-800">
+    <section className="flex-1 md:px-6 max-w-4xl mx-auto pt-20 xl:pt-6 pb-10 font-sans text-gray-800">
       {/* Centrerad Header */}
       <div className="w-full text-center mb-6 border-b border-zinc-200 pb-4">
         <div className="flex items-center justify-center gap-1.5 mb-1">

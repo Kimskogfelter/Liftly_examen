@@ -6,21 +6,19 @@ import { useSearchParams, Link } from "react-router-dom";
 
 function SearchPage({ currentUser, setCurrentUser }) {
   const [posts, setPosts] = useState([]);
-  const [totalPosts, setTotalPosts] = useState(0); // <--- 1. Statet för totala antalet träffar
+  const [totalPosts, setTotalPosts] = useState(0);
   const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [error, setError] = useState("");
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("query") || "";
 
-  // Paginerings-states för inlägg
   const [page, setPage] = useState(1);
   const [hasMorePosts, setHasMorePosts] = useState(true);
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
 
   const observer = useRef();
 
-  // Funktion för att hämta sökresultat med paginering för posts
   const getSearchResults = async (currentPage, isInitialLoad = false) => {
     if (isInitialLoad) {
       setError("");
@@ -33,7 +31,6 @@ function SearchPage({ currentUser, setCurrentUser }) {
         params: { query: searchQuery, page: currentPage, limit: 10 }
       });
 
-      // 2. Plocka ut totalPosts från backend-svaret
       const { posts: newPosts, totalPosts, users: fetchedUsers, hasMore } = response.data;
 
       setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
@@ -43,7 +40,6 @@ function SearchPage({ currentUser, setCurrentUser }) {
       if (isInitialLoad) {
         setUsers(fetchedUsers || []);
 
-        // UX: Om inga inlägg hittas men användare finns, växla till "users"-fliken
         if (newPosts?.length === 0 && fetchedUsers?.length > 0) {
           setActiveTab("users");
         } else {
@@ -58,7 +54,6 @@ function SearchPage({ currentUser, setCurrentUser }) {
     }
   };
 
-  // Nollställ och sök på nytt när sökfrasen ändras
   useEffect(() => {
     if (searchQuery) {
       setPage(1);
@@ -71,14 +66,12 @@ function SearchPage({ currentUser, setCurrentUser }) {
     }
   }, [searchQuery]);
 
-  // Hämta fler inlägg när 'page' ökar
   useEffect(() => {
     if (page > 1) {
       getSearchResults(page, false);
     }
   }, [page]);
 
-  // Ref-callback för oändlig skrollning på sökresultat
   const lastPostElementRef = useCallback(
     (node) => {
       if (loadingMorePosts) return;
@@ -104,26 +97,26 @@ function SearchPage({ currentUser, setCurrentUser }) {
   };
 
   return (
-    <section className="flex-1 px-4 md:px-6 max-w-4xl mx-auto pt-24 sm:pt-28 xl:pt-8 font-sans text-gray-800 w-full">
-      <div className="max-w-xl mx-auto w-full mb-6">
-        {/* Searchbar */}
+    // 1. Borttaget px-2 md:px-6 härifrån så sidan är "fulldredd"
+    <section className="flex-1 max-w-4xl mx-auto pt-24 sm:pt-28 xl:pt-8 font-sans text-gray-800 w-full">
+      
+      {/* 2. Flyttat in paddingen hit istället så sökfält och flikar behåller sin luft */}
+      <div className="px-4 md:px-6 max-w-xl mx-auto w-full mb-6">
         <SearchBar currentUser={currentUser} />
 
-        {/* DISPLAY TITLE AND TABS IF THERE IS A SEARCH QUERY */}
         {searchQuery && (
           <>
             <h2 className="text-gray-500 text-xs my-6">
               Results for: <span className="font-bold text-gray-800">"{searchQuery}"</span>
             </h2>
 
-            <div className="flex border-b border-gray-100">
+            <div className="flex border-b border-gray-100 px-0">
               <button
                 onClick={() => setActiveTab("posts")}
                 className={`flex-1 pb-3 text-sm font-semibold transition-all border-b-2 text-center cursor-pointer ${
                   activeTab === "posts" ? "border-gray-800 text-gray-800" : "border-transparent text-gray-400 hover:text-gray-600"
                 }`}
               >
-                {/* 4. Använd totalPosts här istället för posts.length */}
                 Posts ({totalPosts})
               </button>
               <button
@@ -139,7 +132,13 @@ function SearchPage({ currentUser, setCurrentUser }) {
         )}
       </div>
 
-      {/* DISPLAY ACTIVE TAB */}
+      {error && (
+        <div className="px-4 md:px-6">
+          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">{error}</div>
+        </div>
+      )}
+
+      {/* 3. Inläggen / flödet ligger nu helt utan padding i sidled och går kant-i-kant */}
       {searchQuery && (
         <div className="mt-6">
           {activeTab === "posts" && (
@@ -157,13 +156,13 @@ function SearchPage({ currentUser, setCurrentUser }) {
                   hasMorePosts={hasMorePosts}
                 />
               ) : (
-                <p className="text-gray-400 text-xs text-center mt-10">No posts found matching your search.</p>
+                <p className="text-gray-400 text-xs text-center mt-10 px-4">No posts found matching your search.</p>
               )}
             </div>
           )}
 
           {activeTab === "users" && (
-            <div className="w-full max-w-xl mx-auto pb-24 sm:pb-12">
+            <div className="w-full max-w-xl mx-auto pb-24 sm:pb-12 px-4">
               {users.length > 0 ? (
                 <div className="flex flex-col gap-2 w-full">
                   {users.map((u) => (
@@ -195,9 +194,8 @@ function SearchPage({ currentUser, setCurrentUser }) {
         </div>
       )}
 
-      {/* DISPLAY INFO TEXT IF THERE IS NO SEARCH QUERY */}
       {!searchQuery && (
-        <p className="text-gray-400 text-xs text-center mt-20">
+        <p className="text-gray-400 text-xs text-center mt-20 px-4">
           Type something above to search for amazing workouts, tags or friends!
         </p>
       )}

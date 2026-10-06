@@ -101,9 +101,9 @@ function HomePage({ currentUser, setCurrentUser }) {
   };
 
   return (
-    <section className="flex-1 max-w-2xl mx-auto pb-10 px-4 min-h-screen pt-14 xl:pt-0">
+    <section className="flex-1 max-w-2xl mx-auto pb-10 min-h-screen pt-14 xl:pt-0">
       {/* TABS */}
-      <div className="sticky top-14 xl:top-0 bg-white/80 backdrop-blur-md z-30 pt-4 xl:pt-0 mb-10 xl:mb-6 border-b border-gray-100">
+      <div className="sticky top-14 xl:top-0 bg-white/80 backdrop-blur-md z-30 pt-4 xl:pt-0 mb-6 xl:mb-6 border-b border-gray-100">
         <div className="max-w-2xl mx-auto flex">
           <button
             onClick={() => setActiveTab("posts")}
