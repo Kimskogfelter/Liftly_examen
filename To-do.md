@@ -19,6 +19,8 @@
 - fixa betalplan för server så den alltid är uppe??
 - fixa så appen kan lanseras hos app store och andriod för att lätt laddas ner
 
+- uppdatera README.md med screenshots från de olika delarna på appen
+
 ## ✅ Redan Klart
 - [x] Vända inläggsordning (`.reverse()`) på profilsidan så nyaste inläggen visas överst.
 - [x] Standardisera toppmarginaler och layout på Search, Saved, Category och Profile.
