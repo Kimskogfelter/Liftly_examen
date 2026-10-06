@@ -1,5 +1,17 @@
 import mongoose, { Schema } from "mongoose";
 
+// Sub-schema för att dela månad från kalendern
+const calendarShareSchema = new mongoose.Schema({
+    month: { type: String, required: true }, // t.ex. "October 2026"
+    days: [{
+        date: { type: String }, // t.ex. "2026-10-01" eller dagnummer "1"
+        dayNumber: { type: Number }, // 1, 2, 3...
+        title: { type: String, default: "" }, // t.ex. "Överkropp"
+        completed: { type: Boolean, default: false },
+        hasWorkout: { type: Boolean, default: false }
+    }]
+}, { _id: false });
+
 // Sub-schema för enskilda ingredienser
 const ingredientSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -49,7 +61,12 @@ const postSchema = new mongoose.Schema({
     recipe: { 
         type: recipeSchema, 
         default: null 
-    }
+    },
+    // skapas från delning i kalendern
+    calendarShare: {
+    type: calendarShareSchema,
+    default: null
+}
 }, { timestamps: true });
 
 // post model

@@ -7,7 +7,7 @@ import { upload } from "../middleware/cloudinaryUpload.js";
 // loading env var from .env
 import 'dotenv/config';
 // funktion för pagination/scroll
-import { getPagination, formatPaginatedResponse } from '../utils/pagination.js';   
+import { getPagination, formatPaginatedResponse } from '../utils/pagination.js';
 import path from "path";
 
 
@@ -23,8 +23,8 @@ export const createPost = async (req, res, next) => {
             return next(new HttpError("User not found", 404));
         }
 
-        // get inputs from frontend (including optional recipe)
-        const { content, hashtags, category, subCategory, spotifyUrl, recipe } = req.body;
+        // get inputs from frontend (including optional recipe, calenderShare from calendar)
+        const { content, hashtags, category, subCategory, spotifyUrl, recipe, calendarShare } = req.body;
 
         // --------- media -----------
         let mediaFiles = req.files ? req.files.map(file => file.path) : [];
@@ -45,6 +45,11 @@ export const createPost = async (req, res, next) => {
             parsedRecipe = JSON.parse(recipe);
         }
 
+        // 2.5 Remake CALENDARSHARE from JSON-string to object (if provided)
+        let parsedCalendarShare = null;
+        if (calendarShare) {
+            parsedCalendarShare = JSON.parse(calendarShare);
+        }
         // 3. Build post object with fields that ALWAYS should be there
         const postObject = {
             createdBy: user._id,
@@ -52,7 +57,8 @@ export const createPost = async (req, res, next) => {
             category: category || "General",
             subCategory: subCategory || "",
             spotifyUrl: spotifyUrl || "",
-            recipe: parsedRecipe // Lägg till receptet här (blir null om det saknas)
+            recipe: parsedRecipe, // Lägg till receptet här (blir null om det saknas)
+            calendarShare: parsedCalendarShare
         };
 
         // 4. Add CONTENT only if user have written text
@@ -167,9 +173,9 @@ export const getPosts = async (req, res, next) => {
         const paginatedData = formatPaginatedResponse(posts, totalPosts, page, limit);
 
         // returnera paginerad data
-        return res.status(200).json({ 
-            message: "Posts found", 
-            ...paginatedData 
+        return res.status(200).json({
+            message: "Posts found",
+            ...paginatedData
         });
 
     } catch (error) {
@@ -216,8 +222,8 @@ export const getUserPosts = async (req, res, next) => {
         const paginatedData = formatPaginatedResponse(userPosts, totalPosts, page, limit);
 
         // returnera paginerad data
-        return res.status(200).json({ 
-            message: "Posts found", 
+        return res.status(200).json({
+            message: "Posts found",
             userPosts: paginatedData.posts,
             hasMore: paginatedData.hasMore,
             currentPage: paginatedData.currentPage,
@@ -265,8 +271,8 @@ export const getFollowingPosts = async (req, res, next) => {
         // 4. Formatera svaret med hasMore
         const paginatedData = formatPaginatedResponse(followingPosts, totalPosts, page, limit);
 
-        return res.status(200).json({ 
-            message: "Posts found", 
+        return res.status(200).json({
+            message: "Posts found",
             followingPosts: paginatedData.posts,
             hasMore: paginatedData.hasMore,
             currentPage: paginatedData.currentPage,

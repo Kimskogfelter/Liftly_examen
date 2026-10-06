@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import ShareCalendarModal from '../components/calendar/ShareCalendarModal';
 import { LuCalendar } from "react-icons/lu";
-import { FiPlus, FiCheck } from "react-icons/fi";
+import { FiPlus, FiCheck, FiShare2 } from "react-icons/fi";
 
 const CalendarPage = () => {
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ const CalendarPage = () => {
     const [logs, setLogs] = useState([]);
     const [workouts, setWorkouts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [shareModalData, setShareModalData] = useState(null);
 
     // Formulär-state för att boka pass
     const [selectedWorkoutId, setSelectedWorkoutId] = useState('');
@@ -49,6 +51,37 @@ const CalendarPage = () => {
 
     const handleNextMonth = () => {
         setCurrentDateObj(new Date(year, currentDateObj.getMonth() + 1, 1));
+    };
+
+
+    const handleShareMonth = () => {
+        const monthName = `${monthNames[currentDateObj.getMonth()]} ${year}`;
+
+        // Bygg ihop array med alla dagar för den aktiva månaden
+        const daysData = Array.from({ length: daysInMonth }).map((_, index) => {
+            const dayNum = index + 1;
+            const formattedDay = String(dayNum).padStart(2, '0');
+            const dateString = `${year}-${month}-${formattedDay}`;
+            const dayLogs = Array.isArray(logs) ? logs.filter((l) => l.date === dateString) : [];
+
+            const hasWorkout = dayLogs.length > 0;
+            const isCompleted = hasWorkout && dayLogs.every(l => l.completed);
+            const title = dayLogs.length > 0 ? dayLogs[0].title : "";
+
+            return {
+                date: dateString,
+                dayNumber: dayNum,
+                title: title,
+                completed: isCompleted,
+                hasWorkout: hasWorkout
+            };
+        });
+
+        // Sätt data till modalen istället för att posta direkt
+        setShareModalData({
+            month: monthName,
+            days: daysData
+        });
     };
 
     const handleAssignWorkout = async (e) => {
@@ -122,20 +155,33 @@ const CalendarPage = () => {
                 </p>
             </div>
 
-            {/* Månadsväljare & Månadsvy: Ingen bakgrund/border på mobil (flödar ut), men snyggt kort på desktop (sm:) */}
+            {/* Månadsväljare & Månadsvy */}
             <div className="bg-transparent sm:bg-white sm:border sm:border-gray-100 sm:rounded-lg p-0 sm:p-5 sm:shadow-sm mb-6">
                 <div className="flex justify-between items-center mb-3 sm:mb-4 px-1 sm:px-0">
                     <span className="text-xs font-semibold text-zinc-700">Select Month</span>
-                    <div className="flex items-center gap-3 bg-zinc-50 px-3 py-1.5 rounded-xl border border-zinc-200">
-                        <button onClick={handlePrevMonth} className="text-xs font-bold text-zinc-600 hover:text-black cursor-pointer">
-                            &larr;
+
+                    <div className="flex items-center gap-3">
+                        {/* DELNINGSKNAPP */}
+                        <button
+                            onClick={handleShareMonth}
+                            className="flex items-center gap-1.5 bg-black text-white hover:bg-zinc-800 text-[11px] font-semibold px-2.5 py-1.5 rounded-xl transition cursor-pointer disabled:opacity-50 shadow-xs"
+                            title="Share month overview to feed"
+                        >
+                            <FiShare2 size={13} />
+                            <span>Share</span>
                         </button>
-                        <span className="text-xs font-bold text-zinc-800">
-                            {monthNames[currentDateObj.getMonth()]} {year}
-                        </span>
-                        <button onClick={handleNextMonth} className="text-xs font-bold text-zinc-600 hover:text-black cursor-pointer">
-                            &rarr;
-                        </button>
+
+                        <div className="flex items-center gap-3 bg-zinc-50 px-3 py-1.5 rounded-xl border border-zinc-200">
+                            <button onClick={handlePrevMonth} className="text-xs font-bold text-zinc-600 hover:text-black cursor-pointer">
+                                &larr;
+                            </button>
+                            <span className="text-xs font-bold text-zinc-800">
+                                {monthNames[currentDateObj.getMonth()]} {year}
+                            </span>
+                            <button onClick={handleNextMonth} className="text-xs font-bold text-zinc-600 hover:text-black cursor-pointer">
+                                &rarr;
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -161,7 +207,7 @@ const CalendarPage = () => {
                             const isSelected = selectedDate === dateString;
 
                             let boxStyles = "bg-white border-zinc-200 text-zinc-700 hover:border-zinc-300";
-                            
+
                             if (hasWorkout) {
                                 boxStyles = isCompleted
                                     ? "bg-black border-black text-white shadow-sm"
@@ -189,9 +235,8 @@ const CalendarPage = () => {
                                         {dayLogs.map((log) => (
                                             <div
                                                 key={log._id}
-                                                className={`text-[9px] sm:text-[10px] font-medium leading-tight px-0.5 py-0.5 rounded line-clamp-2 ${
-                                                    log.completed ? "line-through opacity-80" : ""
-                                                }`}
+                                                className={`text-[9px] sm:text-[10px] font-medium leading-tight px-0.5 py-0.5 rounded line-clamp-2 ${log.completed ? "line-through opacity-80" : ""
+                                                    }`}
                                                 title={log.title}
                                             >
                                                 {log.title}
@@ -268,9 +313,8 @@ const CalendarPage = () => {
                                             navigate(`/workouts/${workoutId}`);
                                         }
                                     }}
-                                    className={`font-semibold text-xs truncate cursor-pointer hover:underline hover:text-blue-600 transition ${
-                                        log.completed ? "line-through text-zinc-400" : "text-zinc-900"
-                                    }`}
+                                    className={`font-semibold text-xs truncate cursor-pointer hover:underline hover:text-blue-600 transition ${log.completed ? "line-through text-zinc-400" : "text-zinc-900"
+                                        }`}
                                     title={log.title}
                                 >
                                     {log.title}
@@ -281,11 +325,10 @@ const CalendarPage = () => {
                             <div className="flex items-center gap-2 shrink-0">
                                 <button
                                     onClick={() => handleToggleComplete(log._id, log.completed)}
-                                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
-                                        log.completed
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${log.completed
                                             ? "bg-green-100 text-green-800 hover:bg-green-200"
                                             : "bg-zinc-100 text-zinc-800 hover:bg-zinc-200"
-                                    }`}
+                                        }`}
                                 >
                                     <FiCheck size={14} className={log.completed ? "text-green-700" : "text-zinc-600"} />
                                     <span>{log.completed ? "Completed" : "Mark as Done"}</span>
@@ -302,6 +345,17 @@ const CalendarPage = () => {
                     ))
                 )}
             </div>
+            {/* Share Calendar Modal */}
+            {shareModalData && (
+                <ShareCalendarModal
+                    calendarData={shareModalData}
+                    onClose={() => setShareModalData(null)}
+                    onShared={() => {
+                        setShareModalData(null);
+                        navigate('/');
+                    }}
+                />
+            )}
         </section>
     );
 };

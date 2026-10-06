@@ -6,6 +6,7 @@ import { handlePostLikeToggle } from "../../functions/posts/handlePostLikeToggle
 import { handleSavePost } from "../../functions/posts/handleSavePost";
 import FullsizeImageModal from "./FullsizeImageModal";
 import { createSpotifyEmbedUrl } from "../../functions/spotify/spotify";
+import PostCalendarShare from "./PostCalendarShare";
 import TimeAgo from "react-timeago";
 import { BsThreeDots } from "react-icons/bs";
 import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
@@ -282,6 +283,8 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                                 )}
                             </div>
                         )}
+                        {/* KALENDER-KORT (DELAD MÅNAD) - LJUS STIL */}
+                        <PostCalendarShare calendarShare={post.calendarShare} />
                     </div>
 
                     {/* SPOTIFY EMBED */}
