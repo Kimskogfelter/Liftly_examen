@@ -6,6 +6,7 @@ import { useSearchParams, Link } from "react-router-dom";
 
 function SearchPage({ currentUser, setCurrentUser }) {
   const [posts, setPosts] = useState([]);
+  const [totalPosts, setTotalPosts] = useState(0); // <--- 1. Statet för totala antalet träffar
   const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [error, setError] = useState("");
@@ -32,9 +33,11 @@ function SearchPage({ currentUser, setCurrentUser }) {
         params: { query: searchQuery, page: currentPage, limit: 10 }
       });
 
-      const { posts: newPosts, users: fetchedUsers, hasMore } = response.data;
+      // 2. Plocka ut totalPosts från backend-svaret
+      const { posts: newPosts, totalPosts, users: fetchedUsers, hasMore } = response.data;
 
       setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
+      setTotalPosts(totalPosts);
       setHasMorePosts(hasMore);
 
       if (isInitialLoad) {
@@ -64,6 +67,7 @@ function SearchPage({ currentUser, setCurrentUser }) {
     } else {
       setPosts([]);
       setUsers([]);
+      setTotalPosts(0);
     }
   }, [searchQuery]);
 
@@ -119,7 +123,8 @@ function SearchPage({ currentUser, setCurrentUser }) {
                   activeTab === "posts" ? "border-gray-800 text-gray-800" : "border-transparent text-gray-400 hover:text-gray-600"
                 }`}
               >
-                Posts ({posts.length})
+                {/* 4. Använd totalPosts här istället för posts.length */}
+                Posts ({totalPosts})
               </button>
               <button
                 onClick={() => setActiveTab("users")}
