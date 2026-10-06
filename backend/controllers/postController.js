@@ -283,18 +283,20 @@ export const getFollowingPosts = async (req, res, next) => {
 
 export const getCategoryPosts = async (req, res, next) => {
     try {
-        // 1. Hämta både category och subCategory från query (t.ex. ?category=Music&subCategory=Electronic)
         const { category, subCategory } = req.query;
 
-        // Om inga kategorier skickas med söker vi på alla inlägg, annars filtrerar vi på kategorin
         const queryFilter = {};
-        if (category) queryFilter.category = category;
-        if (subCategory) queryFilter.subCategory = subCategory;
+        if (category) {
+            queryFilter.category = { $regex: new RegExp(`^${category}$`, "i") };
+        }
+        if (subCategory) {
+            queryFilter.subCategory = { $regex: new RegExp(`^${subCategory}$`, "i") };
+        }
 
-        // 2. Hämta page, limit och skip från query
+        console.log("query filter:", queryFilter);
+
         const { page, limit, skip } = getPagination(req.query, 10);
 
-        // 3. Hämta inläggen och räkna totala antalet i kategorin parallellt
         const [posts, totalPosts] = await Promise.all([
             Post.find(queryFilter)
                 .populate("createdBy", "username profileImage")
@@ -311,12 +313,7 @@ export const getCategoryPosts = async (req, res, next) => {
             Post.countDocuments(queryFilter)
         ]);
 
-        // Om inga inlägg hittas för kategorin
-        if (totalPosts === 0) {
-            return next(new HttpError(`No posts found in the category: ${category || 'all'}`, 404));
-        }
-
-        // 4. Formatera svaret med formatPaginatedResponse
+        // VIKTIGT: Skicka alltid 200 OK med totalPosts = 0 istället för att kasta 404!
         const paginatedData = formatPaginatedResponse(posts, totalPosts, page, limit);
 
         return res.status(200).json({

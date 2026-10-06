@@ -10,6 +10,7 @@ function CategoryPage({ currentUser }) {
     const subCategory = searchParams.get("sub");
 
     const [posts, setPosts] = useState([]);
+    const [totalPosts, setTotalPosts] = useState(0);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
 
@@ -36,9 +37,12 @@ function CategoryPage({ currentUser }) {
             }
 
             const res = await api.get(url);
-            const { posts: newPosts, hasMore } = res.data;
+            const { posts: newPosts, hasMore, totalPosts } = res.data;
 
             setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
+            if (totalPosts !== undefined) {
+                setTotalPosts(totalPosts);
+            }
             setHasMorePosts(hasMore);
         } catch (err) {
             if (err.response?.status === 404) {
@@ -98,16 +102,22 @@ function CategoryPage({ currentUser }) {
     return (
         <section className="flex-1 px-2 md:px-6 max-w-4xl mx-auto pt-20 xl:pt-6 font-sans text-gray-800">
             {/* Header */}
-            <div className="w-full text-center mb-8 border-b border-zinc-200 pb-5">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                    <FiFolder size={20} className="text-black" />
+            <div className="w-full text-center mb-6 border-b border-zinc-200 pb-4">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                    <FiFolder size2={20} className="text-black" />
                     <h1 className="text-xl font-bold text-gray-900 tracking-wide">
                         Category: <span className="text-zinc-500 font-normal">{getDisplayTitle()}</span>
                     </h1>
                 </div>
+
+                {totalPosts > 0 && (
+                    <p className="text-xs text-zinc-400 font-medium mt-1">
+                        {totalPosts} {totalPosts === 1 ? "post found" : "posts found"}
+                    </p>
+                )}
             </div>
 
-            {/* Error message om det skulle behövas */}
+            {/* Error message */}
             {error && (
                 <div className="bg-red-50 text-red-600 text-xs p-3 rounded-lg mb-4 text-center font-medium">
                     {error}
@@ -124,8 +134,8 @@ function CategoryPage({ currentUser }) {
                     <p className="text-zinc-400 text-xs mt-1">Be the first to create a post for {getDisplayTitle()}.</p>
                 </div>
             ) : (
-                <PostFeed 
-                    posts={posts} 
+                <PostFeed
+                    posts={posts}
                     layout="grid-3x3"
                     lastPostElementRef={lastPostElementRef}
                     loadingMorePosts={loadingMorePosts}
