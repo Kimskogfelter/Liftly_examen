@@ -7,6 +7,7 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
   const [error, setError] = useState("");
   const token = currentUser?.token;
   const [posts, setPosts] = useState([]);
+  const [totalPosts, setTotalPosts] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
 
@@ -71,9 +72,10 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
 
     try {
       const response = await api.get(`/users/savedposts?page=${currentPage}&limit=10`);
-      const { savedPosts: newPosts, hasMore } = response.data;
+      const { savedPosts: newPosts, hasMore, totalPosts } = response.data;
 
       setPosts((prev) => (isInitialLoad ? newPosts : [...prev, ...newPosts]));
+      setTotalPosts(totalPosts);
       setHasMorePosts(hasMore);
     } catch (err) {
       const errorResponse = err.response?.data;
@@ -162,6 +164,17 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
           <FiBookmark size={20} className="text-black fill-black" />
           <h1 className="text-xl font-bold text-gray-900 tracking-wide">Saved Posts</h1>
         </div>
+
+        {/* Diskret undertitel som anpassar sig efter vald kategori */}
+        {totalPosts > 0 && (
+          <p className="text-xs text-zinc-400 font-medium">
+            {selectedCategory === "All" ? (
+              <>{totalPosts} {totalPosts === 1 ? "saved post" : "saved posts"} in your collection</>
+            ) : (
+              <>{filteredPosts.length} {filteredPosts.length === 1 ? "saved post" : "saved posts"} in <span className="font-semibold text-zinc-600">{getDisplayCategoryName()}</span></>
+            )}
+          </p>
+        )}
 
         {/* MOBIL & IPAD: Diskret kategori-knapp */}
         {posts.length > 0 && (
@@ -276,15 +289,16 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
 
       {/* DESKTOP-MENY */}
       {posts.length > 0 && (
-        <aside className="hidden xl:block absolute left-[102%] top-6 w-48">
+        <aside className="hidden xl:block fixed left-[calc(50%+28rem)] top-24 w-48 max-h-[calc(100vh-8rem)] overflow-y-auto">
           <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-3">
             Categories
           </h2>
           <div className="flex flex-col gap-0.5 w-full text-xs">
             <button
               onClick={() => { setSelectedCategory("All"); setSelectedSubCategory(null); }}
-              className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${selectedCategory === "All" ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
-                }`}
+              className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                selectedCategory === "All" ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
+              }`}
             >
               All
             </button>
@@ -304,7 +318,9 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
                         setSelectedSubCategory(null);
                       }
                     }}
-                    className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${isActive ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"}`}
+                    className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
+                      isActive ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
+                    }`}
                   >
                     <span onClick={(e) => {
                       e.stopPropagation();
@@ -328,8 +344,9 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
                           <button
                             key={sub}
                             onClick={() => handleSubCategoryClick(cat.id, sub)}
-                            className={`w-full text-left px-2 py-1 rounded-md transition-colors cursor-pointer ${isSubActive ? "font-bold text-black bg-zinc-100" : "text-zinc-400 hover:text-black hover:bg-zinc-50"
-                              }`}
+                            className={`w-full text-left px-2 py-1 rounded-md transition-colors cursor-pointer ${
+                              isSubActive ? "font-bold text-black bg-zinc-100" : "text-zinc-400 hover:text-black hover:bg-zinc-50"
+                            }`}
                           >
                             └ {sub}
                           </button>
