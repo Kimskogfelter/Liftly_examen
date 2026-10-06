@@ -166,7 +166,7 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
         </div>
 
         {/* Diskret undertitel som anpassar sig efter vald kategori */}
-        {totalPosts > 0 && (
+        {((selectedCategory === "All" && totalPosts > 0) || (selectedCategory !== "All" && filteredPosts.length > 0)) && (
           <p className="text-xs text-zinc-400 font-medium">
             {selectedCategory === "All" ? (
               <>{totalPosts} {totalPosts === 1 ? "saved post" : "saved posts"} in your collection</>
@@ -296,9 +296,8 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
           <div className="flex flex-col gap-0.5 w-full text-xs">
             <button
               onClick={() => { setSelectedCategory("All"); setSelectedSubCategory(null); }}
-              className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                selectedCategory === "All" ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
-              }`}
+              className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${selectedCategory === "All" ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
+                }`}
             >
               All
             </button>
@@ -318,9 +317,8 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
                         setSelectedSubCategory(null);
                       }
                     }}
-                    className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
-                      isActive ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
-                    }`}
+                    className={`w-full text-left px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${isActive ? "font-bold text-black bg-zinc-100" : "font-normal text-zinc-500 hover:text-black hover:bg-zinc-50"
+                      }`}
                   >
                     <span onClick={(e) => {
                       e.stopPropagation();
@@ -344,9 +342,8 @@ function SavedPostsPage({ currentUser, setCurrentUser }) {
                           <button
                             key={sub}
                             onClick={() => handleSubCategoryClick(cat.id, sub)}
-                            className={`w-full text-left px-2 py-1 rounded-md transition-colors cursor-pointer ${
-                              isSubActive ? "font-bold text-black bg-zinc-100" : "text-zinc-400 hover:text-black hover:bg-zinc-50"
-                            }`}
+                            className={`w-full text-left px-2 py-1 rounded-md transition-colors cursor-pointer ${isSubActive ? "font-bold text-black bg-zinc-100" : "text-zinc-400 hover:text-black hover:bg-zinc-50"
+                              }`}
                           >
                             └ {sub}
                           </button>
