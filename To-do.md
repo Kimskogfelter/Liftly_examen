@@ -9,10 +9,9 @@
 - skönhetsfilter till bild/video
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
-- lägg till antal träffar gällande posts på söksidan, saved posts, category och hashtag. tänk på pagination !!
 - fixa så man kan posta sina träningspass och dela kalender så folk ser hur många pass man gjort så det delas i ett inlägg?
 - fixa så man kan hur man tränat i en årsvy på kalendern för att sen dela om man vill
-- ändra så man kan skriva direkt i sökfältet istället för att slussas till söksidan och SEN börja skriva
+- fixa så men enklare ser att det är ett musik inlägg i post grid item 
 
 - fixa betalplan för server så den alltid är uppe??
 - fixa så appen kan lanseras hos app store och andriod för att lätt laddas ner
@@ -57,3 +56,4 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
   - [x] Skapa struktur och gränssnitt för att bygga egna recept (ingredienser, instruktioner, tillagningstid och makronätring).
 - [x] fixa så glömt lösenord mejl skickas till alla användare inte bara mig själv! tydligen blockerat av resend under test och behöver fixa egen domän alt nå annat gratis fix
 - [x] fixa kontakta oss sida så folk kan skicka in förbättringar, buggar etc till min email/egen mejl till lifly?!
+- [x] lägg till antal träffar gällande posts på söksidan, saved posts, category och hashtag. tänk på pagination !!
