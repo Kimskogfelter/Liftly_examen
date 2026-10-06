@@ -13,6 +13,7 @@
 - fixa så man kan hur man tränat i en årsvy på kalendern för att sen dela om man vill
 - fixa att efter ett avklarat träningspass med alla bockar gjorda så det står done, kommer upp en lite share workout knapp..? eller?? alt att passet automatiskt bockas av som avklarat i kalendern? eller går det ens? 
 - se till delad kalender syns som en bild i post grid item istället för bara content texten??
+- ta bort rundade kanterna på inläggen på mobilskärm??
 
 - städa upp i postCard komponenten samt CalendarPage.jsx, börjar bli mycket kod i båda filerna
 
