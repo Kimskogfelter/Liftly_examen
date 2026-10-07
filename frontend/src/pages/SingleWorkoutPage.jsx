@@ -5,30 +5,46 @@ import WorkoutCard from "../components/workouts/WorkoutCard";
 
 function SingleWorkoutPage({ currentUser }) {
     const { workoutId } = useParams(); // get workout ID from URL parameters
-    const [workout, setWorkout] = useState(null); // Ett pass är ett objekt -> null som initial state
+    const [workout, setWorkout] = useState(null); // Workout is an object -> null as initial state
     const [error, setError] = useState("");
     const token = currentUser?.token;
     const navigate = useNavigate();
 
-    // Funktion för att hämta passets detaljer från backend
+    // Function to fetch workout details from backend
     const getWorkout = async () => {
         try {
-            const response = await api.get(`${import.meta.env.VITE_API_URL}/workouts/${workoutId}`);
+            const response = await api.get(`/workouts/${workoutId}`);
             setWorkout(response.data.workout || response.data);
-
-            // console.log("Fetched workout details:", response.data);
-            
         } catch (err) {
             setError("Could not fetch workout details.");
         }
     };
 
-    // Anropa getWorkout när komponenten laddas eller när workoutId/token ändras
+    // Call getWorkout when component loads or when workoutId/token changes
     useEffect(() => {
         if (token && workoutId) {
             getWorkout();
         }
     }, [workoutId, token]);
+
+    // Function to finish workout and update calendar
+    const handleFinishWorkout = async () => {
+        try {
+            const todayStr = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+
+            // Call backend endpoint
+            await api.post('/workouts/finish', {
+                workoutId,
+                date: todayStr
+            });
+
+            // Navigate to calendar so user immediately sees the completed workout
+            navigate('/calendar');
+        } catch (err) {
+            console.error("Error finishing workout:", err);
+            setError("Could not save finished workout.");
+        }
+    };
 
     return (
         <section className="flex-1 px-2 md:px-6 max-w-2xl mx-auto pt-16 md:pt-24 xl:pt-8 pb-24 font-sans text-gray-800">
@@ -38,13 +54,23 @@ function SingleWorkoutPage({ currentUser }) {
                 </div>
             )}
 
-            {/* if workout exist execute below code */}
+            {/* if workout exists execute below code */}
             {workout && (
-                <div className="mt-8 py-6">
-                    <WorkoutCard
-                        workout={workout}
-                        currentUser={currentUser}
-                    />
+                <div className="mt-8 py-6 flex flex-col items-center">
+                    <div className="w-full max-w-lg">
+                        <WorkoutCard
+                            workout={workout}
+                            currentUser={currentUser}
+                        />
+
+                        {/* Finish Workout button matched to container width */}
+                        <button
+                            onClick={handleFinishWorkout}
+                            className="w-full mt-6 bg-black text-white py-2.5 rounded-xl font-medium text-sm hover:opacity-90 transition shadow-sm cursor-pointer"
+                        >
+                            Finish Workout
+                        </button>
+                    </div>
                 </div>
             )}
         </section>

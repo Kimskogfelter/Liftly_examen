@@ -1,5 +1,6 @@
 import { Workout } from "../models/workoutModel.js";
 import { User } from "../models/userModel.js";
+import { CalendarLog } from "../models/calendarModel.js";
 import { HttpError } from "../models/errorModel.js";
 import mongoose from "mongoose";
 
@@ -29,6 +30,62 @@ export const createWorkout = async (req, res, next) => {
 
     } catch (error) {
         return next(new HttpError(error.message || error, 500));
+    }
+};
+
+
+export const finishWorkout = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const { workoutId, date } = req.body;
+
+        if (!workoutId || !date) {
+            return res.status(400).json({ message: "Workout ID and date are required." });
+        }
+
+        const workoutDoc = await Workout.findById(workoutId);
+        if (!workoutDoc) {
+            return res.status(404).json({ message: "Workout not found." });
+        }
+
+        // 1. Leta efter en befintlig oavslutad post som matchar både datum och specifikt pass-ID
+        let calendarEntry = await CalendarLog.findOne({ 
+            user: userId, 
+            date, 
+            workout: workoutId, 
+            completed: false 
+        });
+
+        // 2. Om ingen specifik hittades, leta efter valfri post på datumet (för bakåtkompatibilitet)
+        if (!calendarEntry) {
+            calendarEntry = await CalendarLog.findOne({ user: userId, date, completed: false });
+        }
+
+        if (calendarEntry) {
+            // Uppdatera den hittade posten till avklarad
+            calendarEntry.workout = workoutId;
+            calendarEntry.title = workoutDoc.title;
+            calendarEntry.completed = true;
+            await calendarEntry.save();
+        } else {
+            // Om ingen ledig post fanns, skapa en ny
+            calendarEntry = await CalendarLog.create({
+                user: userId,
+                date,
+                title: workoutDoc.title,
+                workout: workoutId,
+                completed: true
+            });
+        }
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Workout finished and saved to calendar!", 
+            calendarEntry 
+        });
+
+    } catch (error) {
+        return next(new HttpError(error.message || "Server error while finishing workout", 500));
     }
 };
 
