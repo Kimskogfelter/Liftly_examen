@@ -10,10 +10,7 @@
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
 
-- fixa så man kan hur man tränat i en årsvy på kalendern för att sen dela om man vill
-- fixa att efter ett avklarat träningspass med alla bockar gjorda så det står done, kommer upp en lite share workout knapp..? eller?? alt att passet automatiskt bockas av som avklarat i kalendern? eller går det ens? 
 - se till delad kalender syns som en bild i post grid item istället för bara content texten??
-- ta bort rundade kanterna på inläggen på mobilskärm??
 
 - städa upp i postCard komponenten samt CalendarPage.jsx, börjar bli mycket kod i båda filerna
 
@@ -64,4 +61,5 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
 - [x] fixa kontakta oss sida så folk kan skicka in förbättringar, buggar etc till min email/egen mejl till lifly?!
 - [x] lägg till antal träffar gällande posts på söksidan, saved posts, category och hashtag. tänk på pagination !!
 - [x] fixa så men enklare ser att det är ett musik inlägg i post grid item 
+- [x] fixa att man kan klicka i avklarat träningspass på single workout page vyn, så bockas de av automatiskt i kalendern
 
