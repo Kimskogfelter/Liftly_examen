@@ -104,7 +104,7 @@ export const getWorkouts = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error.message || error, 500));
+        return next(new HttpError(error.message || "Could not fetch workouts", 500));
     }
 };
 
@@ -183,7 +183,7 @@ export const updateWorkout = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error.message || error, 500));
+        return next(new HttpError(error.message || "Could not update workout", 500));
     }
 };
 
@@ -216,6 +216,6 @@ export const deleteWorkout = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error.message || error, 500));
+        return next(new HttpError(error.message || "Could not delete workout", 500));
     }
 };
