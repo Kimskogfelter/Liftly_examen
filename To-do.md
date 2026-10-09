@@ -29,6 +29,7 @@ Appen får inte se ut som en testprototyp fylld med "Lorem Ipsum"-texter eller b
 - skönhetsfilter till bild/video, måste väll finnas enkla tillägg för detta?? eller måste man koda allt själv??
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
+- redan inskrivna sociala användarnamn fylls inte i när man klickar edit profile på profilsidan
 
 - fixa betalplan för server så den alltid är uppe??
 - fixa så appen kan lanseras hos app store och andriod för att lätt laddas ner
