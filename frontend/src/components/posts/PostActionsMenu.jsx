@@ -15,11 +15,11 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
         <>
             {/* 1. Huvudmeny */}
             {!showEditPostModal && !showDeletePostModal && createPortal(
-                <div 
+                <div
                     className={backdropClasses}
                     onClick={closeMenu}
                 >
-                    <div 
+                    <div
                         className="w-full max-w-sm bg-white rounded-lg p-6 text-gray-800 relative animate-in zoom-in-95 duration-150"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -33,7 +33,7 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
                                     Choose an action for this post
                                 </p>
                             </div>
-                            <button 
+                            <button
                                 onClick={closeMenu}
                                 className="p-1.5 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
                             >
@@ -86,20 +86,15 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
             {showEditPostModal && createPortal(
                 <div 
                     className={backdropClasses}
-                    onClick={() => {
-                        setShowEditPostModal(false);
-                        closeMenu();
-                    }}
+                    onClick={() => setShowEditPostModal(false)}
                 >
-                    <div className="w-full max-w-md bg-white rounded-3xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
+                    {/* Endast stoppar klicket från att nå bakgrunden, ingen extra styling */}
+                    <div onClick={(e) => e.stopPropagation()}>
                         <EditPostModal 
                             currentUser={currentUser} 
                             post={post} 
                             handleEditPost={handleEditPost} 
-                            onClose={() => {
-                                setShowEditPostModal(false);
-                                closeMenu();
-                            }} 
+                            onClose={() => setShowEditPostModal(false)} 
                         />
                     </div>
                 </div>,
@@ -110,20 +105,14 @@ function PostActionsMenu({ post, handleDeletePost, handleEditPost, currentUser, 
             {showDeletePostModal && createPortal(
                 <div 
                     className={backdropClasses}
-                    onClick={() => {
-                        setShowDeletePostModal(false);
-                        closeMenu();
-                    }}
+                    onClick={() => setShowDeletePostModal(false)}
                 >
-                    <div className="w-full max-w-md bg-white rounded-3xl p-6 text-gray-800 relative" onClick={(e) => e.stopPropagation()}>
+                    <div onClick={(e) => e.stopPropagation()}>
                         <DeletePostModal 
                             currentUser={currentUser} 
                             post={post} 
                             handleDeletePost={handleDeletePost} 
-                            onClose={() => {
-                                setShowDeletePostModal(false);
-                                closeMenu();
-                            }} 
+                            onClose={() => setShowDeletePostModal(false)} 
                         />
                     </div>
                 </div>,
