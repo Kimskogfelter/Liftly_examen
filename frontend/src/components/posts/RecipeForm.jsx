@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 
 function RecipeForm({ 
@@ -10,8 +10,8 @@ function RecipeForm({
   instructions, setInstructions, 
   onSave, onCancel, onClear
 }) {
+  const [errorMsg, setErrorMsg] = useState("");
 
-  // Hantera textändring för en ingrediens
   const handleIngredientChange = (index, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index] = value;
@@ -26,7 +26,6 @@ function RecipeForm({
     setIngredients(ingredients.filter((_, i) => i !== index));
   };
 
-  // Hantera instruktionssteg
   const handleInstructionChange = (index, value) => {
     const newInstructions = [...instructions];
     newInstructions[index] = value;
@@ -39,6 +38,39 @@ function RecipeForm({
 
   const removeInstruction = (index) => {
     setInstructions(instructions.filter((_, i) => i !== index));
+  };
+
+  // Strikt validering för ALLA fält innan onSave får köra igång
+  const handleSaveClick = () => {
+    setErrorMsg("");
+
+    if (!recipeTitle || !recipeTitle.trim()) {
+      setErrorMsg("Please enter a recipe title");
+      return;
+    }
+    if (prepTimeMinutes === "" || prepTimeMinutes === undefined) {
+      setErrorMsg("Please enter preparation time");
+      return;
+    }
+    if (calories === "" || calories === undefined) {
+      setErrorMsg("Please enter calories");
+      return;
+    }
+    if (protein === "" || protein === undefined) {
+      setErrorMsg("Please enter protein");
+      return;
+    }
+    if (ingredients.length === 0 || ingredients.some(ing => !ing.trim())) {
+      setErrorMsg("Please fill in all ingredients");
+      return;
+    }
+    if (instructions.length === 0 || instructions.some(step => !step.trim())) {
+      setErrorMsg("Please fill in all instruction steps");
+      return;
+    }
+
+    // Om allt är godkänt, anropa spara
+    onSave();
   };
 
   return (
@@ -55,9 +87,16 @@ function RecipeForm({
         </button>
       </div>
 
+      {/* Felmeddelande */}
+      {errorMsg && (
+        <div className="bg-red-50 border border-red-200 text-red-600 text-[11px] p-2 rounded-lg font-medium">
+          {errorMsg}
+        </div>
+      )}
+
       {/* Recepttitel */}
       <div>
-        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Recipe Title</label>
+        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Recipe Title *</label>
         <input
           type="text"
           placeholder="e.g., Chicken Sandwich"
@@ -67,10 +106,10 @@ function RecipeForm({
         />
       </div>
 
-      {/* Tid & Makros med tydliga labels */}
+      {/* Tid & Makros (Nu med tvingande koll) */}
       <div className="grid grid-cols-3 gap-2">
         <div>
-          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Time (min)</label>
+          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Time (min) *</label>
           <input
             type="number"
             placeholder="10"
@@ -80,7 +119,7 @@ function RecipeForm({
           />
         </div>
         <div>
-          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Calories</label>
+          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Calories *</label>
           <input
             type="number"
             placeholder="350"
@@ -90,7 +129,7 @@ function RecipeForm({
           />
         </div>
         <div>
-          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Protein (g)</label>
+          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Protein (g) *</label>
           <input
             type="number"
             placeholder="30"
@@ -104,7 +143,7 @@ function RecipeForm({
       {/* --- INGREDIENSER --- */}
       <div className="space-y-2 pt-1">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-bold text-zinc-700">Ingredients</label>
+          <label className="text-[11px] font-bold text-zinc-700">Ingredients *</label>
           <button
             type="button"
             onClick={addIngredient}
@@ -139,7 +178,7 @@ function RecipeForm({
       {/* --- INSTRUKTIONER --- */}
       <div className="space-y-2 pt-2">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-bold text-zinc-700">Instructions / Steps</label>
+          <label className="text-[11px] font-bold text-zinc-700">Instructions / Steps *</label>
           <button
             type="button"
             onClick={addInstruction}
@@ -171,9 +210,9 @@ function RecipeForm({
           </div>
         ))}
       </div>
+
       {/* --- KNAPPAR LÄNGST NER --- */}
       <div className="pt-6 pb-2 mt-4 border-t border-gray-100 flex items-center justify-between">
-        {/* Rensa-knapp till vänster för att tydligt skilja den åt */}
         <button
           type="button"
           onClick={onClear}
@@ -182,7 +221,6 @@ function RecipeForm({
           Clear all
         </button>
 
-        {/* KNAPPAR LÄNGST NER (3 st) */}
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -193,7 +231,7 @@ function RecipeForm({
           </button>
           <button
             type="button"
-            onClick={onSave}
+            onClick={handleSaveClick}
             className="bg-[#3A3939] hover:bg-zinc-800 text-white font-semibold py-1.5 px-4 rounded-lg text-xs transition-colors cursor-pointer shadow-sm"
           >
             Save Recipe

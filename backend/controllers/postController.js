@@ -45,6 +45,17 @@ export const createPost = async (req, res, next) => {
             parsedRecipe = JSON.parse(recipe);
         }
 
+        // --------- RECIPE VALIDATION  -----------
+        if (parsedRecipe) {
+            const { title, prepTimeMinutes, nutrition, ingredients, instructions } = parsedRecipe;
+
+            if (!title || prepTimeMinutes === undefined || prepTimeMinutes === "" ||
+                !nutrition || nutrition.calories === undefined || nutrition.protein === undefined ||
+                !ingredients || ingredients.length === 0 || !instructions || instructions.length === 0) {
+                return next(new HttpError("Recipe must include a title, prep time, calories, protein, ingredients, and instructions.", 422));
+            }
+        }
+
         // 2.5 Remake CALENDARSHARE from JSON-string to object (if provided)
         let parsedCalendarShare = null;
         if (calendarShare) {
@@ -127,7 +138,7 @@ export const getPost = async (req, res, next) => {
         return res.status(200).json({ message: 'Post found: ', post });
 
     } catch (error) {
-    
+
         return next(new HttpError(error.message || "Could not fetch post", 500));
     }
 
@@ -419,7 +430,7 @@ export const savePost = async (req, res, next) => {
 
 
     } catch (error) {
-       
+
         return next(new HttpError(error.message || "Could not save post", 500));
     }
 
@@ -474,7 +485,7 @@ export const unsavePost = async (req, res, next) => {
 
 
     } catch (error) {
-        
+
         return next(new HttpError(error.message || "Could not unsave post", 500));
 
     }
