@@ -80,7 +80,7 @@ export const createPost = async (req, res, next) => {
         return res.status(201).json({ message: 'Post created successfully', newPost });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not create post", 500));
     }
 };
 
@@ -127,12 +127,8 @@ export const getPost = async (req, res, next) => {
         return res.status(200).json({ message: 'Post found: ', post });
 
     } catch (error) {
-        // Om något går fel när vi försöker hämta en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+    
+        return next(new HttpError(error.message || "Could not fetch post", 500));
     }
 
 }
@@ -179,7 +175,8 @@ export const getPosts = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+
+        return next(new HttpError(error.message || "Could not fetch posts", 500));
     }
 }
 
@@ -231,7 +228,7 @@ export const getUserPosts = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not fetch user posts", 500));
     }
 }
 
@@ -280,7 +277,7 @@ export const getFollowingPosts = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not fetch following posts", 500));
     }
 }
 
@@ -326,7 +323,7 @@ export const getCategoryPosts = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error.message || error, 500));
+        return next(new HttpError(error.message || "Could not fetch category posts", 500));
     }
 };
 
@@ -385,7 +382,7 @@ export const getHashtagPosts = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error.message || error, 500));
+        return next(new HttpError(error.message || "Could not fetch hashtag posts", 500));
     }
 };
 
@@ -422,12 +419,8 @@ export const savePost = async (req, res, next) => {
 
 
     } catch (error) {
-        // Om något går fel när vi försöker följa en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+       
+        return next(new HttpError(error.message || "Could not save post", 500));
     }
 
 }
@@ -481,12 +474,8 @@ export const unsavePost = async (req, res, next) => {
 
 
     } catch (error) {
-        // Om något går fel när vi försöker följa en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        
+        return next(new HttpError(error.message || "Could not unsave post", 500));
 
     }
 
@@ -670,7 +659,7 @@ export const updatePost = async (req, res, next) => {
 
     } catch (error) {
 
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not update post", 500));
     }
 
 }
@@ -739,7 +728,7 @@ export const deletePost = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not delete post", 500));
     }
 
 }
