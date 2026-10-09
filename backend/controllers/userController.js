@@ -98,10 +98,12 @@ export const registerUser = async (req, res, next) => {
 
 
         // --------- create new user to database ----------
-        await User.create({ username: trimUsername, email: emailLowerCase, password: hashedPassword, gdprConsent: {
+        await User.create({
+            username: trimUsername, email: emailLowerCase, password: hashedPassword, gdprConsent: {
                 accepted: gdprConsent.accepted,
                 date: new Date()
-            } })
+            }
+        })
         return res.status(201).json({
             message: "User registered successfully!"
         });
@@ -109,12 +111,7 @@ export const registerUser = async (req, res, next) => {
 
     } catch (error) {
 
-        // Om något går fel när vi försöker registrera användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error.message))
+        return next(new HttpError(error.message || "Could not register user", 500));
     }
 
 }
@@ -259,7 +256,8 @@ export const getUser = async (req, res, next) => {
         return res.status(200).json({ message: 'User found: ', user });
 
     } catch (error) {
-        return next(new HttpError(error));
+
+        return next(new HttpError(error.message || "Could not fetch user", 500));
     }
 
 };
@@ -315,7 +313,7 @@ export const updateUser = async (req, res, next) => {
             req.user.id,
             { $set: { username, email, profileBio, socialLinks } }, // $set ONLY updates the data that is sent from frontend, ex if only profile bio is edited only that is changed in the database
             { new: true, runValidators: true } // runValidators make sure that the backend rules (such as unique email, minLenght etc that is set in the user model) still follows 
-        ).select("-password"); // removes the hashed password so it doenst get sent to frontend
+        ).select("-password -refreshTokens -email -resetPasswordToken -resetPasswordExpires");
 
         // error if no user could be found
         if (!updatedUser) {
@@ -328,12 +326,8 @@ export const updateUser = async (req, res, next) => {
 
 
     } catch (error) {
-        // Om något går fel när vi försöker uppdatera en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+
+        return next(new HttpError(error.message || "Could not update user", 500));
     }
 
 }
@@ -396,12 +390,8 @@ export const followUser = async (req, res, next) => {
 
 
     } catch (error) {
-        // Om något går fel när vi försöker följa en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+
+        return next(new HttpError(error.message || "Could not follow user", 500));
     }
 
 }
@@ -460,12 +450,8 @@ export const unfollowUser = async (req, res, next) => {
         }
 
     } catch (error) {
-        // Om något går fel när vi försöker sluta följa en användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+
+        return next(new HttpError(error.message || "Could not unfollow user", 500));
     }
 
 }
@@ -569,12 +555,8 @@ export const changeProfileImage = async (req, res, next) => {
 
 
     } catch (error) {
-        // Om något går fel när vi försöker uppdatera profilbilden:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+
+        return next(new HttpError(error.message || "Could not change profile image", 500));
     }
 
 }
@@ -702,7 +684,7 @@ export const authUser = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not authenticate user", 500));
     }
 }
 
@@ -742,7 +724,7 @@ export const forgotPassword = async (req, res, next) => {
         const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
         // SKICKA E-POST MED RESEND
-       await resend.emails.send({
+        await resend.emails.send({
             from: "Liftly <noreply@liftlyfit.com>",
             to: user.email,
             subject: "Reset your Liftly Password",
@@ -930,6 +912,6 @@ export const getSavedPosts = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not fetch saved posts", 500));
     }
 };
