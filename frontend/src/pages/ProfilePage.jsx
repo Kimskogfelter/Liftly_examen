@@ -115,7 +115,7 @@ function ProfilePage({ currentUser, setCurrentUser }) {
       {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">{error}</div>}
 
       {/* User Header Info Card */}
-      <div className="w-full max-w-md mx-auto bg-white p-5 mb-6 font-sans relative">
+      <div className="w-full max-w-md mx-auto bg-white p-5 mb-4 font-sans relative">
 
         {/* Inställningsikon uppe i högra hörnet (visas endast för egen profil) */}
         {isOwnProfile && (
