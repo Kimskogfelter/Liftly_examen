@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import ProfileImage from "../users/ProfileImage";
-import PostActionsMenu from "./PostActionsMenu";
 import { handlePostLikeToggle } from "../../functions/posts/handlePostLikeToggle";
 import { handleSavePost } from "../../functions/posts/handleSavePost";
-import FullsizeImageModal from "./FullsizeImageModal";
 import { createSpotifyEmbedUrl } from "../../functions/spotify/spotify";
+import FullsizeImageModal from "./FullsizeImageModal";
 import PostCalendarShare from "./PostCalendarShare";
-import TimeAgo from "react-timeago";
-import { BsThreeDots } from "react-icons/bs";
-import { FiHeart, FiBookmark, FiMessageCircle, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
-import { FaBookmark } from "react-icons/fa";
+import PostHeader from "./PostHeader";
+import PostMedia from "./PostMedia";
+import PostRecipe from "./PostRecipe";
+import PostFooter from "./PostFooter";
 
 // funktion för att formatera datumstämpel
 const customTimeFormatter = (value, unit) => {
@@ -88,52 +86,16 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
             <section className="w-full max-w-lg mx-auto bg-white rounded-lg shadow-sm border border-gray-100 p-4 font-sans text-gray-800 my-3 relative h-auto flex flex-col justify-between">
                 <div>
                     {/* HEADER: Användare, Tid, Kategori och Meny */}
-                    <div className="flex items-center justify-between mb-3 gap-2">
-                        <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
-                                <ProfileImage profileImage={post.createdBy?.profileImage} />
-                            </div>
-                            <div className="flex items-center gap-1.5 min-w-0 text-xs">
-                                <Link to={`/users/${post.createdBy?._id}`} className="font-bold text-black hover:underline tracking-wide truncate">
-                                    {post.createdBy?.username}
-                                </Link>
-                                <span className="text-gray-400 shrink-0">•</span>
-                                <span className="text-[11px] text-gray-400 shrink-0 font-medium">
-                                    <TimeAgo date={post.createdAt} formatter={customTimeFormatter} />
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 shrink-0">
-                            {/* Kategoritagg med endast underkategori */}
-                            <span className="bg-zinc-100 text-zinc-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
-                                {displayCategory}
-                            </span>
-
-                            {post.createdBy?._id === currentUser?.id && (
-                                <div className="relative flex items-center justify-center">
-                                    {showPostActions && (
-                                        <div className="absolute right-9 top-1/2 -translate-y-1/2 z-35 flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1 shadow-md whitespace-nowrap">
-                                            <PostActionsMenu
-                                                currentUser={currentUser}
-                                                post={post}
-                                                handleEditPost={handleEditPost}
-                                                handleDeletePost={handleDeletePost}
-                                                closeMenu={() => setShowPostActions(false)}
-                                            />
-                                        </div>
-                                    )}
-
-                                    <button
-                                        className={`p-1 rounded-full transition-colors cursor-pointer text-gray-500 hover:bg-gray-100 z-10 ${showPostActions ? 'bg-gray-100 text-black' : ''}`}
-                                        onClick={() => setShowPostActions(!showPostActions)}
-                                    >
-                                        {showPostActions ? <FiX size={16} /> : <BsThreeDots size={16} />}
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    <PostHeader
+                        post={post}
+                        currentUser={currentUser}
+                        displayCategory={displayCategory}
+                        showPostActions={showPostActions}
+                        setShowPostActions={setShowPostActions}
+                        handleEditPost={handleEditPost}
+                        handleDeletePost={handleDeletePost}
+                        customTimeFormatter={customTimeFormatter}
+                    />
 
                     {/* POST INNEHÅLL */}
                     <div
@@ -142,64 +104,17 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                     >
 
                         {/* MEDIA HÖGST UPP */}
-                        {hasMedia && (
-                            <div className="relative w-[calc(100%+2rem)] -mx-4 -mt-1 mb-3 bg-black/90 flex items-center justify-center overflow-hidden">
-                                {isVideo ? (
-                                    <video
-                                        src={currentMediaUrl}
-                                        controls={true}
-                                        loop={true}
-                                        playsInline={true}
-                                        muted={true}
-                                        className="w-full h-auto max-h-80 object-contain"
-                                    />
-                                ) : (
-                                    <img
-                                        src={currentMediaUrl}
-                                        alt="Post media"
-                                        className={`w-full h-auto max-h-80 object-contain ${isDetailView ? "cursor-zoom-in" : ""}`}
-                                        onClick={(e) => {
-                                            if (isDetailView) {
-                                                e.preventDefault();
-                                                setFullsizeImage(currentMediaUrl);
-                                            }
-                                        }}
-                                        onError={(e) => {
-                                            e.currentTarget.style.display = "none";
-                                        }}
-                                    />
-                                )}
-
-                                {currentMediaIndex > 0 && (
-                                    <button
-                                        onClick={handlePrevMedia}
-                                        className="absolute left-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
-                                    >
-                                        <FiChevronLeft size={18} />
-                                    </button>
-                                )}
-
-                                {currentMediaIndex < post.media.length - 1 && (
-                                    <button
-                                        onClick={handleNextMedia}
-                                        className="absolute right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors z-10 cursor-pointer"
-                                    >
-                                        <FiChevronRight size={18} />
-                                    </button>
-                                )}
-
-                                {post.media.length > 1 && (
-                                    <div className="absolute bottom-2 flex gap-1 z-10">
-                                        {post.media.map((_, idx) => (
-                                            <div
-                                                key={idx}
-                                                className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentMediaIndex ? "bg-white scale-125" : "bg-white/50"}`}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                        <PostMedia
+                            hasMedia={hasMedia}
+                            isVideo={isVideo}
+                            currentMediaUrl={currentMediaUrl}
+                            currentMediaIndex={currentMediaIndex}
+                            post={post}
+                            isDetailView={isDetailView}
+                            handlePrevMedia={handlePrevMedia}
+                            handleNextMedia={handleNextMedia}
+                            setFullsizeImage={setFullsizeImage}
+                        />
 
                         {/* TEXT & HASHTAGS */}
                         <div className="mb-2 px-0.5 space-y-1">
@@ -229,60 +144,8 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                         </div>
 
                         {/* RECEPT-KORT */}
-                        {post.recipe && (
-                            <div className="mt-3 mb-2 bg-zinc-50 border border-zinc-200/80 rounded-xl p-3.5 text-xs space-y-3">
-                                <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${isDetailView ? "border-b border-zinc-200/60 pb-3" : ""}`}>
-                                    <div className="flex items-center gap-2">
-                                        <h4 className="font-bold text-zinc-900 text-sm">{post.recipe.title}</h4>
-                                    </div>
-                                    <div className="flex items-center gap-2 flex-wrap text-zinc-600 font-medium text-[11px]">
-                                        {post.recipe.prepTimeMinutes > 0 && (
-                                            <span className="bg-white border border-zinc-200 px-2 py-1 rounded-lg">
-                                                {post.recipe.prepTimeMinutes} min
-                                            </span>
-                                        )}
-                                        {post.recipe.nutrition?.calories > 0 && (
-                                            <span className="bg-white border border-zinc-200 px-2 py-1 rounded-lg">
-                                                {post.recipe.nutrition.calories} kcal
-                                            </span>
-                                        )}
-                                        {post.recipe.nutrition?.protein > 0 && (
-                                            <span className="bg-white border border-zinc-200 px-2 py-1 rounded-lg">
-                                                {post.recipe.nutrition.protein}g protein
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
+                        <PostRecipe recipe={post.recipe} isDetailView={isDetailView} />
 
-                                {isDetailView && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1 text-[11px]">
-                                        <div>
-                                            <h5 className="font-bold text-zinc-800 mb-1.5">Ingredients</h5>
-                                            <ul className="space-y-1 text-zinc-600">
-                                                {post.recipe.ingredients?.map((ing, idx) => (
-                                                    <li key={idx} className="flex items-start gap-1.5">
-                                                        <span className="text-zinc-400">•</span>
-                                                        <span>{ing.name}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-
-                                        <div>
-                                            <h5 className="font-bold text-zinc-800 mb-1.5">Instructions</h5>
-                                            <ul className="space-y-1 text-zinc-600">
-                                                {post.recipe.instructions?.map((step, idx) => (
-                                                    <li key={idx} className="flex items-start gap-1.5">
-                                                        <span className="font-semibold text-zinc-400 shrink-0">{idx + 1}.</span>
-                                                        <span>{step}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
                         {/* KALENDER-KORT (DELAD MÅNAD) - LJUS STIL */}
                         <PostCalendarShare calendarShare={post.calendarShare} />
                     </div>
@@ -303,34 +166,21 @@ function PostCard({ post, currentUser, setCurrentUser, handleEditPost, handleDel
                 </div>
 
                 {/* FOOTER */}
-                <div>
-                    <hr className="border-gray-100 my-2" />
-
-                    <div className="flex items-center justify-between pt-1">
-                        <div className="flex items-center gap-5">
-                            <div className="flex items-center gap-1.5">
-                                <button
-                                    className={`text-lg cursor-pointer transition-transform active:scale-90 ${isLiked ? "text-red-500" : "text-black hover:text-gray-600"}`}
-                                    onClick={() => handlePostLikeToggle(isLiked, setIsLiked, setLikesCount, post, currentUser)}
-                                >
-                                    {isLiked ? <FiHeart className="fill-red-500 text-red-500" size={18} /> : <FiHeart size={18} />}
-                                </button>
-                                <span className="font-medium text-xs text-gray-700">{likesCount}</span>
-                            </div>
-
-                            <Link to={`/posts/${post._id}`} className="flex items-center gap-1.5 text-black hover:text-gray-600 text-lg">
-                                <FiMessageCircle size={18} />
-                                <span className="font-medium text-xs text-gray-700">
-                                    {commentsCount}
-                                </span>
-                            </Link>
-                        </div>
-
-                        <button onClick={() => handleSavePost(isSaved, setIsSaved, post, currentUser, setCurrentUser, getSavedPosts)} className="text-lg text-black hover:text-gray-600 cursor-pointer">
-                            {isSaved ? <FaBookmark size={18} /> : <FiBookmark size={18} />}
-                        </button>
-                    </div>
-                </div>
+                <PostFooter
+                    post={post}
+                    currentUser={currentUser}
+                    setCurrentUser={setCurrentUser}
+                    isLiked={isLiked}
+                    setIsLiked={setIsLiked}
+                    likesCount={likesCount}
+                    setLikesCount={setLikesCount}
+                    isSaved={isSaved}
+                    setIsSaved={setIsSaved}
+                    commentsCount={commentsCount}
+                    handlePostLikeToggle={handlePostLikeToggle}
+                    handleSavePost={handleSavePost}
+                    getSavedPosts={getSavedPosts}
+                />
 
                 {fullsizeImage && (
                     <FullsizeImageModal imageUrl={fullsizeImage} onClose={() => setFullsizeImage(null)} />
