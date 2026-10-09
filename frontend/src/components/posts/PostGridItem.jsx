@@ -21,7 +21,7 @@ function PostGridItem({ post }) {
       {/* Badges i övre vänstra hörnet (Recipe och/eller Music) */}
       <div className="absolute top-2 left-2 z-20 pointer-events-none flex flex-col gap-1">
         {post.recipe && (
-          <span className="bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm">
+          <span className="bg-amber-500/85 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm">
             Recipe
           </span>
         )}
