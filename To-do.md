@@ -1,18 +1,34 @@
 # Liftly - Project To-Do List
 
+## APPLE STORE KRAV: Vad krävs för att slippa ett "nej" från Apple (App Store)?
+Apple är kända för att vara strikta vid granskningen (App Store Review). Om du skickar in appen i sitt nuvarande skick finns det några vanliga fallgropar som riskerar att ge dig ett avslag:
+
+1. Innehållsmoderering (Kopplat till din fulords- och gilla-fråga!):
+
+Apple kräver att appar som tillåter användare att generera eget innehåll (som inlägg, kommentarer och bilder) har ett system för att hantera kränkande innehåll.
+
+Krav för att inte få nej: Du måste ha en funktion för att rapportera inlägg/användare (ReportPostModal i post components, samt ReportUserModal i user components?), samt en funktion för att blockera användare. Utan detta blir det nästan garanterat ett nej. (Ett automatiskt fulordsfilter är ett stort plus, men rapporteringsknappen är ett absolut krav).
+
+2. Användarvillkor och Integritetspolicy (Terms & Privacy Policy):
+
+Du måste ha en länk till en integritetspolicy (Privacy Policy) som förklarar vilka uppgifter ni sparar (e-post, lösenord, bilder). Den måste finnas tillgänglig både på en webbsida och i appen.
+
+3. Radering av konto:
+
+Sedan några år tillbaka kräver Apple att om en app låter användare skapa ett konto, så måste det också finnas en enkel knapp inne i appen för att radera sitt konto och all sin data permanent.
+
+4. "Placeholder"-innehåll / Skräpdata:
+
+Appen får inte se ut som en testprototyp fylld med "Lorem Ipsum"-texter eller buggiga element som inte fungerar när granskaren klickar runt.
+
 
 ## Säkerhet & Autentisering
 - Ändra namnet token till accessToken i både frontend och backend för bättre förståelse av vad den gör
-- dubbelkolla att ingen del i backend skickar med känslig information till frontend!!
 
 ## Nya Funktioner
 - skönhetsfilter till bild/video, måste väll finnas enkla tillägg för detta?? eller måste man koda allt själv??
 - fixa så man får notiser i och utanför appen när något händer, tex en kommentar eller gilla markering
 - fixa ett språk filter mot fula ord?! 
-
-- se till delad kalender syns som en bild i post grid item istället för bara content texten??
-
-- städa upp i postCard komponenten samt CalendarPage.jsx, börjar bli mycket kod i båda filerna
 
 - fixa betalplan för server så den alltid är uppe??
 - fixa så appen kan lanseras hos app store och andriod för att lätt laddas ner
@@ -62,4 +78,5 @@ Skapa en dedikerad vy som visar alla inlägg taggade med en viss hashtag när ma
 - [x] lägg till antal träffar gällande posts på söksidan, saved posts, category och hashtag. tänk på pagination !!
 - [x] fixa så men enklare ser att det är ett musik inlägg i post grid item 
 - [x] fixa att man kan klicka i avklarat träningspass på single workout page vyn, så bockas de av automatiskt i kalendern
-
+- [x] dubbelkolla att ingen del i backend skickar med känslig information till frontend!!
+- [x] se till så det syns att det är en delad kalender vy i post grid item komponenten
