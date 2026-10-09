@@ -63,12 +63,8 @@ export const createComment = async (req, res, next) => {
 
 
     } catch (error) {
-        // Om något går fel när vi försöker registrera användaren:
-        // 1. Vi tar det fel som fångas upp i 'catch' (det som kallas 'error')
-        // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
-        // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
-        //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        
+        return next(new HttpError(error.message || "Could not create comment", 500))
     }
 
 }
@@ -114,7 +110,7 @@ export const getComment = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not fetch comment", 500))
     }
 
 }
@@ -165,7 +161,7 @@ export const getComments = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not fetch comments", 500))
     }
 
 }
@@ -221,7 +217,7 @@ export const replyComment = async (req, res, next) => {
         });
 
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Could not add reply", 500));
     }
 };
 
@@ -495,7 +491,7 @@ export const deleteComment = async (req, res, next) => {
         // 2. Vi skapar ett nytt fel-objekt av typen HttpError med det här felmeddelandet
         // 3. Vi skickar det nya fel-objektet vidare till Express med 'next()'
         //    → Express vet då att något gick fel och kan skicka tillbaka ett HTTP-fel till klienten
-        return next(new HttpError(error))
+        return next(new HttpError(error.message || "Could not delete comment", 500))
     }
 
 }
